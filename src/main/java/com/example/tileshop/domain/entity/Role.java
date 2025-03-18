@@ -13,6 +13,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+
 @Entity
 @Table(name = "roles",
         uniqueConstraints = @UniqueConstraint(name = "UN_ROLE_CODE", columnNames = "code"))
@@ -21,7 +22,7 @@ public class Role {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "role_id")
-    private Byte id;
+    private Long id;
 
     @Column(nullable = false)
     private String name;

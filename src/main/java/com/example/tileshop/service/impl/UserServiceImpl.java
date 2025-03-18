@@ -48,8 +48,6 @@ public class UserServiceImpl implements UserService {
         User user = new User();
         user.setUsername("tuyenngoc");
         user.setEmail("tuyenngoc@gmail.com");
-        user.setPhoneNumber("0984176999");
-        user.setFullName("Trịnh Ngọc Tuyến");
         user.setPassword(passwordEncoder.encode("admin"));
         user.setRole(roleRepository.findByCode(RoleConstant.ROLE_ADMIN).orElseThrow(() -> new RuntimeException("Invalid role")));
 
