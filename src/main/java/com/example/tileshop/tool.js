@@ -7,7 +7,9 @@ const OUTPUT_DIRS = {
     controllers: path.join(__dirname, 'controller'),
     repositories: path.join(__dirname, 'repository'),
     services: path.join(__dirname, 'service'),
-    serviceImpl: path.join(__dirname, 'service/impl')
+    serviceImpl: path.join(__dirname, 'service/impl'),
+    mappers: path.join(__dirname, 'domain/mapper'),
+    dtos: path.join(__dirname, 'domain/dto')
 };
 
 // Đảm bảo các thư mục đầu ra tồn tại
@@ -105,6 +107,31 @@ public class ${entity}ServiceImpl implements ${entity}Service {
 }`;
 }
 
+// Nội dung DTO
+function getDTOContent(entity) {
+    return `package com.example.tileshop.domain.dto;
+
+import lombok.Data;
+
+@Data
+public class ${entity}DTO {
+    private Long id;
+}`;
+}
+
+// Nội dung Mapper
+function getMapperContent(entity) {
+    return `package com.example.tileshop.domain.mapper;
+
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.factory.Mappers;
+
+@Mapper(componentModel = "spring")
+public interface ${entity}Mapper {
+}`;
+}
+
 // **Chạy tool**
 function generate() {
     const entities = getEntities();
@@ -120,6 +147,8 @@ function generate() {
         createFile(path.join(OUTPUT_DIRS.repositories, `${entity}Repository.java`), getRepositoryContent(entity));
         createFile(path.join(OUTPUT_DIRS.services, `${entity}Service.java`), getServiceContent(entity));
         createFile(path.join(OUTPUT_DIRS.serviceImpl, `${entity}ServiceImpl.java`), getServiceImplContent(entity));
+        createFile(path.join(OUTPUT_DIRS.dtos, `${entity}DTO.java`), getDTOContent(entity));
+        createFile(path.join(OUTPUT_DIRS.mappers, `${entity}Mapper.java`), getMapperContent(entity));
     });
 
     console.log('✅ Generation complete!');

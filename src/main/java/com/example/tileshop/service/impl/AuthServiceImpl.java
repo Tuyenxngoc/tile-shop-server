@@ -1,6 +1,7 @@
 package com.example.tileshop.service.impl;
 
 import com.example.tileshop.constant.ErrorMessage;
+import com.example.tileshop.constant.RoleConstant;
 import com.example.tileshop.constant.SuccessMessage;
 import com.example.tileshop.domain.dto.common.CommonResponseDto;
 import com.example.tileshop.domain.dto.common.DataMailDto;
@@ -8,11 +9,17 @@ import com.example.tileshop.domain.dto.request.auth.*;
 import com.example.tileshop.domain.dto.response.auth.CurrentUserLoginResponseDto;
 import com.example.tileshop.domain.dto.response.auth.LoginResponseDto;
 import com.example.tileshop.domain.dto.response.auth.TokenRefreshResponseDto;
+import com.example.tileshop.domain.entity.Cart;
+import com.example.tileshop.domain.entity.Customer;
+import com.example.tileshop.domain.entity.Role;
 import com.example.tileshop.domain.entity.User;
 import com.example.tileshop.exception.BadRequestException;
 import com.example.tileshop.exception.ConflictException;
 import com.example.tileshop.exception.NotFoundException;
 import com.example.tileshop.exception.UnauthorizedException;
+import com.example.tileshop.repository.CartRepository;
+import com.example.tileshop.repository.CustomerRepository;
+import com.example.tileshop.repository.RoleRepository;
 import com.example.tileshop.repository.UserRepository;
 import com.example.tileshop.security.CustomUserDetails;
 import com.example.tileshop.security.jwt.JwtTokenProvider;
@@ -65,7 +72,13 @@ public class AuthServiceImpl implements AuthService {
 
     UserRepository userRepository;
 
+    CustomerRepository customerRepository;
+
+    CartRepository cartRepository;
+
     PasswordEncoder passwordEncoder;
+
+    RoleRepository roleRepository;
 
     SendMailUtil sendMailUtil;
 
@@ -234,14 +247,32 @@ public class AuthServiceImpl implements AuthService {
             throw new ConflictException(ErrorMessage.Auth.ERR_DUPLICATE_EMAIL);
         }
 
+        Role role = roleRepository.findByCode(RoleConstant.ROLE_USER).orElseThrow(() -> new RuntimeException("Role ROLE_USER not found"));
+
+        User user = new User();
+        user.setUsername(requestDto.getUsername());
+        user.setPassword(passwordEncoder.encode(requestDto.getPassword()));
+        user.setEmail(requestDto.getEmail());
+        user.setRole(role);
+
+        userRepository.save(user);
+
+        Customer customer = new Customer();
+        customer.setFullName(requestDto.getFullName());
+        customer.setPhoneNumber(requestDto.getPhoneNumber());
+        customer.setUser(user);
+
+        customerRepository.save(customer);
+
+        Cart cart = new Cart();
+        cart.setCustomer(customer);
+        cartRepository.save(cart);
+
         Map<String, Object> properties = new HashMap<>();
         properties.put("username", requestDto.getUsername());
         properties.put("password", requestDto.getPassword());
 
         sendEmail(requestDto.getEmail(), "Đăng ký thành công", properties, "registerSuccess.html");
-
-        //Create new User
-        User user = null;
 
         return null;
     }

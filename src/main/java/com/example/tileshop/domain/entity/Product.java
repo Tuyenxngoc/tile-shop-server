@@ -15,7 +15,6 @@ import java.util.List;
 
 @Entity
 @Table(name = "products")
-@Inheritance(strategy = InheritanceType.JOINED)
 public class Product {
 
     @Id

@@ -1,5 +1,6 @@
 package com.example.tileshop.domain.entity;
 
+import com.example.tileshop.constant.Gender;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
@@ -14,7 +15,9 @@ import java.util.List;
 @AllArgsConstructor
 
 @Entity
-@Table(name = "customers")
+@Table(name = "customers",
+        uniqueConstraints = @UniqueConstraint(name = "UK_CUSTOMER_USER_ID", columnNames = "user_id")
+)
 public class Customer {
 
     @Id
@@ -22,17 +25,20 @@ public class Customer {
     @Column(name = "customer_id")
     private Long id;
 
-    @Column(name = "full-name")
+    @Column(name = "full_name")
     private String fullName;
 
-    @Column(name = "phone-number", nullable = false)
+    @Column(name = "phone_number", nullable = false)
     private String phoneNumber;
 
     @Column(name = "address")
     private String address;
 
+    @Enumerated(EnumType.STRING)
+    private Gender gender;
+
     @OneToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "FK_CUSTOMER_USER_ID"), nullable = false)
     private User user;
 
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)

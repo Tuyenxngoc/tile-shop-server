@@ -14,7 +14,9 @@ import java.util.List;
 @AllArgsConstructor
 
 @Entity
-@Table(name = "carts")
+@Table(name = "carts",
+        uniqueConstraints = @UniqueConstraint(name = "UK_CART_CUSTOMER_ID", columnNames = "customer_id")
+)
 public class Cart {
 
     @Id
