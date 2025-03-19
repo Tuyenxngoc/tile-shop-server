@@ -1,7 +1,7 @@
 package com.example.tileshop.service.impl;
 
 import com.example.tileshop.constant.ErrorMessage;
-import com.example.tileshop.domain.entity.User;
+import com.example.tileshop.entity.User;
 import com.example.tileshop.repository.UserRepository;
 import com.example.tileshop.security.CustomUserDetails;
 import com.example.tileshop.service.CustomUserDetailsService;

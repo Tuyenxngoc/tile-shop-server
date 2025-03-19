@@ -1,9 +1,9 @@
 package com.example.tileshop.controller;
 
 import com.example.tileshop.annotation.RestApiV1;
-import com.example.tileshop.base.VsResponseUtil;
 import com.example.tileshop.constant.UrlConstant;
 import com.example.tileshop.service.RoleService;
+import com.example.tileshop.util.VsResponseUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AccessLevel;

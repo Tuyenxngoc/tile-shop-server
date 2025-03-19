@@ -1,6 +1,6 @@
 package com.example.tileshop.service.impl;
 
-import com.example.tileshop.domain.entity.Review;
+import com.example.tileshop.entity.Review;
 import com.example.tileshop.repository.ReviewRepository;
 import com.example.tileshop.service.ReviewService;
 import lombok.RequiredArgsConstructor;

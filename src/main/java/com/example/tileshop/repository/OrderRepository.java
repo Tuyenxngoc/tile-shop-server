@@ -1,6 +1,6 @@
 package com.example.tileshop.repository;
 
-import com.example.tileshop.domain.entity.Order;
+import com.example.tileshop.entity.Order;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

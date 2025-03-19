@@ -1,7 +1,7 @@
 package com.example.tileshop.service.impl;
 
 import com.example.tileshop.constant.RoleConstant;
-import com.example.tileshop.domain.entity.Role;
+import com.example.tileshop.entity.Role;
 import com.example.tileshop.repository.RoleRepository;
 import com.example.tileshop.service.RoleService;
 import lombok.AccessLevel;

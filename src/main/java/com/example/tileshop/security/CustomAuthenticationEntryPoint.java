@@ -1,7 +1,7 @@
 package com.example.tileshop.security;
 
-import com.example.tileshop.base.RestData;
 import com.example.tileshop.constant.ErrorMessage;
+import com.example.tileshop.dto.common.RestData;
 import com.example.tileshop.util.MessageUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;

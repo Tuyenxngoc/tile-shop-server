@@ -1,6 +1,6 @@
 package com.example.tileshop.service;
 
-import com.example.tileshop.domain.entity.Cart;
+import com.example.tileshop.entity.Cart;
 
 import java.util.List;
 

@@ -1,6 +1,6 @@
 package com.example.tileshop.util;
 
-import com.example.tileshop.domain.dto.common.DataMailDto;
+import com.example.tileshop.dto.common.DataMailDto;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.AccessLevel;

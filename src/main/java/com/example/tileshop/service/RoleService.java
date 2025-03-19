@@ -1,6 +1,6 @@
 package com.example.tileshop.service;
 
-import com.example.tileshop.domain.entity.Role;
+import com.example.tileshop.entity.Role;
 
 import java.util.List;
 

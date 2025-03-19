@@ -1,10 +1,10 @@
 package com.example.tileshop.service;
 
-import com.example.tileshop.domain.dto.common.CommonResponseDto;
-import com.example.tileshop.domain.dto.request.auth.*;
-import com.example.tileshop.domain.dto.response.auth.CurrentUserLoginResponseDto;
-import com.example.tileshop.domain.dto.response.auth.LoginResponseDto;
-import com.example.tileshop.domain.dto.response.auth.TokenRefreshResponseDto;
+import com.example.tileshop.dto.common.CommonResponseDto;
+import com.example.tileshop.dto.request.auth.*;
+import com.example.tileshop.dto.response.auth.CurrentUserLoginResponseDto;
+import com.example.tileshop.dto.response.auth.LoginResponseDto;
+import com.example.tileshop.dto.response.auth.TokenRefreshResponseDto;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.core.Authentication;

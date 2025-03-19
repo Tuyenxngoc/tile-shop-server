@@ -3,7 +3,7 @@ package com.example.tileshop.service.impl;
 import com.example.tileshop.constant.CommonConstant;
 import com.example.tileshop.constant.ErrorMessage;
 import com.example.tileshop.constant.RoleConstant;
-import com.example.tileshop.domain.entity.User;
+import com.example.tileshop.entity.User;
 import com.example.tileshop.exception.BadRequestException;
 import com.example.tileshop.exception.NotFoundException;
 import com.example.tileshop.repository.RoleRepository;

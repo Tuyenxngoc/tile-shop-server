@@ -1,6 +1,6 @@
 package com.example.tileshop.service;
 
-import com.example.tileshop.domain.entity.OrderItem;
+import com.example.tileshop.entity.OrderItem;
 
 import java.util.List;
 

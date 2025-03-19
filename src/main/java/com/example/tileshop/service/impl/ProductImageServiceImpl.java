@@ -1,6 +1,6 @@
 package com.example.tileshop.service.impl;
 
-import com.example.tileshop.domain.entity.ProductImage;
+import com.example.tileshop.entity.ProductImage;
 import com.example.tileshop.repository.ProductImageRepository;
 import com.example.tileshop.service.ProductImageService;
 import lombok.RequiredArgsConstructor;
