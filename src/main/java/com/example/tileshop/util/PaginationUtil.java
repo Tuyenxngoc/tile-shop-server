@@ -2,10 +2,10 @@ package com.example.tileshop.util;
 
 import com.example.tileshop.constant.CommonConstant;
 import com.example.tileshop.constant.SortByDataConstant;
-import com.example.tileshop.domain.dto.pagination.PaginationFullRequestDto;
-import com.example.tileshop.domain.dto.pagination.PaginationRequestDto;
-import com.example.tileshop.domain.dto.pagination.PaginationSortRequestDto;
-import com.example.tileshop.domain.dto.pagination.PagingMeta;
+import com.example.tileshop.dto.request.pagination.PaginationFullRequestDto;
+import com.example.tileshop.dto.request.pagination.PaginationRequestDto;
+import com.example.tileshop.dto.request.pagination.PaginationSortRequestDto;
+import com.example.tileshop.dto.response.pagination.PagingMeta;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;

@@ -1,15 +1,17 @@
 const fs = require('fs');
 const path = require('path');
 
-// Cấu hình thư mục chứa entity và thư mục đầu ra
-const ENTITY_DIR = path.join(__dirname, 'domain/entity');
+const BASE_DIR = path.join(__dirname, '..', '..', '..', '..');
+const JAVA_CODE_DIR = path.join(BASE_DIR, 'src', 'main', 'java', 'com', 'example', 'tileshop');
+
+const ENTITY_DIR = path.join(JAVA_CODE_DIR, 'entity');
 const OUTPUT_DIRS = {
-    controllers: path.join(__dirname, 'controller'),
-    repositories: path.join(__dirname, 'repository'),
-    services: path.join(__dirname, 'service'),
-    serviceImpl: path.join(__dirname, 'service/impl'),
-    mappers: path.join(__dirname, 'domain/mapper'),
-    dtos: path.join(__dirname, 'domain/dto')
+    controllers: path.join(JAVA_CODE_DIR, 'controller'),
+    repositories: path.join(JAVA_CODE_DIR, 'repository'),
+    services: path.join(JAVA_CODE_DIR, 'service'),
+    serviceImpl: path.join(JAVA_CODE_DIR, 'service', 'impl'),
+    mappers: path.join(JAVA_CODE_DIR, 'mapper'),
+    dtos: path.join(JAVA_CODE_DIR, 'dto')
 };
 
 // Đảm bảo các thư mục đầu ra tồn tại
@@ -61,7 +63,7 @@ public class ${entity}Controller {
 function getRepositoryContent(entity) {
     return `package com.example.tileshop.repository;
 
-import com.example.tileshop.domain.entity.${entity};
+import com.example.tileshop.entity.${entity};
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -74,7 +76,7 @@ public interface ${entity}Repository extends JpaRepository<${entity}, Long> {
 function getServiceContent(entity) {
     return `package com.example.tileshop.service;
 
-import com.example.tileshop.domain.entity.${entity};
+import com.example.tileshop.entity.${entity};
 
 import java.util.List;
 
@@ -87,7 +89,7 @@ public interface ${entity}Service {
 function getServiceImplContent(entity) {
     return `package com.example.tileshop.service.impl;
 
-import com.example.tileshop.domain.entity.${entity};
+import com.example.tileshop.entity.${entity};
 import com.example.tileshop.repository.${entity}Repository;
 import com.example.tileshop.service.${entity}Service;
 import org.springframework.stereotype.Service;
@@ -109,7 +111,7 @@ public class ${entity}ServiceImpl implements ${entity}Service {
 
 // Nội dung DTO
 function getDTOContent(entity) {
-    return `package com.example.tileshop.domain.dto;
+    return `package com.example.tileshop.dto;
 
 import lombok.Data;
 
@@ -121,7 +123,7 @@ public class ${entity}DTO {
 
 // Nội dung Mapper
 function getMapperContent(entity) {
-    return `package com.example.tileshop.domain.mapper;
+    return `package com.example.tileshop.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -147,7 +149,6 @@ function generate() {
         createFile(path.join(OUTPUT_DIRS.repositories, `${entity}Repository.java`), getRepositoryContent(entity));
         createFile(path.join(OUTPUT_DIRS.services, `${entity}Service.java`), getServiceContent(entity));
         createFile(path.join(OUTPUT_DIRS.serviceImpl, `${entity}ServiceImpl.java`), getServiceImplContent(entity));
-        createFile(path.join(OUTPUT_DIRS.dtos, `${entity}DTO.java`), getDTOContent(entity));
         createFile(path.join(OUTPUT_DIRS.mappers, `${entity}Mapper.java`), getMapperContent(entity));
     });
 
