@@ -274,7 +274,8 @@ public class AuthServiceImpl implements AuthService {
 
         sendEmail(requestDto.getEmail(), "Đăng ký thành công", properties, "registerSuccess.html");
 
-        return null;
+        String message = messageUtil.getMessage(SuccessMessage.User.REGISTER);
+        return new CommonResponseDto(message, user);
     }
 
 }

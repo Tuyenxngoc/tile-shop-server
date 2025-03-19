@@ -15,6 +15,7 @@ import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -55,7 +56,7 @@ public class AuthController {
     @Operation(summary = "API Register")
     @PostMapping(UrlConstant.Auth.REGISTER)
     public ResponseEntity<?> register(@Valid @RequestBody RegisterRequestDto requestDto) {
-        return VsResponseUtil.success(authService.register(requestDto));
+        return VsResponseUtil.success(HttpStatus.CREATED, authService.register(requestDto));
     }
 
     @Operation(summary = "API forget password")

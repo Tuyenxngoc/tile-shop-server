@@ -9,9 +9,10 @@ public class SuccessMessage {
     public static class User {
         public static final String CHANGE_PASSWORD = "success.user.change-password";
         public static final String FORGET_PASSWORD = "success.user.send.password";
+        public static final String REGISTER = "success.user.register";
     }
 
     public static class Auth {
-        public static final String LOGOUT = "success.user.logout";
+        public static final String LOGOUT = "success.auth.logout";
     }
 }
