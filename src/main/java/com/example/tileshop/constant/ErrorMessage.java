@@ -48,6 +48,7 @@ public class ErrorMessage {
     public static final String INVALID_TIME = "invalid.time-format";
     public static final String INVALID_LOCAL_DATE_FORMAT = "invalid.local-date-format";
     public static final String INVALID_LOCAL_DATE_TIME_FORMAT = "invalid.local-date-time-format";
+
     //File
     public static final String INVALID_MAX_UPLOAD_SIZE_EXCEEDED = "invalid.max-upload-size-exceeded";
     public static final String INVALID_FILE_REQUIRED = "invalid.file.required";
@@ -59,18 +60,49 @@ public class ErrorMessage {
     public static class Auth {
         public static final String ERR_INCORRECT_USERNAME_PASSWORD = "exception.auth.incorrect.username-password";
         public static final String ERR_INCORRECT_PASSWORD = "exception.auth.incorrect.password";
-        public static final String ERR_INCORRECT_EMAIL = "exception.auth.incorrect.email";
         public static final String ERR_DUPLICATE_USERNAME = "exception.auth.duplicate.username";
         public static final String ERR_DUPLICATE_EMAIL = "exception.auth.duplicate.email";
-        public static final String ERR_DUPLICATE_USERNAME_EMAIL = "exception.auth.duplicate.username.email";
-        public static final String ERR_ACCOUNT_NOT_ENABLED = "exception.auth.account.not.enabled";
-        public static final String ERR_ACCOUNT_LOCKED = "exception.auth.account.locked";
         public static final String ERR_INVALID_REFRESH_TOKEN = "exception.auth.invalid.refresh.token";
-        public static final String EXPIRED_REFRESH_TOKEN = "exception.auth.expired.refresh.token";
-        public static final String INVALID_ACCESS_TOKEN = "exception.auth.invalid.access.token";
-        public static final String USER_NOT_FOUND = "exception.auth.user.not.found";
-        public static final String ERR_ACCOUNT_NOT_ACTIVE = "exception.auth.account.not.active";
-        public static final String ERR_ACCOUNT_EXPIRED = "exception.auth.account.exp";
+    }
+
+    public static class Attribute {
+        public static final String ERR_NOT_FOUND_ID = "exception.attribute.not.found.id";
+    }
+
+    public static class Cart {
+        public static final String ERR_NOT_FOUND_ID = "exception.cart.not.found.id";
+    }
+
+    public static class CartItem {
+        public static final String ERR_NOT_FOUND_ID = "exception.cart-item.not.found.id";
+    }
+
+    public static class Category {
+        public static final String ERR_NOT_FOUND_ID = "exception.category.not.found.id";
+    }
+
+    public static class Order {
+        public static final String ERR_NOT_FOUND_ID = "exception.order.not.found.id";
+    }
+
+    public static class OrderItem {
+        public static final String ERR_NOT_FOUND_ID = "exception.order-item.not.found.id";
+    }
+
+    public static class Product {
+        public static final String ERR_NOT_FOUND_ID = "exception.product.not.found.id";
+    }
+
+    public static class ProductAttribute {
+        public static final String ERR_NOT_FOUND_ID = "exception.product-attribute.not.found.id";
+    }
+
+    public static class ProductImage {
+        public static final String ERR_NOT_FOUND_ID = "exception.product-image.not.found.id";
+    }
+
+    public static class Review {
+        public static final String ERR_NOT_FOUND_ID = "exception.review.not.found.id";
     }
 
     public static class Role {
@@ -79,17 +111,11 @@ public class ErrorMessage {
     }
 
     public static class User {
-        public static final String ERR_NOT_FOUND_USERNAME_OR_EMAIL = "exception.user.not.found.username-email";
         public static final String ERR_NOT_FOUND_USERNAME = "exception.user.not.found.username";
         public static final String ERR_NOT_FOUND_EMAIL = "exception.user.not.found.email";
         public static final String ERR_NOT_FOUND_ID = "exception.user.not.found.id";
         public static final String ERR_NOT_FOUND_ACCOUNT = "exception.user.not.found.account";
-        public static final String ALREADY_VERIFIED = "exception.user.already.verified";
-        public static final String INVALID_VERIFICATION_CODE = "exception.user.invalid.verification.code";
         public static final String RATE_LIMIT = "exception.user.rate.limit";
-        public static final String INVALID_EMAIL = "exception.user.invalid.email";
-        public static final String ERR_NOT_ALLOWED_SUPER_ADMIN = "exception.user.not.allowed.super.admin";
-        public static final String ERR_DUPLICATE_USERNAME_EMAIL = "exception.user.duplicate.username.email";
     }
 
 }
