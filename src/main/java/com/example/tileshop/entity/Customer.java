@@ -39,6 +39,7 @@ public class Customer {
 
     @OneToOne
     @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "FK_CUSTOMER_USER_ID"), nullable = false)
+    @JsonIgnore
     private User user;
 
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)

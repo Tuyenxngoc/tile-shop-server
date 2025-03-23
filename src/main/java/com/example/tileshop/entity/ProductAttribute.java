@@ -1,5 +1,6 @@
 package com.example.tileshop.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -22,10 +23,12 @@ public class ProductAttribute {
 
     @ManyToOne
     @JoinColumn(name = "product_id", foreignKey = @ForeignKey(name = "FK_PRODUCT_ATTRIBUTE_PRODUCT_ID"), nullable = false)
+    @JsonIgnore
     private Product product;
 
     @ManyToOne
     @JoinColumn(name = "attribute_id", foreignKey = @ForeignKey(name = "FK_PRODUCT_ATTRIBUTE_ATTRIBUTE_ID"), nullable = false)
+    @JsonIgnore
     private Attribute attribute;
 
 }

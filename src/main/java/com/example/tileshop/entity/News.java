@@ -1,6 +1,7 @@
 package com.example.tileshop.entity;
 
 import com.example.tileshop.entity.common.DateAuditing;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -30,10 +31,12 @@ public class News extends DateAuditing {
 
     @ManyToOne
     @JoinColumn(name = "category_id", foreignKey = @ForeignKey(name = "FK_NEWS_CATEGORY_ID"), nullable = false)
+    @JsonIgnore
     private NewsCategory category;
 
     @ManyToOne
     @JoinColumn(name = "author_id", foreignKey = @ForeignKey(name = "FK_NEWS_AUTHOR_ID"), nullable = false)
+    @JsonIgnore
     private User author;
 
 }
