@@ -33,7 +33,7 @@ public class AuthController {
 
     @Operation(summary = "API Login")
     @PostMapping(UrlConstant.Auth.LOGIN)
-    public ResponseEntity<?> adminLogin(@Valid @RequestBody LoginRequestDto request) {
+    public ResponseEntity<?> login(@Valid @RequestBody LoginRequestDto request) {
         return VsResponseUtil.success(authService.login(request));
     }
 
@@ -59,10 +59,10 @@ public class AuthController {
         return VsResponseUtil.success(HttpStatus.CREATED, authService.register(requestDto));
     }
 
-    @Operation(summary = "API forget password")
-    @PostMapping(UrlConstant.Auth.FORGET_PASSWORD)
-    public ResponseEntity<?> adminForgetPassword(@Valid @RequestBody ForgetPasswordRequestDto requestDto) {
-        return VsResponseUtil.success(authService.forgetPassword(requestDto));
+    @Operation(summary = "API forgot password")
+    @PostMapping(UrlConstant.Auth.FORGOT_PASSWORD)
+    public ResponseEntity<?> forgotPassword(@Valid @RequestBody ForgotPasswordRequestDto requestDto) {
+        return VsResponseUtil.success(authService.forgotPassword(requestDto));
     }
 
     @Operation(summary = "API change password")

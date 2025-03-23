@@ -45,7 +45,7 @@ public class SuccessMessage {
 
     public static class User {
         public static final String CHANGE_PASSWORD = "success.user.change-password";
-        public static final String FORGET_PASSWORD = "success.user.send.password";
+        public static final String FORGOT_PASSWORD = "success.user.send.password";
         public static final String REGISTER = "success.user.register";
     }
 

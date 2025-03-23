@@ -17,7 +17,7 @@ public interface AuthService {
 
     TokenRefreshResponseDto refresh(TokenRefreshRequestDto request);
 
-    CommonResponseDto forgetPassword(ForgetPasswordRequestDto requestDto);
+    CommonResponseDto forgotPassword(ForgotPasswordRequestDto requestDto);
 
     CommonResponseDto changePassword(ChangePasswordRequestDto requestDto, String userId);
 

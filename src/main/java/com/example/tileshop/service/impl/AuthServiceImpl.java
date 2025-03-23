@@ -171,7 +171,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public CommonResponseDto forgetPassword(ForgetPasswordRequestDto requestDto) {
+    public CommonResponseDto forgotPassword(ForgotPasswordRequestDto requestDto) {
         User user = userRepository.findByUsernameAndEmail(requestDto.getUsername(), requestDto.getEmail())
                 .orElseThrow(() -> new NotFoundException(ErrorMessage.User.ERR_NOT_FOUND_ACCOUNT));
 
@@ -188,11 +188,11 @@ public class AuthServiceImpl implements AuthService {
         Map<String, Object> properties = new HashMap<>();
         properties.put("username", requestDto.getUsername());
         properties.put("newPassword", newPassword);
-        sendEmail(user.getEmail(), "Lấy lại mật khẩu", properties, "forgetPassword.html");
+        sendEmail(user.getEmail(), "Lấy lại mật khẩu", properties, "forgotPassword.html");
 
         emailRateLimiterService.setMailLimit(requestDto.getEmail(), 1, TimeUnit.MINUTES);
 
-        String message = messageUtil.getMessage(SuccessMessage.User.FORGET_PASSWORD);
+        String message = messageUtil.getMessage(SuccessMessage.User.FORGOT_PASSWORD);
         return new CommonResponseDto(message);
     }
 

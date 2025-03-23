@@ -45,7 +45,7 @@ public class SecurityConfig {
             //auth
             "/api/v1/auth/login",
             "/api/v1/auth/register",
-            "/api/v1/auth/forget-password",
+            "/api/v1/auth/forgot-password",
             "/api/v1/auth/refresh-token",
             //resources
             "/images/**",
