@@ -31,6 +31,9 @@ public class Product {
 
     private int stockQuantity;
 
+    @Column(nullable = false)
+    private double averageRating = 0.0;
+
     @ManyToOne
     @JoinColumn(name = "category_id", foreignKey = @ForeignKey(name = "FK_PRODUCT_CATEGORY_ID"), nullable = false)
     @JsonIgnore
