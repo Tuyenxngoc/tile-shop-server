@@ -1,9 +1,17 @@
 package com.example.tileshop.service;
 
-import com.example.tileshop.entity.Category;
-
-import java.util.List;
+import com.example.tileshop.dto.common.CommonResponseDto;
+import com.example.tileshop.dto.request.CategoryRequestDto;
+import com.example.tileshop.dto.request.pagination.PaginationFullRequestDto;
 
 public interface CategoryService {
-    List<Category> getAll();
+    CommonResponseDto save(CategoryRequestDto requestDto);
+
+    CommonResponseDto update(Long id, CategoryRequestDto requestDto);
+
+    CommonResponseDto delete(Long id);
+
+    Object findAll(PaginationFullRequestDto requestDto);
+
+    Object findById(Long id);
 }

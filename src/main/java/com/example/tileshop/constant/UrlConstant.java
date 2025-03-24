@@ -16,15 +16,87 @@ public class UrlConstant {
         public static final String GET_CURRENT_USER = PRE_FIX + "/current";
     }
 
-    public static class User {
-        private static final String PRE_FIX = "/users";
+    public static class Attribute {
+        private static final String PRE_FIX = "/attributes";
 
         public static final String CREATE = PRE_FIX;
         public static final String GET_ALL = PRE_FIX;
         public static final String GET_BY_ID = PRE_FIX + "/{id}";
         public static final String UPDATE = PRE_FIX + "/{id}";
         public static final String DELETE = PRE_FIX + "/{id}";
-        public static final String UPLOAD_IMAGES = PRE_FIX + "/upload-images";
+    }
+
+    public static class Cart {
+        private static final String PRE_FIX = "/cart";
+
+        public static final String GET = PRE_FIX;
+        public static final String CLEAR = PRE_FIX + "/clear";
+    }
+
+    public static class CartItem {
+        private static final String PRE_FIX = "/cart-items";
+
+        public static final String ADD = PRE_FIX;
+        public static final String UPDATE = PRE_FIX + "/{id}";
+        public static final String REMOVE = PRE_FIX + "/{id}";
+    }
+
+    public static class Category {
+        private static final String PRE_FIX = "/categories";
+
+        public static final String CREATE = PRE_FIX;
+        public static final String GET_ALL = PRE_FIX;
+        public static final String GET_BY_ID = PRE_FIX + "/{id}";
+        public static final String UPDATE = PRE_FIX + "/{id}";
+        public static final String DELETE = PRE_FIX + "/{id}";
+        public static final String TOGGLE_ACTIVE = PRE_FIX + "/{id}/toggle-active";
+    }
+
+    public static class Order {
+        private static final String PRE_FIX = "/orders";
+
+        public static final String CREATE = PRE_FIX;
+        public static final String GET_ALL = PRE_FIX;
+        public static final String GET_BY_ID = PRE_FIX + "/{id}";
+        public static final String UPDATE_STATUS = PRE_FIX + "/{id}/status";
+        public static final String DELETE = PRE_FIX + "/{id}";
+    }
+
+    public static class OrderItem {
+        private static final String PRE_FIX = "/order-items";
+
+        public static final String GET_ALL = PRE_FIX;
+        public static final String GET_BY_ORDER_ID = PRE_FIX + "/order/{orderId}";
+    }
+
+    public static class Product {
+        private static final String PRE_FIX = "/products";
+
+        public static final String CREATE = PRE_FIX;
+        public static final String GET_ALL = PRE_FIX;
+        public static final String GET_BY_ID = PRE_FIX + "/{id}";
+        public static final String UPDATE = PRE_FIX + "/{id}";
+        public static final String DELETE = PRE_FIX + "/{id}";
+    }
+
+    public static class ProductAttribute {
+        private static final String PRE_FIX = "/product-attributes";
+
+        public static final String GET_BY_PRODUCT_ID = PRE_FIX + "/product/{productId}";
+    }
+
+    public static class ProductImage {
+        private static final String PRE_FIX = "/product-images";
+
+        public static final String UPLOAD = PRE_FIX + "/upload";
+        public static final String DELETE = PRE_FIX + "/{id}";
+    }
+
+    public static class Review {
+        private static final String PRE_FIX = "/reviews";
+
+        public static final String CREATE = PRE_FIX;
+        public static final String GET_BY_PRODUCT_ID = PRE_FIX + "/product/{productId}";
     }
 
     public static class Role {
@@ -35,6 +107,17 @@ public class UrlConstant {
         public static final String GET_BY_ID = PRE_FIX + "/{id}";
         public static final String UPDATE = PRE_FIX + "/{id}";
         public static final String DELETE = PRE_FIX + "/{id}";
+    }
+
+    public static class User {
+        private static final String PRE_FIX = "/users";
+
+        public static final String CREATE = PRE_FIX;
+        public static final String GET_ALL = PRE_FIX;
+        public static final String GET_BY_ID = PRE_FIX + "/{id}";
+        public static final String UPDATE = PRE_FIX + "/{id}";
+        public static final String DELETE = PRE_FIX + "/{id}";
+        public static final String UPLOAD_IMAGES = PRE_FIX + "/upload-images";
     }
 
 }

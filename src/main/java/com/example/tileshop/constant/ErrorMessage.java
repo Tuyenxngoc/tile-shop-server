@@ -79,6 +79,7 @@ public class ErrorMessage {
 
     public static class Category {
         public static final String ERR_NOT_FOUND_ID = "exception.category.not.found.id";
+        public static final String ERR_DUPLICATE_NAME = "exception.category.duplicate.name";
     }
 
     public static class Order {
