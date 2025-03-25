@@ -1,5 +1,6 @@
 package com.example.tileshop.entity;
 
+import com.example.tileshop.entity.common.DateAuditing;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
@@ -14,8 +15,9 @@ import java.util.List;
 @AllArgsConstructor
 
 @Entity
-@Table(name = "attributes")
-public class Attribute {
+@Table(name = "attributes",
+        uniqueConstraints = @UniqueConstraint(name = "UN_ATTRIBUTE_NAME", columnNames = "name"))
+public class Attribute extends DateAuditing {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

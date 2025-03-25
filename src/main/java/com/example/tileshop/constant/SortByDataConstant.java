@@ -2,11 +2,13 @@ package com.example.tileshop.constant;
 
 public enum SortByDataConstant implements SortByInterface {
 
-    Attribute {
+    ATTRIBUTE {
         @Override
         public String getSortBy(String sortBy) {
             return switch (sortBy) {
-
+                case "name" -> "name";
+                case "createdDate" -> "createdDate";
+                case "lastModifiedDate" -> "lastModifiedDate";
                 default -> "id";
             };
         }
@@ -36,7 +38,7 @@ public enum SortByDataConstant implements SortByInterface {
         @Override
         public String getSortBy(String sortBy) {
             return switch (sortBy) {
-
+                case "name" -> "name";
                 default -> "id";
             };
         }
