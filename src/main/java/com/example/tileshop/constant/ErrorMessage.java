@@ -80,6 +80,8 @@ public class ErrorMessage {
     public static class Category {
         public static final String ERR_NOT_FOUND_ID = "exception.category.not.found.id";
         public static final String ERR_DUPLICATE_NAME = "exception.category.duplicate.name";
+        public static final String ERR_SELF_PARENT = "exception.category.self.parent";
+        public static final String ERR_CHILD_AS_PARENT = "exception.category.child.as.parent";
     }
 
     public static class Order {

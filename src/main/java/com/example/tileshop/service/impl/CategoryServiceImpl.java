@@ -8,6 +8,7 @@ import com.example.tileshop.dto.request.pagination.PaginationFullRequestDto;
 import com.example.tileshop.entity.Attribute;
 import com.example.tileshop.entity.Category;
 import com.example.tileshop.entity.CategoryAttribute;
+import com.example.tileshop.exception.BadRequestException;
 import com.example.tileshop.exception.ConflictException;
 import com.example.tileshop.exception.NotFoundException;
 import com.example.tileshop.repository.AttributeRepository;
@@ -49,13 +50,9 @@ public class CategoryServiceImpl implements CategoryService {
             parentCategory = getEntity(requestDto.getParentId());
         }
 
-        List<Attribute> attributes = new ArrayList<>();
+        List<Attribute> attributes = null;
         if (requestDto.getAttributeIds() != null) {
-            for (Long id : requestDto.getAttributeIds()) {
-                Attribute attribute = attributeRepository.findById(id)
-                        .orElseThrow(() -> new NotFoundException(ErrorMessage.Attribute.ERR_NOT_FOUND_ID, id));
-                attributes.add(attribute);
-            }
+            attributes = attributeRepository.findAllById(requestDto.getAttributeIds());
         }
 
         Category category = new Category();
@@ -64,16 +61,18 @@ public class CategoryServiceImpl implements CategoryService {
 
         categoryRepository.save(category);
 
-        List<CategoryAttribute> categoryAttributes = new ArrayList<>();
-        for (Attribute attribute : attributes) {
-            CategoryAttribute categoryAttribute = new CategoryAttribute();
-            categoryAttribute.setCategory(category);
-            categoryAttribute.setAttribute(attribute);
+        if (attributes != null) {
+            List<CategoryAttribute> categoryAttributes = new ArrayList<>();
+            for (Attribute attribute : attributes) {
+                CategoryAttribute categoryAttribute = new CategoryAttribute();
+                categoryAttribute.setCategory(category);
+                categoryAttribute.setAttribute(attribute);
 
-            categoryAttributes.add(categoryAttribute);
+                categoryAttributes.add(categoryAttribute);
+            }
+
+            categoryAttributeRepository.saveAll(categoryAttributes);
         }
-
-        categoryAttributeRepository.saveAll(categoryAttributes);
 
         String message = messageUtil.getMessage(SuccessMessage.CREATE);
         return new CommonResponseDto(message, category);
@@ -81,7 +80,36 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public CommonResponseDto update(Long id, CategoryRequestDto requestDto) {
+        Category category = getEntity(id);
+
+        if (!category.getName().equals(requestDto.getName()) && categoryRepository.existsByName(requestDto.getName())) {
+            throw new ConflictException(ErrorMessage.Category.ERR_DUPLICATE_NAME, requestDto.getName());
+        }
+
+        if (requestDto.getParentId() != null) {
+            if (requestDto.getParentId().equals(id)) {
+                throw new BadRequestException(ErrorMessage.Category.ERR_SELF_PARENT);
+            }
+
+            Category newParent = getEntity(requestDto.getParentId());
+            if (isChildCategory(id, newParent)) {
+                throw new BadRequestException(ErrorMessage.Category.ERR_CHILD_AS_PARENT);
+            }
+
+            category.setParent(newParent);
+        }
+
         return null;
+    }
+
+    private boolean isChildCategory(Long id, Category parentCategory) {
+        while (parentCategory != null) {
+            if (parentCategory.getId().equals(id)) {
+                return true;
+            }
+            parentCategory = parentCategory.getParent();
+        }
+        return false;
     }
 
     @Override
