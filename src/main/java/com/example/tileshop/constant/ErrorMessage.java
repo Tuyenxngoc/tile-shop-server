@@ -82,6 +82,7 @@ public class ErrorMessage {
         public static final String ERR_DUPLICATE_NAME = "exception.category.duplicate.name";
         public static final String ERR_SELF_PARENT = "exception.category.self.parent";
         public static final String ERR_CHILD_AS_PARENT = "exception.category.child.as.parent";
+        public static final String ERR_HAS_CHILDREN = "exception.category.has.children";
     }
 
     public static class Order {

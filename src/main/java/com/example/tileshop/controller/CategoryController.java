@@ -2,7 +2,7 @@ package com.example.tileshop.controller;
 
 import com.example.tileshop.annotation.RestApiV1;
 import com.example.tileshop.constant.UrlConstant;
-import com.example.tileshop.dto.request.CategoryRequestDto;
+import com.example.tileshop.dto.category.CategoryRequestDto;
 import com.example.tileshop.dto.request.pagination.PaginationFullRequestDto;
 import com.example.tileshop.service.CategoryService;
 import com.example.tileshop.util.VsResponseUtil;

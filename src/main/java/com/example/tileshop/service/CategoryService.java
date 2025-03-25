@@ -1,8 +1,10 @@
 package com.example.tileshop.service;
 
+import com.example.tileshop.dto.category.CategoryRequestDto;
+import com.example.tileshop.dto.category.CategoryResponseDTO;
 import com.example.tileshop.dto.common.CommonResponseDto;
-import com.example.tileshop.dto.request.CategoryRequestDto;
 import com.example.tileshop.dto.request.pagination.PaginationFullRequestDto;
+import com.example.tileshop.dto.response.pagination.PaginationResponseDto;
 
 public interface CategoryService {
     CommonResponseDto save(CategoryRequestDto requestDto);
@@ -11,7 +13,7 @@ public interface CategoryService {
 
     CommonResponseDto delete(Long id);
 
-    Object findAll(PaginationFullRequestDto requestDto);
+    PaginationResponseDto<CategoryResponseDTO> findAll(PaginationFullRequestDto requestDto);
 
-    Object findById(Long id);
+    CategoryResponseDTO findById(Long id);
 }

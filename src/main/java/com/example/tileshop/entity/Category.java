@@ -41,7 +41,7 @@ public class Category {
     @JsonIgnore
     private List<Product> products = new ArrayList<>();
 
-    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     @JsonIgnore
     private List<CategoryAttribute> categoryAttributes = new ArrayList<>();
 
