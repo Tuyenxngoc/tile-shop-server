@@ -1,4 +1,4 @@
-package com.example.tileshop.dto.request.auth;
+package com.example.tileshop.dto.auth;
 
 import com.example.tileshop.constant.ErrorMessage;
 import jakarta.validation.constraints.NotBlank;
@@ -11,7 +11,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class TokenRefreshRequestDto {
+public class TokenRefreshRequestDTO {
 
     @NotBlank(message = ErrorMessage.INVALID_NOT_BLANK_FIELD)
     private String refreshToken;

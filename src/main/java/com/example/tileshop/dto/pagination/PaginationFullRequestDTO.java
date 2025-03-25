@@ -1,4 +1,4 @@
-package com.example.tileshop.dto.request.pagination;
+package com.example.tileshop.dto.pagination;
 
 import com.example.tileshop.constant.CommonConstant;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -10,7 +10,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class PaginationFullRequestDto extends PaginationSortRequestDto {
+public class PaginationFullRequestDTO extends PaginationSortRequestDTO {
 
     @Parameter(description = "Keyword to search")
     private String keyword = CommonConstant.EMPTY_STRING;

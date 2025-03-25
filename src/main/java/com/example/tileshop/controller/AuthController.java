@@ -3,7 +3,7 @@ package com.example.tileshop.controller;
 import com.example.tileshop.annotation.CurrentUser;
 import com.example.tileshop.annotation.RestApiV1;
 import com.example.tileshop.constant.UrlConstant;
-import com.example.tileshop.dto.request.auth.*;
+import com.example.tileshop.dto.auth.*;
 import com.example.tileshop.security.CustomUserDetails;
 import com.example.tileshop.service.AuthService;
 import com.example.tileshop.util.VsResponseUtil;
@@ -33,7 +33,7 @@ public class AuthController {
 
     @Operation(summary = "API Login")
     @PostMapping(UrlConstant.Auth.LOGIN)
-    public ResponseEntity<?> login(@Valid @RequestBody LoginRequestDto request) {
+    public ResponseEntity<?> login(@Valid @RequestBody LoginRequestDTO request) {
         return VsResponseUtil.success(authService.login(request));
     }
 
@@ -49,29 +49,29 @@ public class AuthController {
 
     @Operation(summary = "API Refresh token")
     @PostMapping(UrlConstant.Auth.REFRESH_TOKEN)
-    public ResponseEntity<?> refresh(@Valid @RequestBody TokenRefreshRequestDto tokenRefreshRequestDto) {
-        return VsResponseUtil.success(authService.refresh(tokenRefreshRequestDto));
+    public ResponseEntity<?> refresh(@Valid @RequestBody TokenRefreshRequestDTO tokenRefreshRequestDTO) {
+        return VsResponseUtil.success(authService.refresh(tokenRefreshRequestDTO));
     }
 
     @Operation(summary = "API Register")
     @PostMapping(UrlConstant.Auth.REGISTER)
-    public ResponseEntity<?> register(@Valid @RequestBody RegisterRequestDto requestDto) {
-        return VsResponseUtil.success(HttpStatus.CREATED, authService.register(requestDto));
+    public ResponseEntity<?> register(@Valid @RequestBody RegisterRequestDTO requestDTO) {
+        return VsResponseUtil.success(HttpStatus.CREATED, authService.register(requestDTO));
     }
 
     @Operation(summary = "API forgot password")
     @PostMapping(UrlConstant.Auth.FORGOT_PASSWORD)
-    public ResponseEntity<?> forgotPassword(@Valid @RequestBody ForgotPasswordRequestDto requestDto) {
-        return VsResponseUtil.success(authService.forgotPassword(requestDto));
+    public ResponseEntity<?> forgotPassword(@Valid @RequestBody ForgotPasswordRequestDTO requestDTO) {
+        return VsResponseUtil.success(authService.forgotPassword(requestDTO));
     }
 
     @Operation(summary = "API change password")
     @PatchMapping(UrlConstant.Auth.CHANGE_PASSWORD)
     public ResponseEntity<?> changePassword(
-            @Valid @RequestBody ChangePasswordRequestDto requestDto,
+            @Valid @RequestBody ChangePasswordRequestDTO requestDTO,
             @CurrentUser CustomUserDetails userDetails
     ) {
-        return VsResponseUtil.success(authService.changePassword(requestDto, userDetails.getUserId()));
+        return VsResponseUtil.success(authService.changePassword(requestDTO, userDetails.getUserId()));
     }
 
     @Operation(summary = "API get current user login")

@@ -10,7 +10,7 @@ import lombok.Setter;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CommonResponseDto {
+public class CommonResponseDTO {
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Boolean status;
@@ -19,12 +19,12 @@ public class CommonResponseDto {
 
     private Object data;
 
-    public CommonResponseDto(String message) {
+    public CommonResponseDTO(String message) {
         this.status = null;
         this.message = message;
     }
 
-    public CommonResponseDto(String message, Object data) {
+    public CommonResponseDTO(String message, Object data) {
         this.status = null;
         this.message = message;
         this.data = data;

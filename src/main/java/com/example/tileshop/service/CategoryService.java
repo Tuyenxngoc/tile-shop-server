@@ -1,19 +1,19 @@
 package com.example.tileshop.service;
 
-import com.example.tileshop.dto.category.CategoryRequestDto;
+import com.example.tileshop.dto.category.CategoryRequestDTO;
 import com.example.tileshop.dto.category.CategoryResponseDTO;
-import com.example.tileshop.dto.common.CommonResponseDto;
-import com.example.tileshop.dto.request.pagination.PaginationFullRequestDto;
-import com.example.tileshop.dto.response.pagination.PaginationResponseDto;
+import com.example.tileshop.dto.common.CommonResponseDTO;
+import com.example.tileshop.dto.pagination.PaginationFullRequestDTO;
+import com.example.tileshop.dto.pagination.PaginationResponseDTO;
 
 public interface CategoryService {
-    CommonResponseDto save(CategoryRequestDto requestDto);
+    CommonResponseDTO save(CategoryRequestDTO requestDTO);
 
-    CommonResponseDto update(Long id, CategoryRequestDto requestDto);
+    CommonResponseDTO update(Long id, CategoryRequestDTO requestDTO);
 
-    CommonResponseDto delete(Long id);
+    CommonResponseDTO delete(Long id);
 
-    PaginationResponseDto<CategoryResponseDTO> findAll(PaginationFullRequestDto requestDto);
+    PaginationResponseDTO<CategoryResponseDTO> findAll(PaginationFullRequestDTO requestDTO);
 
     CategoryResponseDTO findById(Long id);
 }

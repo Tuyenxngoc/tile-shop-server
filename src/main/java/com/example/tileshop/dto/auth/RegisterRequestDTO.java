@@ -1,4 +1,4 @@
-package com.example.tileshop.dto.request.auth;
+package com.example.tileshop.dto.auth;
 
 import com.example.tileshop.constant.CommonConstant;
 import com.example.tileshop.constant.ErrorMessage;
@@ -15,7 +15,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class RegisterRequestDto {
+public class RegisterRequestDTO {
 
     @NotBlank(message = ErrorMessage.INVALID_NOT_BLANK_FIELD)
     @Pattern(regexp = CommonConstant.REGEXP_FULL_NAME, message = ErrorMessage.INVALID_FORMAT_NAME)

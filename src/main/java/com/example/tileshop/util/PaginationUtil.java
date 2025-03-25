@@ -2,10 +2,10 @@ package com.example.tileshop.util;
 
 import com.example.tileshop.constant.CommonConstant;
 import com.example.tileshop.constant.SortByDataConstant;
-import com.example.tileshop.dto.request.pagination.PaginationFullRequestDto;
-import com.example.tileshop.dto.request.pagination.PaginationRequestDto;
-import com.example.tileshop.dto.request.pagination.PaginationSortRequestDto;
-import com.example.tileshop.dto.response.pagination.PagingMeta;
+import com.example.tileshop.dto.pagination.PaginationFullRequestDTO;
+import com.example.tileshop.dto.pagination.PaginationRequestDTO;
+import com.example.tileshop.dto.pagination.PaginationSortRequestDTO;
+import com.example.tileshop.dto.pagination.PagingMeta;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -15,17 +15,17 @@ import java.util.List;
 
 public class PaginationUtil {
 
-    public static Pageable buildPageable(PaginationRequestDto request) {
+    public static Pageable buildPageable(PaginationRequestDTO request) {
         return PageRequest.of(request.getPageNum(), request.getPageSize());
     }
 
-    public static Pageable buildPageable(PaginationSortRequestDto requestDto, SortByDataConstant constant) {
-        Sort sort = Sort.by(requestDto.getSortBy(constant));
-        sort = requestDto.getIsAscending() ? sort.ascending() : sort.descending();
-        return PageRequest.of(requestDto.getPageNum(), requestDto.getPageSize(), sort);
+    public static Pageable buildPageable(PaginationSortRequestDTO requestDTO, SortByDataConstant constant) {
+        Sort sort = Sort.by(requestDTO.getSortBy(constant));
+        sort = requestDTO.getIsAscending() ? sort.ascending() : sort.descending();
+        return PageRequest.of(requestDTO.getPageNum(), requestDTO.getPageSize(), sort);
     }
 
-    public static Pageable buildPageable(PaginationRequestDto requestDto, List<String> sortByFields, List<Boolean> sortDirections) {
+    public static Pageable buildPageable(PaginationRequestDTO requestDTO, List<String> sortByFields, List<Boolean> sortDirections) {
         if (sortByFields.size() != sortDirections.size()) {
             throw new IllegalArgumentException("Number of sort fields and sort directions must match");
         }
@@ -35,20 +35,20 @@ public class PaginationUtil {
                 .toArray(Sort.Order[]::new)
         );
 
-        return PageRequest.of(requestDto.getPageNum(), requestDto.getPageSize(), sort);
+        return PageRequest.of(requestDTO.getPageNum(), requestDTO.getPageSize(), sort);
     }
 
-    public static <T> PagingMeta buildPagingMeta(PaginationRequestDto request, Page<T> pages) {
+    public static <T> PagingMeta buildPagingMeta(PaginationRequestDTO request, Page<T> pages) {
         return buildPagingMeta(request.getPageNum(), request.getPageSize(), null, null, pages);
     }
 
-    public static <T> PagingMeta buildPagingMeta(PaginationSortRequestDto request, SortByDataConstant constant, Page<T> pages) {
+    public static <T> PagingMeta buildPagingMeta(PaginationSortRequestDTO request, SortByDataConstant constant, Page<T> pages) {
         String sortBy = request.getSortBy(constant);
         String sortOrder = request.getIsAscending() ? CommonConstant.SORT_TYPE_ASC : CommonConstant.SORT_TYPE_DESC;
         return buildPagingMeta(request.getPageNum(), request.getPageSize(), sortBy, sortOrder, pages);
     }
 
-    public static <T> PagingMeta buildPagingMeta(PaginationFullRequestDto request, SortByDataConstant constant, Page<T> pages) {
+    public static <T> PagingMeta buildPagingMeta(PaginationFullRequestDTO request, SortByDataConstant constant, Page<T> pages) {
         String sortBy = request.getSortBy(constant);
         String sortOrder = request.getIsAscending() ? CommonConstant.SORT_TYPE_ASC : CommonConstant.SORT_TYPE_DESC;
         return buildPagingMeta(request.getPageNum(), request.getPageSize(), sortBy, sortOrder, pages, request.getKeyword(), request.getSearchBy());

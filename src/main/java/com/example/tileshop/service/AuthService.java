@@ -1,28 +1,25 @@
 package com.example.tileshop.service;
 
-import com.example.tileshop.dto.common.CommonResponseDto;
-import com.example.tileshop.dto.request.auth.*;
-import com.example.tileshop.dto.response.auth.CurrentUserLoginResponseDto;
-import com.example.tileshop.dto.response.auth.LoginResponseDto;
-import com.example.tileshop.dto.response.auth.TokenRefreshResponseDto;
+import com.example.tileshop.dto.auth.*;
+import com.example.tileshop.dto.common.CommonResponseDTO;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.core.Authentication;
 
 public interface AuthService {
 
-    LoginResponseDto login(LoginRequestDto request);
+    LoginResponseDTO login(LoginRequestDTO request);
 
-    CommonResponseDto logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication);
+    CommonResponseDTO logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication);
 
-    TokenRefreshResponseDto refresh(TokenRefreshRequestDto request);
+    TokenRefreshResponseDTO refresh(TokenRefreshRequestDTO request);
 
-    CommonResponseDto forgotPassword(ForgotPasswordRequestDto requestDto);
+    CommonResponseDTO forgotPassword(ForgotPasswordRequestDTO requestDTO);
 
-    CommonResponseDto changePassword(ChangePasswordRequestDto requestDto, String userId);
+    CommonResponseDTO changePassword(ChangePasswordRequestDTO requestDTO, String userId);
 
-    CurrentUserLoginResponseDto getCurrentUser(String userId);
+    CurrentUserLoginResponseDTO getCurrentUser(String userId);
 
-    CommonResponseDto register(RegisterRequestDto requestDto);
+    CommonResponseDTO register(RegisterRequestDTO requestDTO);
 
 }

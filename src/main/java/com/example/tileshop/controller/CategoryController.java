@@ -2,8 +2,8 @@ package com.example.tileshop.controller;
 
 import com.example.tileshop.annotation.RestApiV1;
 import com.example.tileshop.constant.UrlConstant;
-import com.example.tileshop.dto.category.CategoryRequestDto;
-import com.example.tileshop.dto.request.pagination.PaginationFullRequestDto;
+import com.example.tileshop.dto.category.CategoryRequestDTO;
+import com.example.tileshop.dto.pagination.PaginationFullRequestDTO;
 import com.example.tileshop.service.CategoryService;
 import com.example.tileshop.util.VsResponseUtil;
 import io.swagger.v3.oas.annotations.Operation;
@@ -29,8 +29,8 @@ public class CategoryController {
     @Operation(summary = "API Create Category")
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping(UrlConstant.Category.CREATE)
-    public ResponseEntity<?> createCategory(@Valid @RequestBody CategoryRequestDto requestDto) {
-        return VsResponseUtil.success(HttpStatus.CREATED, categoryService.save(requestDto));
+    public ResponseEntity<?> createCategory(@Valid @RequestBody CategoryRequestDTO requestDTO) {
+        return VsResponseUtil.success(HttpStatus.CREATED, categoryService.save(requestDTO));
     }
 
     @Operation(summary = "API Update Category")
@@ -38,9 +38,9 @@ public class CategoryController {
     @PutMapping(UrlConstant.Category.UPDATE)
     public ResponseEntity<?> updateCategory(
             @PathVariable Long id,
-            @Valid @RequestBody CategoryRequestDto requestDto
+            @Valid @RequestBody CategoryRequestDTO requestDTO
     ) {
-        return VsResponseUtil.success(categoryService.update(id, requestDto));
+        return VsResponseUtil.success(categoryService.update(id, requestDTO));
     }
 
     @Operation(summary = "API Delete Category")
@@ -53,8 +53,8 @@ public class CategoryController {
     @Operation(summary = "API Get Categories")
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping(UrlConstant.Category.GET_ALL)
-    public ResponseEntity<?> getCategories(@ParameterObject PaginationFullRequestDto requestDto) {
-        return VsResponseUtil.success(categoryService.findAll(requestDto));
+    public ResponseEntity<?> getCategories(@ParameterObject PaginationFullRequestDTO requestDTO) {
+        return VsResponseUtil.success(categoryService.findAll(requestDTO));
     }
 
     @Operation(summary = "API Get Category By Id")

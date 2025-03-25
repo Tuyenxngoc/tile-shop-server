@@ -11,7 +11,7 @@ import java.util.Map;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class DataMailDto {
+public class DataMailDTO {
 
     private String to;
 

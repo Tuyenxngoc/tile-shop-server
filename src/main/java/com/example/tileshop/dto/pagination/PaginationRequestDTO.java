@@ -1,4 +1,4 @@
-package com.example.tileshop.dto.request.pagination;
+package com.example.tileshop.dto.pagination;
 
 import com.example.tileshop.constant.CommonConstant;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class PaginationRequestDto {
+public class PaginationRequestDTO {
 
     @Parameter(description = "Page you want to retrieve (0..N)")
     private Integer pageNum = CommonConstant.PAGE_NUM_DEFAULT;

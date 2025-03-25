@@ -11,7 +11,7 @@ import java.util.Set;
 
 @Getter
 @Setter
-public class CategoryRequestDto {
+public class CategoryRequestDTO {
 
     @NotBlank(message = ErrorMessage.INVALID_NOT_BLANK_FIELD)
     @Size(min = 3, max = 100, message = ErrorMessage.INVALID_TEXT_LENGTH)

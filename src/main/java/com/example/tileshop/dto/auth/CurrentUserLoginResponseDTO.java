@@ -1,4 +1,4 @@
-package com.example.tileshop.dto.response.auth;
+package com.example.tileshop.dto.auth;
 
 import com.example.tileshop.constant.RoleConstant;
 import lombok.Builder;
@@ -8,7 +8,7 @@ import java.util.Set;
 
 @Getter
 @Builder
-public class CurrentUserLoginResponseDto {
+public class CurrentUserLoginResponseDTO {
 
     private String userId;
 

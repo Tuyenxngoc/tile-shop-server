@@ -3,12 +3,9 @@ package com.example.tileshop.service.impl;
 import com.example.tileshop.constant.ErrorMessage;
 import com.example.tileshop.constant.RoleConstant;
 import com.example.tileshop.constant.SuccessMessage;
-import com.example.tileshop.dto.common.CommonResponseDto;
-import com.example.tileshop.dto.common.DataMailDto;
-import com.example.tileshop.dto.request.auth.*;
-import com.example.tileshop.dto.response.auth.CurrentUserLoginResponseDto;
-import com.example.tileshop.dto.response.auth.LoginResponseDto;
-import com.example.tileshop.dto.response.auth.TokenRefreshResponseDto;
+import com.example.tileshop.dto.auth.*;
+import com.example.tileshop.dto.common.CommonResponseDTO;
+import com.example.tileshop.dto.common.DataMailDTO;
 import com.example.tileshop.entity.Cart;
 import com.example.tileshop.entity.Customer;
 import com.example.tileshop.entity.Role;
@@ -85,14 +82,14 @@ public class AuthServiceImpl implements AuthService {
     CustomUserDetailsService customUserDetailsService;
 
     private void sendEmail(String to, String subject, Map<String, Object> properties, String templateName) {
-        DataMailDto mailDto = new DataMailDto();
-        mailDto.setTo(to);
-        mailDto.setSubject(subject);
-        mailDto.setProperties(properties);
+        DataMailDTO dataMailDTO = new DataMailDTO();
+        dataMailDTO.setTo(to);
+        dataMailDTO.setSubject(subject);
+        dataMailDTO.setProperties(properties);
 
         CompletableFuture.runAsync(() -> {
             try {
-                sendMailUtil.sendEmailWithHTML(mailDto, templateName);
+                sendMailUtil.sendEmailWithHTML(dataMailDTO, templateName);
             } catch (MessagingException e) {
                 log.error("Failed to send email to [{}] with subject [{}]. Error: {}", to, subject, e.getMessage(), e);
             } catch (Exception e) {
@@ -102,7 +99,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public LoginResponseDto login(LoginRequestDto request) {
+    public LoginResponseDTO login(LoginRequestDTO request) {
         try {
             Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
 
@@ -112,7 +109,7 @@ public class AuthServiceImpl implements AuthService {
             String accessToken = jwtTokenProvider.generateToken(customUserDetails, false);
             String refreshToken = jwtTokenProvider.generateToken(customUserDetails, true);
 
-            return new LoginResponseDto(accessToken, refreshToken);
+            return new LoginResponseDTO(accessToken, refreshToken);
         } catch (AuthenticationException e) {
             throw new UnauthorizedException(ErrorMessage.Auth.ERR_INCORRECT_USERNAME_PASSWORD);
         } catch (UnauthorizedException e) {
@@ -124,7 +121,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public CommonResponseDto logout(
+    public CommonResponseDTO logout(
             HttpServletRequest request,
             HttpServletResponse response,
             Authentication authentication
@@ -146,11 +143,11 @@ public class AuthServiceImpl implements AuthService {
         logout.logout(request, response, authentication);
 
         String message = messageUtil.getMessage(SuccessMessage.Auth.LOGOUT);
-        return new CommonResponseDto(message);
+        return new CommonResponseDTO(message);
     }
 
     @Override
-    public TokenRefreshResponseDto refresh(TokenRefreshRequestDto request) {
+    public TokenRefreshResponseDTO refresh(TokenRefreshRequestDTO request) {
         String refreshToken = request.getRefreshToken();
 
         if (!jwtTokenProvider.validateToken(refreshToken) ||
@@ -167,16 +164,16 @@ public class AuthServiceImpl implements AuthService {
 
         jwtBlacklistService.blacklistRefreshToken(refreshToken);
 
-        return new TokenRefreshResponseDto(newAccessToken, newRefreshToken);
+        return new TokenRefreshResponseDTO(newAccessToken, newRefreshToken);
     }
 
     @Override
-    public CommonResponseDto forgotPassword(ForgotPasswordRequestDto requestDto) {
-        User user = userRepository.findByUsernameAndEmail(requestDto.getUsername(), requestDto.getEmail())
+    public CommonResponseDTO forgotPassword(ForgotPasswordRequestDTO requestDTO) {
+        User user = userRepository.findByUsernameAndEmail(requestDTO.getUsername(), requestDTO.getEmail())
                 .orElseThrow(() -> new NotFoundException(ErrorMessage.User.ERR_NOT_FOUND_ACCOUNT));
 
         // Kiểm tra giới hạn thời gian gửi email
-        if (emailRateLimiterService.isMailLimited(requestDto.getEmail())) {
+        if (emailRateLimiterService.isMailLimited(requestDTO.getEmail())) {
             throw new BadRequestException(ErrorMessage.User.RATE_LIMIT);
         }
 
@@ -186,31 +183,31 @@ public class AuthServiceImpl implements AuthService {
         userRepository.save(user);
 
         Map<String, Object> properties = new HashMap<>();
-        properties.put("username", requestDto.getUsername());
+        properties.put("username", requestDTO.getUsername());
         properties.put("newPassword", newPassword);
         sendEmail(user.getEmail(), "Lấy lại mật khẩu", properties, "forgotPassword.html");
 
-        emailRateLimiterService.setMailLimit(requestDto.getEmail(), 1, TimeUnit.MINUTES);
+        emailRateLimiterService.setMailLimit(requestDTO.getEmail(), 1, TimeUnit.MINUTES);
 
         String message = messageUtil.getMessage(SuccessMessage.User.FORGOT_PASSWORD);
-        return new CommonResponseDto(message);
+        return new CommonResponseDTO(message);
     }
 
     @Override
-    public CommonResponseDto changePassword(ChangePasswordRequestDto requestDto, String userId) {
-        if (!requestDto.getPassword().equals(requestDto.getRepeatPassword())) {
+    public CommonResponseDTO changePassword(ChangePasswordRequestDTO requestDTO, String userId) {
+        if (!requestDTO.getPassword().equals(requestDTO.getRepeatPassword())) {
             throw new BadRequestException(ErrorMessage.INVALID_REPEAT_PASSWORD);
         }
 
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException(ErrorMessage.User.ERR_NOT_FOUND_USERNAME, userId));
 
-        boolean isCorrectPassword = passwordEncoder.matches(requestDto.getOldPassword(), user.getPassword());
+        boolean isCorrectPassword = passwordEncoder.matches(requestDTO.getOldPassword(), user.getPassword());
         if (!isCorrectPassword) {
             throw new BadRequestException(ErrorMessage.Auth.ERR_INCORRECT_PASSWORD);
         }
 
-        user.setPassword(passwordEncoder.encode(requestDto.getPassword()));
+        user.setPassword(passwordEncoder.encode(requestDTO.getPassword()));
         userRepository.save(user);
 
         Map<String, Object> properties = new HashMap<>();
@@ -218,15 +215,15 @@ public class AuthServiceImpl implements AuthService {
         sendEmail(user.getEmail(), "Đổi mật khẩu thành công", properties, "changePassword.html");
 
         String message = messageUtil.getMessage(SuccessMessage.User.CHANGE_PASSWORD);
-        return new CommonResponseDto(message);
+        return new CommonResponseDTO(message);
     }
 
     @Override
-    public CurrentUserLoginResponseDto getCurrentUser(String userId) {
+    public CurrentUserLoginResponseDTO getCurrentUser(String userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException(ErrorMessage.User.ERR_NOT_FOUND_ID, userId));
 
-        return CurrentUserLoginResponseDto.builder()
+        return CurrentUserLoginResponseDTO.builder()
                 .userId(user.getId())
                 .username(user.getUsername())
                 .roleNames(Set.of(user.getRole().getCode()))
@@ -234,15 +231,15 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public CommonResponseDto register(RegisterRequestDto requestDto) {
-        if (!requestDto.getPassword().equals(requestDto.getRepeatPassword())) {
+    public CommonResponseDTO register(RegisterRequestDTO requestDTO) {
+        if (!requestDTO.getPassword().equals(requestDTO.getRepeatPassword())) {
             throw new BadRequestException(ErrorMessage.INVALID_REPEAT_PASSWORD);
         }
-        boolean isUsernameExists = userRepository.existsByUsername(requestDto.getUsername());
+        boolean isUsernameExists = userRepository.existsByUsername(requestDTO.getUsername());
         if (isUsernameExists) {
             throw new ConflictException(ErrorMessage.Auth.ERR_DUPLICATE_USERNAME);
         }
-        boolean isEmailExists = userRepository.existsByEmail(requestDto.getEmail());
+        boolean isEmailExists = userRepository.existsByEmail(requestDTO.getEmail());
         if (isEmailExists) {
             throw new ConflictException(ErrorMessage.Auth.ERR_DUPLICATE_EMAIL);
         }
@@ -250,16 +247,16 @@ public class AuthServiceImpl implements AuthService {
         Role role = roleRepository.findByCode(RoleConstant.ROLE_USER).orElseThrow(() -> new RuntimeException("Role ROLE_USER not found"));
 
         User user = new User();
-        user.setUsername(requestDto.getUsername());
-        user.setPassword(passwordEncoder.encode(requestDto.getPassword()));
-        user.setEmail(requestDto.getEmail());
+        user.setUsername(requestDTO.getUsername());
+        user.setPassword(passwordEncoder.encode(requestDTO.getPassword()));
+        user.setEmail(requestDTO.getEmail());
         user.setRole(role);
 
         userRepository.save(user);
 
         Customer customer = new Customer();
-        customer.setFullName(requestDto.getFullName());
-        customer.setPhoneNumber(requestDto.getPhoneNumber());
+        customer.setFullName(requestDTO.getFullName());
+        customer.setPhoneNumber(requestDTO.getPhoneNumber());
         customer.setUser(user);
 
         customerRepository.save(customer);
@@ -269,13 +266,13 @@ public class AuthServiceImpl implements AuthService {
         cartRepository.save(cart);
 
         Map<String, Object> properties = new HashMap<>();
-        properties.put("username", requestDto.getUsername());
-        properties.put("password", requestDto.getPassword());
+        properties.put("username", requestDTO.getUsername());
+        properties.put("password", requestDTO.getPassword());
 
-        sendEmail(requestDto.getEmail(), "Đăng ký thành công", properties, "registerSuccess.html");
+        sendEmail(requestDTO.getEmail(), "Đăng ký thành công", properties, "registerSuccess.html");
 
         String message = messageUtil.getMessage(SuccessMessage.User.REGISTER);
-        return new CommonResponseDto(message, user);
+        return new CommonResponseDTO(message, user);
     }
 
 }

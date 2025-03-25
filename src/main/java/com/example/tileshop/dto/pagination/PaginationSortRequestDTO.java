@@ -1,4 +1,4 @@
-package com.example.tileshop.dto.request.pagination;
+package com.example.tileshop.dto.pagination;
 
 import com.example.tileshop.constant.CommonConstant;
 import com.example.tileshop.constant.SortByDataConstant;
@@ -12,7 +12,7 @@ import lombok.Setter;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class PaginationSortRequestDto extends PaginationRequestDto {
+public class PaginationSortRequestDTO extends PaginationRequestDTO {
 
     @Parameter(description = "The name of property want to sort")
     private String sortBy = CommonConstant.EMPTY_STRING;

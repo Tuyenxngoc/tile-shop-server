@@ -3,12 +3,12 @@ package com.example.tileshop.service.impl;
 import com.example.tileshop.constant.ErrorMessage;
 import com.example.tileshop.constant.SortByDataConstant;
 import com.example.tileshop.constant.SuccessMessage;
-import com.example.tileshop.dto.category.CategoryRequestDto;
+import com.example.tileshop.dto.category.CategoryRequestDTO;
 import com.example.tileshop.dto.category.CategoryResponseDTO;
-import com.example.tileshop.dto.common.CommonResponseDto;
-import com.example.tileshop.dto.request.pagination.PaginationFullRequestDto;
-import com.example.tileshop.dto.response.pagination.PaginationResponseDto;
-import com.example.tileshop.dto.response.pagination.PagingMeta;
+import com.example.tileshop.dto.common.CommonResponseDTO;
+import com.example.tileshop.dto.pagination.PaginationFullRequestDTO;
+import com.example.tileshop.dto.pagination.PaginationResponseDTO;
+import com.example.tileshop.dto.pagination.PagingMeta;
 import com.example.tileshop.entity.Attribute;
 import com.example.tileshop.entity.Category;
 import com.example.tileshop.entity.CategoryAttribute;
@@ -50,23 +50,23 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public CommonResponseDto save(CategoryRequestDto requestDto) {
-        if (categoryRepository.existsByName(requestDto.getName())) {
-            throw new ConflictException(ErrorMessage.Category.ERR_DUPLICATE_NAME, requestDto.getName());
+    public CommonResponseDTO save(CategoryRequestDTO requestDTO) {
+        if (categoryRepository.existsByName(requestDTO.getName())) {
+            throw new ConflictException(ErrorMessage.Category.ERR_DUPLICATE_NAME, requestDTO.getName());
         }
 
         Category parentCategory = null;
-        if (requestDto.getParentId() != null) {
-            parentCategory = getEntity(requestDto.getParentId());
+        if (requestDTO.getParentId() != null) {
+            parentCategory = getEntity(requestDTO.getParentId());
         }
 
         List<Attribute> attributes = null;
-        if (requestDto.getAttributeIds() != null) {
-            attributes = attributeRepository.findAllById(requestDto.getAttributeIds());
+        if (requestDTO.getAttributeIds() != null) {
+            attributes = attributeRepository.findAllById(requestDTO.getAttributeIds());
         }
 
         Category category = new Category();
-        category.setName(requestDto.getName());
+        category.setName(requestDTO.getName());
         category.setParent(parentCategory);
 
         categoryRepository.save(category);
@@ -85,26 +85,26 @@ public class CategoryServiceImpl implements CategoryService {
         }
 
         String message = messageUtil.getMessage(SuccessMessage.CREATE);
-        return new CommonResponseDto(message, category);
+        return new CommonResponseDTO(message, category);
     }
 
     @Override
-    public CommonResponseDto update(Long id, CategoryRequestDto requestDto) {
+    public CommonResponseDTO update(Long id, CategoryRequestDTO requestDTO) {
         Category category = getEntity(id);
 
-        if (!category.getName().equals(requestDto.getName())) {
-            if (categoryRepository.existsByName(requestDto.getName())) {
-                throw new ConflictException(ErrorMessage.Category.ERR_DUPLICATE_NAME, requestDto.getName());
+        if (!category.getName().equals(requestDTO.getName())) {
+            if (categoryRepository.existsByName(requestDTO.getName())) {
+                throw new ConflictException(ErrorMessage.Category.ERR_DUPLICATE_NAME, requestDTO.getName());
             }
-            category.setName(requestDto.getName());
+            category.setName(requestDTO.getName());
         }
 
-        if (requestDto.getParentId() != null) {
-            if (requestDto.getParentId().equals(id)) {
+        if (requestDTO.getParentId() != null) {
+            if (requestDTO.getParentId().equals(id)) {
                 throw new BadRequestException(ErrorMessage.Category.ERR_SELF_PARENT);
             }
 
-            Category newParent = getEntity(requestDto.getParentId());
+            Category newParent = getEntity(requestDTO.getParentId());
             if (isChildCategory(id, newParent)) {
                 throw new BadRequestException(ErrorMessage.Category.ERR_CHILD_AS_PARENT);
             }
@@ -121,8 +121,8 @@ public class CategoryServiceImpl implements CategoryService {
                 .collect(Collectors.toSet());
 
         // Lấy danh sách thuộc tính mới từ request
-        Set<Long> newAttributeIds = requestDto.getAttributeIds() != null
-                ? requestDto.getAttributeIds()
+        Set<Long> newAttributeIds = requestDTO.getAttributeIds() != null
+                ? requestDTO.getAttributeIds()
                 : new HashSet<>();
 
         // Xác định danh sách cần xóa (có trong current nhưng không có trong new)
@@ -156,7 +156,7 @@ public class CategoryServiceImpl implements CategoryService {
 
         // Trả về phản hồi thành công
         String message = messageUtil.getMessage(SuccessMessage.UPDATE);
-        return new CommonResponseDto(message, category);
+        return new CommonResponseDTO(message, category);
     }
 
     private boolean isChildCategory(Long id, Category parentCategory) {
@@ -170,7 +170,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public CommonResponseDto delete(Long id) {
+    public CommonResponseDTO delete(Long id) {
         Category category = getEntity(id);
 
         if (!category.getSubCategories().isEmpty()) {
@@ -180,12 +180,12 @@ public class CategoryServiceImpl implements CategoryService {
         categoryRepository.delete(category);
 
         String message = messageUtil.getMessage(SuccessMessage.DELETE);
-        return new CommonResponseDto(message, null);
+        return new CommonResponseDTO(message, null);
     }
 
     @Override
-    public PaginationResponseDto<CategoryResponseDTO> findAll(PaginationFullRequestDto requestDto) {
-        Pageable pageable = PaginationUtil.buildPageable(requestDto, SortByDataConstant.CATEGORY);
+    public PaginationResponseDTO<CategoryResponseDTO> findAll(PaginationFullRequestDTO requestDTO) {
+        Pageable pageable = PaginationUtil.buildPageable(requestDTO, SortByDataConstant.CATEGORY);
 
         Page<Category> page = categoryRepository.findAll(pageable);
 
@@ -193,13 +193,13 @@ public class CategoryServiceImpl implements CategoryService {
                 .map(CategoryResponseDTO::new)
                 .collect(Collectors.toList());
 
-        PagingMeta pagingMeta = PaginationUtil.buildPagingMeta(requestDto, SortByDataConstant.CATEGORY, page);
+        PagingMeta pagingMeta = PaginationUtil.buildPagingMeta(requestDTO, SortByDataConstant.CATEGORY, page);
 
-        PaginationResponseDto<CategoryResponseDTO> responseDto = new PaginationResponseDto<>();
-        responseDto.setItems(items);
-        responseDto.setMeta(pagingMeta);
+        PaginationResponseDTO<CategoryResponseDTO> responseDTO = new PaginationResponseDTO<>();
+        responseDTO.setItems(items);
+        responseDTO.setMeta(pagingMeta);
 
-        return responseDto;
+        return responseDTO;
     }
 
     @Override

@@ -1,4 +1,4 @@
-package com.example.tileshop.dto.response.pagination;
+package com.example.tileshop.dto.pagination;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;

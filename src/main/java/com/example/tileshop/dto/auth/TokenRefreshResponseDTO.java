@@ -1,10 +1,10 @@
-package com.example.tileshop.dto.response.auth;
+package com.example.tileshop.dto.auth;
 
 import com.example.tileshop.constant.CommonConstant;
 import lombok.Getter;
 
 @Getter
-public class LoginResponseDto {
+public class TokenRefreshResponseDTO {
 
     private final String tokenType = CommonConstant.TOKEN_TYPE;
 
@@ -12,8 +12,9 @@ public class LoginResponseDto {
 
     private final String refreshToken;
 
-    public LoginResponseDto(String accessToken, String refreshToken) {
+    public TokenRefreshResponseDTO(String accessToken, String refreshToken) {
         this.accessToken = accessToken;
         this.refreshToken = refreshToken;
     }
+
 }
