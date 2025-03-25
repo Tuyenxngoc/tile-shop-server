@@ -19,6 +19,7 @@ import com.example.tileshop.repository.AttributeRepository;
 import com.example.tileshop.repository.CategoryAttributeRepository;
 import com.example.tileshop.repository.CategoryRepository;
 import com.example.tileshop.service.CategoryService;
+import com.example.tileshop.specification.CategorySpecification;
 import com.example.tileshop.util.MessageUtil;
 import com.example.tileshop.util.PaginationUtil;
 import lombok.RequiredArgsConstructor;
@@ -187,11 +188,11 @@ public class CategoryServiceImpl implements CategoryService {
     public PaginationResponseDTO<CategoryResponseDTO> findAll(PaginationFullRequestDTO requestDTO) {
         Pageable pageable = PaginationUtil.buildPageable(requestDTO, SortByDataConstant.CATEGORY);
 
-        Page<Category> page = categoryRepository.findAll(pageable);
+        Page<Category> page = categoryRepository.findAll(CategorySpecification.filterByField(requestDTO.getSearchBy(), requestDTO.getKeyword()), pageable);
 
         List<CategoryResponseDTO> items = page.getContent().stream()
                 .map(CategoryResponseDTO::new)
-                .collect(Collectors.toList());
+                .toList();
 
         PagingMeta pagingMeta = PaginationUtil.buildPagingMeta(requestDTO, SortByDataConstant.CATEGORY, page);
 

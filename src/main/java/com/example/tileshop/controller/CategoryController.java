@@ -58,7 +58,7 @@ public class CategoryController {
     }
 
     @Operation(summary = "API Get Category By Id")
-    @PreAuthorize("hasRole('ROLE_VIEW_CATEGORY')")
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping(UrlConstant.Category.GET_BY_ID)
     public ResponseEntity<?> getCategoryById(@PathVariable Long id) {
         return VsResponseUtil.success(categoryService.findById(id));
