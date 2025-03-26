@@ -86,6 +86,24 @@ public class ErrorMessage {
         public static final String ERR_HAS_CHILDREN = "exception.category.has.children";
     }
 
+    public static class CategoryAttribute {
+        public static final String ERR_NOT_FOUND_ID = "exception.category.attribute.not.found.id";
+    }
+
+    public static class Customer {
+        public static final String ERR_NOT_FOUND_ID = "exception.customer.not.found.id";
+    }
+
+    public static class News {
+        public static final String ERR_NOT_FOUND_ID = "exception.news.not.found.id";
+    }
+
+    public static class NewsCategory {
+        public static final String ERR_NOT_FOUND_ID = "exception.news.category.not.found.id";
+        public static final String ERR_DUPLICATE_NAME = "exception.news.category.duplicate.name";
+        public static final String ERR_HAS_NEWS = "exception.news.category.has.news";
+    }
+
     public static class Order {
         public static final String ERR_NOT_FOUND_ID = "exception.order.not.found.id";
     }

@@ -22,6 +22,18 @@ public class SuccessMessage {
     public static class Category {
     }
 
+    public static class CategoryAttribute {
+    }
+
+    public static class Customer {
+    }
+
+    public static class News {
+    }
+
+    public static class NewsCategory {
+    }
+
     public static class Order {
     }
 
