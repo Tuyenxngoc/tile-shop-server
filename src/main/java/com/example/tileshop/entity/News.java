@@ -23,6 +23,9 @@ public class News extends DateAuditing {
     @Column(nullable = false, length = 500)
     private String title;
 
+    @Column(nullable = false, length = 1500)
+    private String description;
+
     @Column(columnDefinition = "TEXT", nullable = false)
     private String content;
 
@@ -33,10 +36,5 @@ public class News extends DateAuditing {
     @JoinColumn(name = "category_id", foreignKey = @ForeignKey(name = "FK_NEWS_CATEGORY_ID"), nullable = false)
     @JsonIgnore
     private NewsCategory category;
-
-    @ManyToOne
-    @JoinColumn(name = "author_id", foreignKey = @ForeignKey(name = "FK_NEWS_AUTHOR_ID"), nullable = false)
-    @JsonIgnore
-    private User author;
 
 }
