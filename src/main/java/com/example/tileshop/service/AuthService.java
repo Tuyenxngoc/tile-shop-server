@@ -7,7 +7,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.core.Authentication;
 
 public interface AuthService {
-
     LoginResponseDTO login(LoginRequestDTO request);
 
     CommonResponseDTO logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication);
@@ -21,5 +20,4 @@ public interface AuthService {
     CurrentUserLoginResponseDTO getCurrentUser(String userId);
 
     CommonResponseDTO register(RegisterRequestDTO requestDTO);
-
 }
