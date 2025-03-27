@@ -1,18 +1,19 @@
 package com.example.tileshop.dto.news;
 
+import com.example.tileshop.dto.common.BaseEntityDTO;
 import com.example.tileshop.entity.News;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.Setter;
 
 @Getter
-@Setter
 @AllArgsConstructor
 public class NewsResponseDTO {
 
-    private Long id;
+    private long id;
 
     private String title;
+
+    private String slug;
 
     private String description;
 
@@ -20,12 +21,16 @@ public class NewsResponseDTO {
 
     private String imageUrl;
 
+    private BaseEntityDTO category;
+
     public NewsResponseDTO(News news) {
         this.id = news.getId();
         this.title = news.getTitle();
+        this.slug = news.getSlug();
         this.description = news.getDescription();
         this.content = news.getContent();
         this.imageUrl = news.getImageUrl();
+        this.category = new BaseEntityDTO(news.getCategory().getId(), news.getCategory().getName());
     }
 
 }

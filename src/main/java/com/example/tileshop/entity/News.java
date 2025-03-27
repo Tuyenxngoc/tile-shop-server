@@ -12,7 +12,15 @@ import lombok.*;
 @AllArgsConstructor
 
 @Entity
-@Table(name = "news")
+@Table(name = "news",
+        indexes = {
+                @Index(name = "IDX_NEWS_TITLE", columnList = "title"),
+                @Index(name = "IDX_NEWS_SLUG", columnList = "slug")
+        },
+        uniqueConstraints = {
+                @UniqueConstraint(name = "UN_NEWS_SLUG", columnNames = "slug")
+        }
+)
 public class News extends DateAuditing {
 
     @Id
@@ -22,6 +30,9 @@ public class News extends DateAuditing {
 
     @Column(nullable = false, length = 500)
     private String title;
+
+    @Column(nullable = false, length = 500)
+    private String slug;
 
     @Column(nullable = false, length = 1500)
     private String description;

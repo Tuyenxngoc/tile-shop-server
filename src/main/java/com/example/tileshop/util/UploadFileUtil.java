@@ -2,9 +2,7 @@ package com.example.tileshop.util;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
-import com.example.tileshop.constant.ErrorMessage;
 import com.example.tileshop.exception.BadGatewayException;
-import com.example.tileshop.exception.BadRequestException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -78,12 +76,12 @@ public class UploadFileUtil {
         }
     }
 
-    public void checkImageIsValid(MultipartFile file) {
-        if (file != null && !file.isEmpty()) {
-            String contentType = file.getContentType();
-            if (contentType == null || !contentType.startsWith("image/")) {
-                throw new BadRequestException(ErrorMessage.INVALID_FILE_TYPE);
-            }
+    public boolean isImageInvalid(MultipartFile file) {
+        if (file == null || file.isEmpty()) {
+            return true;
         }
+        String contentType = file.getContentType();
+        return contentType == null || !contentType.startsWith("image/");
     }
+
 }

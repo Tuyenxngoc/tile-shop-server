@@ -44,7 +44,7 @@ public class NewsController {
     public ResponseEntity<?> updateNews(
             @PathVariable Long id,
             @RequestPart("news") @Valid NewsRequestDTO requestDTO,
-            @RequestPart(value = "image") MultipartFile image
+            @RequestPart(value = "image", required = false) MultipartFile image
     ) {
         return VsResponseUtil.success(newsService.update(id, requestDTO, image));
     }
@@ -69,4 +69,12 @@ public class NewsController {
     public ResponseEntity<?> getNewsById(@PathVariable Long id) {
         return VsResponseUtil.success(newsService.findById(id));
     }
+
+    @Operation(summary = "API Get News By Slug")
+    @PreAuthorize("permitAll()")
+    @GetMapping(UrlConstant.News.GET_BY_SLUG)
+    public ResponseEntity<?> getNewsBySlug(@PathVariable String slug) {
+        return VsResponseUtil.success(newsService.findBySlug(slug));
+    }
+
 }

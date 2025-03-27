@@ -17,4 +17,6 @@ public interface NewsService {
     PaginationResponseDTO<NewsResponseDTO> findAll(PaginationFullRequestDTO requestDTO);
 
     NewsResponseDTO findById(Long id);
+
+    NewsResponseDTO findBySlug(String slug);
 }
