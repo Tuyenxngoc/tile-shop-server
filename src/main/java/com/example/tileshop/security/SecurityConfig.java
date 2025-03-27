@@ -55,7 +55,14 @@ public class SecurityConfig {
     };
 
     private static final String[] GET_WHITELIST_URL = {
+            //News category
+            "/api/v1/news-categories",
+            "/api/v1/news-categories/*",
 
+            //News
+            "/api/v1/news",
+            "/api/v1/news/*",
+            "/api/v1/news/slug/*",
     };
 
     private static final String[] POST_WHITELIST_URL = {

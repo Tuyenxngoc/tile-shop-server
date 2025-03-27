@@ -51,14 +51,12 @@ public class NewsCategoryController {
     }
 
     @Operation(summary = "API Get News Categories")
-    @PreAuthorize("permitAll()")
     @GetMapping(UrlConstant.NewsCategory.GET_ALL)
     public ResponseEntity<?> getNewsCategories(@ParameterObject PaginationFullRequestDTO requestDTO) {
         return VsResponseUtil.success(newsCategoryService.findAll(requestDTO));
     }
 
     @Operation(summary = "API Get News Category By Id")
-    @PreAuthorize("permitAll()")
     @GetMapping(UrlConstant.NewsCategory.GET_BY_ID)
     public ResponseEntity<?> getNewsCategoryById(@PathVariable Long id) {
         return VsResponseUtil.success(newsCategoryService.findById(id));

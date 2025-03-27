@@ -1,7 +1,8 @@
 package com.example.tileshop.specification;
 
-import com.example.tileshop.entity.Category_;
 import com.example.tileshop.entity.News;
+import com.example.tileshop.entity.NewsCategory;
+import com.example.tileshop.entity.NewsCategory_;
 import com.example.tileshop.entity.News_;
 import com.example.tileshop.util.SpecificationsUtil;
 import jakarta.persistence.criteria.Join;
@@ -25,9 +26,11 @@ public class NewsSpecification {
                     ));
 
                     case News_.CATEGORY -> {
-                        Join<?, ?> categoryJoin = root.join(News_.category);
-                        predicate = builder.and(predicate, builder.equal(categoryJoin.get(Category_.ID),
-                                SpecificationsUtil.castToRequiredType(categoryJoin.get(Category_.ID).getJavaType(), keyword)));
+                        Join<News, NewsCategory> categoryJoin = root.join(News_.category);
+                        predicate = builder.like(
+                                builder.lower(categoryJoin.get(NewsCategory_.name)),
+                                "%" + keyword.toLowerCase() + "%"
+                        );
                     }
                 }
             }

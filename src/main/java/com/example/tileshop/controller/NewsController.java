@@ -57,21 +57,18 @@ public class NewsController {
     }
 
     @Operation(summary = "API Get News")
-    @PreAuthorize("permitAll()")
     @GetMapping(UrlConstant.News.GET_ALL)
     public ResponseEntity<?> getNews(@ParameterObject PaginationFullRequestDTO requestDTO) {
         return VsResponseUtil.success(newsService.findAll(requestDTO));
     }
 
     @Operation(summary = "API Get News By Id")
-    @PreAuthorize("permitAll()")
     @GetMapping(UrlConstant.News.GET_BY_ID)
     public ResponseEntity<?> getNewsById(@PathVariable Long id) {
         return VsResponseUtil.success(newsService.findById(id));
     }
 
     @Operation(summary = "API Get News By Slug")
-    @PreAuthorize("permitAll()")
     @GetMapping(UrlConstant.News.GET_BY_SLUG)
     public ResponseEntity<?> getNewsBySlug(@PathVariable String slug) {
         return VsResponseUtil.success(newsService.findBySlug(slug));
