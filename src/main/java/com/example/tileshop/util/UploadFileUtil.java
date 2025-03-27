@@ -65,8 +65,13 @@ public class UploadFileUtil {
         if (url == null || url.isEmpty()) {
             return;
         }
+
         int startIndex = url.lastIndexOf("/") + 1;
         int endIndex = url.lastIndexOf(".");
+        if (startIndex <= 0 || endIndex <= startIndex) {
+            return;
+        }
+
         String publicId = url.substring(startIndex, endIndex);
         try {
             Map<?, ?> result = cloudinary.uploader().destroy(publicId, ObjectUtils.asMap("invalidate", true));
