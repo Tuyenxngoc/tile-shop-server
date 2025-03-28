@@ -1,9 +1,7 @@
 package com.example.tileshop.controller;
 
-import com.example.tileshop.annotation.CurrentUser;
 import com.example.tileshop.annotation.RestApiV1;
 import com.example.tileshop.constant.UrlConstant;
-import com.example.tileshop.security.CustomUserDetails;
 import com.example.tileshop.service.UserService;
 import com.example.tileshop.util.VsResponseUtil;
 import io.swagger.v3.oas.annotations.Operation;
@@ -31,11 +29,8 @@ public class UserController {
     @Operation(summary = "API upload files")
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping(value = UrlConstant.User.UPLOAD, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<?> uploadFiles(
-            @RequestParam("files") List<MultipartFile> files,
-            @CurrentUser CustomUserDetails userDetails
-    ) {
-        return VsResponseUtil.success(userService.uploadFiles(files, userDetails.getUserId()));
+    public ResponseEntity<?> uploadFiles(@RequestParam("files") List<MultipartFile> files) {
+        return VsResponseUtil.success(userService.uploadFiles(files));
     }
 
 }

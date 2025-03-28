@@ -68,7 +68,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<String> uploadFiles(List<MultipartFile> files, String userId) {
+    public List<String> uploadFiles(List<MultipartFile> files) {
         if (files == null || files.isEmpty()) {
             throw new BadRequestException(ErrorMessage.INVALID_FILE_REQUIRED);
         }
