@@ -37,7 +37,7 @@ public class News extends DateAuditing {
     @Column(nullable = false, length = 1500)
     private String description;
 
-    @Column(columnDefinition = "TEXT", nullable = false)
+    @Column(columnDefinition = "LONGTEXT", nullable = false)
     private String content;
 
     @Column(name = "image_url")
