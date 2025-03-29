@@ -29,8 +29,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @Service
 @RequiredArgsConstructor
@@ -61,21 +59,6 @@ public class NewsServiceImpl implements NewsService {
         }
 
         return slug;
-    }
-
-    private void deleteImagesInContent(String content) {
-        if (content == null || content.isEmpty()) {
-            return;
-        }
-
-        // Regex tìm tất cả URL trong bất kỳ đoạn chứa `src="..."` hoặc `src='...'`
-        Pattern pattern = Pattern.compile("src=['\"]([^'\"]+)['\"]");
-        Matcher matcher = pattern.matcher(content);
-
-        while (matcher.find()) {
-            String imageUrl = matcher.group(1); // Lấy URL ảnh
-            uploadFileUtil.destroyFileWithUrl(imageUrl); // Xóa ảnh
-        }
     }
 
     @Override
@@ -150,8 +133,6 @@ public class NewsServiceImpl implements NewsService {
         if (news.getImageUrl() != null) {
             uploadFileUtil.destroyFileWithUrl(news.getImageUrl());
         }
-
-        deleteImagesInContent(news.getContent());
 
         newsRepository.delete(news);
 
