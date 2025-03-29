@@ -26,6 +26,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -90,6 +91,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
+    @Transactional
     public CommonResponseDTO update(Long id, CategoryRequestDTO requestDTO) {
         Category category = getEntity(id);
 
@@ -136,26 +138,23 @@ public class CategoryServiceImpl implements CategoryService {
 
         // Xóa những CategoryAttribute không còn cần thiết
         if (!attributesToRemove.isEmpty()) {
-            categoryAttributeRepository.deleteByCategoryIdAndAttributeIdIn(id, attributesToRemove);
+            category.getCategoryAttributes().removeIf(ca -> attributesToRemove.contains(ca.getAttribute().getId()));
         }
 
         // Thêm những CategoryAttribute mới
         if (!attributesToAdd.isEmpty()) {
             List<Attribute> attributes = attributeRepository.findAllById(attributesToAdd);
-            List<CategoryAttribute> categoryAttributes = attributes.stream().map(attribute -> {
-                CategoryAttribute categoryAttribute = new CategoryAttribute();
-                categoryAttribute.setCategory(category);
-                categoryAttribute.setAttribute(attribute);
-                return categoryAttribute;
-            }).collect(Collectors.toList());
+            List<CategoryAttribute> categoryAttributes = attributes.stream()
+                    .map(attribute -> {
+                        CategoryAttribute categoryAttribute = new CategoryAttribute();
+                        categoryAttribute.setCategory(category);
+                        categoryAttribute.setAttribute(attribute);
+                        return categoryAttribute;
+                    }).toList();
 
             categoryAttributeRepository.saveAll(categoryAttributes);
         }
 
-        // Lưu danh mục vào database
-        categoryRepository.save(category);
-
-        // Trả về phản hồi thành công
         String message = messageUtil.getMessage(SuccessMessage.UPDATE);
         return new CommonResponseDTO(message, category);
     }
