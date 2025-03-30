@@ -10,9 +10,14 @@ public class AttributeResponseDTO {
 
     private String name;
 
+    private Boolean isRequired;
+
+    private String defaultValue;
+
     public AttributeResponseDTO(Attribute attribute) {
         this.id = attribute.getId();
         this.name = attribute.getName();
+        this.isRequired = attribute.isRequired();
+        this.defaultValue = attribute.getDefaultValue();
     }
-
 }

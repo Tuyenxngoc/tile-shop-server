@@ -22,7 +22,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -45,6 +44,8 @@ public class AttributeServiceImpl implements AttributeService {
 
         Attribute attribute = new Attribute();
         attribute.setName(requestDTO.getName());
+        attribute.setRequired(requestDTO.getIsRequired());
+        attribute.setDefaultValue(requestDTO.getDefaultValue());
 
         attributeRepository.save(attribute);
 
@@ -61,6 +62,8 @@ public class AttributeServiceImpl implements AttributeService {
         }
 
         attribute.setName(requestDTO.getName());
+        attribute.setRequired(requestDTO.getIsRequired());
+        attribute.setDefaultValue(requestDTO.getDefaultValue());
 
         attributeRepository.save(attribute);
 
@@ -86,7 +89,7 @@ public class AttributeServiceImpl implements AttributeService {
 
         List<AttributeResponseDTO> items = page.getContent().stream()
                 .map(AttributeResponseDTO::new)
-                .collect(Collectors.toList());
+                .toList();
 
         PagingMeta pagingMeta = PaginationUtil.buildPagingMeta(requestDTO, SortByDataConstant.ATTRIBUTE, page);
 
@@ -102,6 +105,14 @@ public class AttributeServiceImpl implements AttributeService {
         Attribute attribute = getEntity(id);
 
         return new AttributeResponseDTO(attribute);
+    }
+
+    @Override
+    public List<AttributeResponseDTO> findByCategoryId(Long categoryId) {
+        List<Attribute> attributes = attributeRepository.findAllByCategoryAttributes_Category_Id(categoryId);
+        return attributes.stream()
+                .map(AttributeResponseDTO::new)
+                .toList();
     }
 
 }

@@ -6,6 +6,8 @@ import com.example.tileshop.dto.common.CommonResponseDTO;
 import com.example.tileshop.dto.pagination.PaginationFullRequestDTO;
 import com.example.tileshop.dto.pagination.PaginationResponseDTO;
 
+import java.util.List;
+
 public interface AttributeService {
     CommonResponseDTO save(AttributeRequestDTO requestDTO);
 
@@ -16,4 +18,6 @@ public interface AttributeService {
     PaginationResponseDTO<AttributeResponseDTO> findAll(PaginationFullRequestDTO requestDTO);
 
     AttributeResponseDTO findById(Long id);
+
+    List<AttributeResponseDTO> findByCategoryId(Long categoryId);
 }

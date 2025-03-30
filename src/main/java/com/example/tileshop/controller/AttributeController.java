@@ -63,4 +63,12 @@ public class AttributeController {
     public ResponseEntity<?> getAttributeById(@PathVariable Long id) {
         return VsResponseUtil.success(attributeService.findById(id));
     }
+
+    @Operation(summary = "API Get Attributes By Category ID")
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping(UrlConstant.Attribute.GET_BY_CATEGORY_ID)
+    public ResponseEntity<?> getAttributesByCategoryId(@PathVariable Long categoryId) {
+        return VsResponseUtil.success(attributeService.findByCategoryId(categoryId));
+    }
+
 }

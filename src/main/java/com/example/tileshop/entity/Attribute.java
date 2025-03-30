@@ -26,6 +26,12 @@ public class Attribute extends DateAuditing {
 
     private String name;
 
+    @Column(nullable = false)
+    private boolean isRequired = false;
+
+    @Column
+    private String defaultValue;
+
     @OneToMany(mappedBy = "attribute", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
     private List<ProductAttribute> productAttributes = new ArrayList<>();
