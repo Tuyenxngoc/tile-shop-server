@@ -14,7 +14,15 @@ import java.util.List;
 @AllArgsConstructor
 
 @Entity
-@Table(name = "products")
+@Table(name = "products",
+        indexes = {
+                @Index(name = "IDX_PRODUCT_NAME", columnList = "name"),
+                @Index(name = "IDX_PRODUCT_SLUG", columnList = "slug")
+        },
+        uniqueConstraints = {
+                @UniqueConstraint(name = "UN_PRODUCT_SLUG", columnNames = "slug")
+        }
+)
 public class Product {
 
     @Id
@@ -24,6 +32,9 @@ public class Product {
 
     @Column(nullable = false)
     private String name;
+
+    @Column(nullable = false, length = 500)
+    private String slug;
 
     private String description;
 
