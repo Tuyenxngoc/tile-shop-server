@@ -10,7 +10,7 @@ import lombok.Setter;
 @Setter
 public class BrandRequestDTO {
     @NotBlank(message = ErrorMessage.INVALID_NOT_BLANK_FIELD)
-    @Size(max = 100, message = ErrorMessage.INVALID_TEXT_LENGTH)
+    @Size(min = 3, max = 100, message = ErrorMessage.INVALID_TEXT_LENGTH)
     private String name;
 
     private String description;

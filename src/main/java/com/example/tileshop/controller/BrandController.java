@@ -32,14 +32,14 @@ public class BrandController {
     @PostMapping(value = UrlConstant.Brand.CREATE, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> createBrand(
             @RequestPart("brand") @Valid BrandRequestDTO requestDTO,
-            @RequestPart(value = "image", required = false) MultipartFile image
+            @RequestPart(value = "image") MultipartFile image
     ) {
         return VsResponseUtil.success(HttpStatus.CREATED, brandService.save(requestDTO, image));
     }
 
     @Operation(summary = "API Update Brand")
     @PreAuthorize("hasRole('ADMIN')")
-    @PostMapping(value = UrlConstant.Brand.UPDATE, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PutMapping(value = UrlConstant.Brand.UPDATE, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> updateBrand(
             @PathVariable Long id,
             @RequestPart("brand") @Valid BrandRequestDTO requestDTO,
