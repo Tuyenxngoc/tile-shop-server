@@ -13,6 +13,9 @@ public class SuccessMessage {
     public static class Attribute {
     }
 
+    public static class Brand {
+    }
+
     public static class Cart {
     }
 

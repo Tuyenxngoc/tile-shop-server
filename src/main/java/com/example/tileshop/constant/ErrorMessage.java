@@ -70,6 +70,12 @@ public class ErrorMessage {
         public static final String ERR_DUPLICATE_NAME = "exception.attribute.duplicate.name";
     }
 
+    public static class Brand {
+        public static final String ERR_NOT_FOUND_ID = "exception.brand.not.found.id";
+        public static final String ERR_DUPLICATE_NAME = "exception.brand.duplicate.name";
+        public static final String ERR_DELETE_HAS_PRODUCTS = "exception.brand.delete.has.products";
+    }
+
     public static class Cart {
         public static final String ERR_NOT_FOUND_ID = "exception.cart.not.found.id";
     }

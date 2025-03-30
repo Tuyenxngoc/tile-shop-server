@@ -29,6 +29,8 @@ public class Product {
 
     private double price;
 
+    private Double discountPercentage;
+
     private int stockQuantity;
 
     @Column(nullable = false)
@@ -38,6 +40,11 @@ public class Product {
     @JoinColumn(name = "category_id", foreignKey = @ForeignKey(name = "FK_PRODUCT_CATEGORY_ID"), nullable = false)
     @JsonIgnore
     private Category category;
+
+    @ManyToOne
+    @JoinColumn(name = "brand_id", foreignKey = @ForeignKey(name = "FK_PRODUCT_BRAND_ID"))
+    @JsonIgnore
+    private Brand brand;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     @JsonIgnore
