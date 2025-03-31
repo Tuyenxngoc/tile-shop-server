@@ -15,8 +15,5 @@ public class ProductAttributeRequestDTO {
     private String value;
 
     @NotNull(message = ErrorMessage.INVALID_SOME_THING_FIELD_IS_REQUIRED)
-    private Long productId;
-
-    @NotNull(message = ErrorMessage.INVALID_SOME_THING_FIELD_IS_REQUIRED)
     private Long attributeId;
 }
