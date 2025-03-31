@@ -5,12 +5,7 @@ import com.example.tileshop.constant.SuccessMessage;
 import com.example.tileshop.dto.common.CommonResponseDTO;
 import com.example.tileshop.dto.pagination.PaginationFullRequestDTO;
 import com.example.tileshop.dto.product.ProductRequestDTO;
-import com.example.tileshop.entity.Attribute;
-import com.example.tileshop.entity.Brand;
-import com.example.tileshop.entity.Category;
-import com.example.tileshop.entity.Product;
-import com.example.tileshop.entity.ProductAttribute;
-import com.example.tileshop.entity.ProductImage;
+import com.example.tileshop.entity.*;
 import com.example.tileshop.exception.BadRequestException;
 import com.example.tileshop.exception.NotFoundException;
 import com.example.tileshop.repository.AttributeRepository;
@@ -21,7 +16,6 @@ import com.example.tileshop.service.ProductService;
 import com.example.tileshop.util.MessageUtil;
 import com.example.tileshop.util.SlugUtil;
 import com.example.tileshop.util.UploadFileUtil;
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -131,7 +125,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public CommonResponseDTO update(Long id, ProductRequestDTO requestDTO, List<MultipartFile> images) {
         Product product = getEntity(id);
-        
+
         String message = messageUtil.getMessage(SuccessMessage.UPDATE);
         return new CommonResponseDTO(message, product);
     }
