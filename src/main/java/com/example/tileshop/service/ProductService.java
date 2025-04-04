@@ -2,7 +2,9 @@ package com.example.tileshop.service;
 
 import com.example.tileshop.dto.common.CommonResponseDTO;
 import com.example.tileshop.dto.pagination.PaginationFullRequestDTO;
+import com.example.tileshop.dto.pagination.PaginationResponseDTO;
 import com.example.tileshop.dto.product.ProductRequestDTO;
+import com.example.tileshop.dto.product.ProductResponseDTO;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -14,9 +16,9 @@ public interface ProductService {
 
     CommonResponseDTO delete(Long id);
 
-    Object findAll(PaginationFullRequestDTO requestDTO);
+    PaginationResponseDTO<ProductResponseDTO> findAll(PaginationFullRequestDTO requestDTO);
 
-    Object findById(Long id);
+    ProductRequestDTO findById(Long id);
 
     Object findBySlug(String slug);
 }
