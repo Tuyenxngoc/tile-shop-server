@@ -58,6 +58,7 @@ public class UrlConstant {
         public static final String CREATE = PRE_FIX;
         public static final String GET_ALL = PRE_FIX;
         public static final String GET_BY_ID = PRE_FIX + "/{id}";
+        public static final String GET_TREE = PRE_FIX + "/tree";
         public static final String UPDATE = PRE_FIX + "/{id}";
         public static final String DELETE = PRE_FIX + "/{id}";
     }

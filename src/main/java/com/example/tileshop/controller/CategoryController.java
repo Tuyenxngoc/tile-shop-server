@@ -64,4 +64,10 @@ public class CategoryController {
         return VsResponseUtil.success(categoryService.findById(id));
     }
 
+    @Operation(summary = "API Get Categories Tree")
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping(UrlConstant.Category.GET_TREE)
+    public ResponseEntity<?> getCategoriesTree() {
+        return VsResponseUtil.success(HttpStatus.OK, categoryService.getCategoriesTree());
+    }
 }

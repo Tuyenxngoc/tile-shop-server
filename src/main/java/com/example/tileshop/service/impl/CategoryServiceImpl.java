@@ -5,6 +5,7 @@ import com.example.tileshop.constant.SortByDataConstant;
 import com.example.tileshop.constant.SuccessMessage;
 import com.example.tileshop.dto.category.CategoryRequestDTO;
 import com.example.tileshop.dto.category.CategoryResponseDTO;
+import com.example.tileshop.dto.category.CategoryTreeResponseDTO;
 import com.example.tileshop.dto.common.CommonResponseDTO;
 import com.example.tileshop.dto.pagination.PaginationFullRequestDTO;
 import com.example.tileshop.dto.pagination.PaginationResponseDTO;
@@ -265,4 +266,26 @@ public class CategoryServiceImpl implements CategoryService {
 
         return new CategoryResponseDTO(category);
     }
+
+    @Override
+    public List<CategoryTreeResponseDTO> getCategoriesTree() {
+        List<Category> categories = categoryRepository.findAll();
+        return buildCategoryTree(categories, null);
+    }
+
+    private List<CategoryTreeResponseDTO> buildCategoryTree(List<Category> categories, Category parent) {
+        List<CategoryTreeResponseDTO> tree = new ArrayList<>();
+        for (Category category : categories) {
+            if ((parent == null && category.getParent() == null) || (parent != null && category.getParent() != null && category.getParent().getId().equals(parent.getId()))) {
+                CategoryTreeResponseDTO categoryTreeDTO = new CategoryTreeResponseDTO(
+                        category.getId(),
+                        category.getName(),
+                        buildCategoryTree(categories, category)
+                );
+                tree.add(categoryTreeDTO);
+            }
+        }
+        return tree;
+    }
+
 }
