@@ -36,6 +36,7 @@ public class Product {
     @Column(nullable = false, length = 500)
     private String slug;
 
+    @Column(columnDefinition = "LONGTEXT", nullable = false)
     private String description;
 
     private double price;
