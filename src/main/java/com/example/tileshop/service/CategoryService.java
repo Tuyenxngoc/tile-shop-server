@@ -7,6 +7,8 @@ import com.example.tileshop.dto.pagination.PaginationFullRequestDTO;
 import com.example.tileshop.dto.pagination.PaginationResponseDTO;
 
 public interface CategoryService {
+    void init();
+
     CommonResponseDTO save(CategoryRequestDTO requestDTO);
 
     CommonResponseDTO update(Long id, CategoryRequestDTO requestDTO);

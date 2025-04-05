@@ -1,7 +1,6 @@
 package com.example.tileshop.config;
 
-import com.example.tileshop.service.RoleService;
-import com.example.tileshop.service.UserService;
+import com.example.tileshop.service.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
@@ -16,10 +15,19 @@ public class DataInitializer implements CommandLineRunner {
 
     private final UserService userService;
 
+    private final AttributeService attributeService;
+
+    private final CategoryService categoryService;
+
+    private final CategoryAttributeService categoryAttributeService;
+
     @Override
     public void run(String... args) {
         roleService.init();
         userService.init();
+        attributeService.init();
+        categoryService.init();
+        categoryAttributeService.init();
     }
 
 }

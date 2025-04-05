@@ -52,6 +52,63 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
+    public void init() {
+        if (categoryRepository.count() > 0) {
+            return;
+        }
+
+        List<String> c1 = List.of(
+                "Thiết Bị Vệ Sinh",
+                "Gạch Ốp Lát"
+        );
+
+        List<String> c2_00 = List.of(
+                "Bồn Tắm",
+                "Phòng Xông Hơi",
+                "Bồn Cầu",
+                "Bồn Tiểu Nam",
+                "Lavabo",
+                "Sen Tắm",
+                "Vòi Lavabo",
+                "Combo Thiết Bị Vệ Sinh",
+                "Phụ Kiện Phòng Tắm",
+                "Điều Hoà Phòng Tắm"
+        );
+
+        List<String> c2_01 = List.of(
+                "Gạch Lát Nền",
+                "Gạch Ốp Tường"
+        );
+
+        for (int i = 0; i < c1.size(); i++) {
+            String categoryName = c1.get(i);
+            Category category = new Category();
+            category.setName(categoryName);
+            category.setParent(null);
+            categoryRepository.save(category);
+
+            switch (i) {
+                case 0 -> {
+                    for (String subCategoryName : c2_00) {
+                        Category subCategory = new Category();
+                        subCategory.setName(subCategoryName);
+                        subCategory.setParent(category);
+                        categoryRepository.save(subCategory);
+                    }
+                }
+                case 1 -> {
+                    for (String subCategoryName : c2_01) {
+                        Category subCategory = new Category();
+                        subCategory.setName(subCategoryName);
+                        subCategory.setParent(category);
+                        categoryRepository.save(subCategory);
+                    }
+                }
+            }
+        }
+    }
+
+    @Override
     public CommonResponseDTO save(CategoryRequestDTO requestDTO) {
         if (categoryRepository.existsByName(requestDTO.getName())) {
             throw new ConflictException(ErrorMessage.Category.ERR_DUPLICATE_NAME, requestDTO.getName());

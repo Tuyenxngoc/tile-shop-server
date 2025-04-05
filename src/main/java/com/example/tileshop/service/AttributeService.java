@@ -9,6 +9,8 @@ import com.example.tileshop.dto.pagination.PaginationResponseDTO;
 import java.util.List;
 
 public interface AttributeService {
+    void init();
+
     CommonResponseDTO save(AttributeRequestDTO requestDTO);
 
     CommonResponseDTO update(Long id, AttributeRequestDTO requestDTO);

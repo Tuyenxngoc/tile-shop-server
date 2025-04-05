@@ -37,6 +37,35 @@ public class AttributeServiceImpl implements AttributeService {
     }
 
     @Override
+    public void init() {
+        if (attributeRepository.count() > 0) {
+            return;
+        }
+
+        List<String> defaultAttributes = List.of(
+                "Màu sắc",
+                "Chất liệu",
+                "Loại sản phẩm",
+                "Công nghệ men",
+                "Cơ chế xả",
+                "Lượng nước xả",
+                "Loại nắp",
+                "Kích thước",
+                "Tầm xả",
+                "Sản xuất tại"
+        );
+
+        for (String attributeName : defaultAttributes) {
+            Attribute attribute = new Attribute();
+            attribute.setName(attributeName);
+            attribute.setRequired(false);
+            attribute.setDefaultValue("");
+
+            attributeRepository.save(attribute);
+        }
+    }
+
+    @Override
     public CommonResponseDTO save(AttributeRequestDTO requestDTO) {
         if (attributeRepository.existsByName(requestDTO.getName())) {
             throw new ConflictException(ErrorMessage.Attribute.ERR_DUPLICATE_NAME, requestDTO.getName());
