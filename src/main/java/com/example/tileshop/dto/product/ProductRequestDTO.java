@@ -15,6 +15,7 @@ public class ProductRequestDTO {
     @Size(min = 3, max = 255, message = ErrorMessage.INVALID_TEXT_LENGTH)
     private String name;
 
+    @NotBlank(message = ErrorMessage.INVALID_NOT_BLANK_FIELD)
     private String description;
 
     @NotNull(message = ErrorMessage.INVALID_SOME_THING_FIELD_IS_REQUIRED)
