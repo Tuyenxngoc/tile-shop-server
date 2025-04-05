@@ -31,7 +31,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -207,7 +206,10 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public CommonResponseDTO delete(Long id) {
-        return null;
+        Product product = getEntity(id);
+        //todo
+        String message = messageUtil.getMessage(SuccessMessage.DELETE);
+        return new CommonResponseDTO(message, null);
     }
 
     @Override
@@ -235,9 +237,9 @@ public class ProductServiceImpl implements ProductService {
         ProductRequestDTO responseDTO = new ProductRequestDTO();
         responseDTO.setName(product.getName());
         responseDTO.setDescription(product.getDescription());
-        responseDTO.setPrice(responseDTO.getPrice());
-        responseDTO.setDiscountPercentage(responseDTO.getDiscountPercentage());
-        responseDTO.setStockQuantity(responseDTO.getStockQuantity());
+        responseDTO.setPrice(product.getPrice());
+        responseDTO.setDiscountPercentage(product.getDiscountPercentage());
+        responseDTO.setStockQuantity(product.getStockQuantity());
         responseDTO.setCategoryId(product.getCategory().getId());
         responseDTO.setBrandId(product.getBrand() == null ? null : product.getBrand().getId());
         responseDTO.setAttributes(product.getAttributes().stream()
@@ -247,7 +249,7 @@ public class ProductServiceImpl implements ProductService {
                             a.setValue(attr.getValue());
                             return a;
                         }
-                ).collect(Collectors.toList()));
+                ).toList());
         return responseDTO;
     }
 
