@@ -123,13 +123,21 @@ public class UrlConstant {
 
     public static class Product {
         private static final String PRE_FIX = "/products";
+        private static final String PRE_FIX_ADMIN = ADMIN_URL + "/products";
 
-        public static final String CREATE = PRE_FIX;
-        public static final String GET_ALL = PRE_FIX;
-        public static final String GET_BY_ID = PRE_FIX + "/{id}";
-        public static final String GET_BY_SLUG = PRE_FIX + "/slug/{slug}";
-        public static final String UPDATE = PRE_FIX + "/{id}";
-        public static final String DELETE = PRE_FIX + "/{id}";
+        public static final class Admin {
+            public static final String CREATE = PRE_FIX_ADMIN;
+            public static final String GET_ALL = PRE_FIX_ADMIN;
+            public static final String GET_BY_ID = PRE_FIX_ADMIN + "/{id}";
+            public static final String UPDATE = PRE_FIX_ADMIN + "/{id}";
+            public static final String DELETE = PRE_FIX_ADMIN + "/{id}";
+        }
+
+        public static final class User {
+            public static final String GET_ALL = PRE_FIX;
+            public static final String GET_BY_ID = PRE_FIX + "/{id}";
+            public static final String GET_BY_SLUG = PRE_FIX + "/slug/{slug}";
+        }
     }
 
     public static class ProductAttribute {

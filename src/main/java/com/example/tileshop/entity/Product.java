@@ -71,4 +71,12 @@ public class Product extends DateAuditing {
     @JsonIgnore
     private List<ProductAttribute> attributes = new ArrayList<>();
 
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore
+    private List<OrderItem> orderItems = new ArrayList<>();
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore
+    private List<CartItem> cartItems = new ArrayList<>();
+
 }

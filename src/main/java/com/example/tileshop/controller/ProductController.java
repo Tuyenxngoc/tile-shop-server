@@ -32,7 +32,7 @@ public class ProductController {
 
     @Operation(summary = "API Create Product")
     @PreAuthorize("hasRole('ADMIN')")
-    @PostMapping(value = UrlConstant.Product.CREATE, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = UrlConstant.Product.Admin.CREATE, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> createProduct(
             @RequestPart("product") @Valid ProductRequestDTO requestDTO,
             @RequestPart(value = "images") List<MultipartFile> images
@@ -42,7 +42,7 @@ public class ProductController {
 
     @Operation(summary = "API Update Product")
     @PreAuthorize("hasRole('ADMIN')")
-    @PutMapping(value = UrlConstant.Product.UPDATE, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PutMapping(value = UrlConstant.Product.Admin.UPDATE, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> updateProduct(
             @PathVariable Long id,
             @RequestPart("product") @Valid ProductRequestDTO requestDTO,
@@ -54,25 +54,27 @@ public class ProductController {
 
     @Operation(summary = "API Delete Product")
     @PreAuthorize("hasRole('ADMIN')")
-    @DeleteMapping(UrlConstant.Product.DELETE)
+    @DeleteMapping(UrlConstant.Product.Admin.DELETE)
     public ResponseEntity<?> deleteProduct(@PathVariable Long id) {
         return VsResponseUtil.success(productService.delete(id));
     }
 
     @Operation(summary = "API Get Products")
-    @GetMapping(UrlConstant.Product.GET_ALL)
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping(UrlConstant.Product.Admin.GET_ALL)
     public ResponseEntity<?> getProducts(@ParameterObject PaginationFullRequestDTO requestDTO) {
         return VsResponseUtil.success(productService.findAll(requestDTO));
     }
 
     @Operation(summary = "API Get Product By Id")
-    @GetMapping(UrlConstant.Product.GET_BY_ID)
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping(UrlConstant.Product.Admin.GET_BY_ID)
     public ResponseEntity<?> getProductById(@PathVariable Long id) {
         return VsResponseUtil.success(productService.findById(id));
     }
 
     @Operation(summary = "API Get Product By Slug")
-    @GetMapping(UrlConstant.Product.GET_BY_SLUG)
+    @GetMapping(UrlConstant.Product.User.GET_BY_SLUG)
     public ResponseEntity<?> getProductBySlug(@PathVariable String slug) {
         return VsResponseUtil.success(productService.findBySlug(slug));
     }
