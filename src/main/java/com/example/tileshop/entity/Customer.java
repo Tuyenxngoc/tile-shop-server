@@ -1,6 +1,7 @@
 package com.example.tileshop.entity;
 
 import com.example.tileshop.constant.Gender;
+import com.example.tileshop.entity.common.DateAuditing;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
@@ -18,7 +19,7 @@ import java.util.List;
 @Table(name = "customers",
         uniqueConstraints = @UniqueConstraint(name = "UK_CUSTOMER_USER_ID", columnNames = "user_id")
 )
-public class Customer {
+public class Customer extends DateAuditing {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -26,9 +26,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
@@ -110,8 +112,8 @@ public class ProductServiceImpl implements ProductService {
                 })
                 .toList();
 
-        product.setName(requestDTO.getName());
-        product.setDescription(requestDTO.getDescription());
+        product.setName(requestDTO.getName().trim());
+        product.setDescription(requestDTO.getDescription().trim());
         product.setPrice(requestDTO.getPrice());
         product.setDiscountPercentage(requestDTO.getDiscountPercentage());
         product.setStockQuantity(requestDTO.getStockQuantity());
@@ -121,7 +123,7 @@ public class ProductServiceImpl implements ProductService {
         product.setAttributes(productAttributes);
         product.setImages(productImages);
 
-        String baseSlug = SlugUtil.toSlug(requestDTO.getName());
+        String baseSlug = SlugUtil.toSlug(requestDTO.getName().trim());
         String uniqueSlug = generateUniqueSlug(baseSlug);
         product.setSlug(uniqueSlug);
 
@@ -132,38 +134,43 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @Transactional
     public CommonResponseDTO update(Long id, ProductRequestDTO requestDTO, List<MultipartFile> images) {
         Product product = getEntity(id);
 
+        // Validate images
         if (images != null && images.stream().anyMatch(uploadFileUtil::isImageInvalid)) {
             throw new BadRequestException(ErrorMessage.INVALID_FILE_TYPE);
         }
 
-        Category category = categoryRepository.findById(requestDTO.getCategoryId())
-                .orElseThrow(() -> new NotFoundException(ErrorMessage.Category.ERR_NOT_FOUND_ID,
-                        requestDTO.getCategoryId()));
-        product.setCategory(category);
+        // Update Category if id modified
+        if (!requestDTO.getCategoryId().equals(product.getCategory().getId())) {
+            Category category = categoryRepository.findById(requestDTO.getCategoryId())
+                    .orElseThrow(() -> new NotFoundException(ErrorMessage.Category.ERR_NOT_FOUND_ID,
+                            requestDTO.getCategoryId()));
+            product.setCategory(category);
+        }
 
-        Brand brand = null;
-        if (requestDTO.getBrandId() != null) {
-            brand = brandRepository.findById(requestDTO.getBrandId())
+        // Update Brand if id modified
+        if (requestDTO.getBrandId() != null && !requestDTO.getBrandId().equals(product.getBrand().getId())) {
+            Brand brand = brandRepository.findById(requestDTO.getBrandId())
                     .orElseThrow(() -> new NotFoundException(ErrorMessage.Brand.ERR_NOT_FOUND_ID,
                             requestDTO.getBrandId()));
+            product.setBrand(brand);
         }
-        product.setBrand(brand);
 
-        product.setName(requestDTO.getName());
-        product.setDescription(requestDTO.getDescription());
+        // Update slug
+        if (!requestDTO.getName().trim().equals(product.getName())) {
+            String baseSlug = SlugUtil.toSlug(requestDTO.getName().trim());
+            String uniqueSlug = generateUniqueSlug(baseSlug);
+            product.setSlug(uniqueSlug);
+        }
+
+        product.setName(requestDTO.getName().trim());
+        product.setDescription(requestDTO.getDescription().trim());
         product.setPrice(requestDTO.getPrice());
         product.setDiscountPercentage(requestDTO.getDiscountPercentage());
         product.setStockQuantity(requestDTO.getStockQuantity());
-
-        String baseSlug = SlugUtil.toSlug(requestDTO.getName());
-        if (!baseSlug.equals(product.getSlug())) {
-            product.setSlug(generateUniqueSlug(baseSlug));
-        }
-
-        product.getAttributes().clear();
 
         List<ProductAttribute> updatedAttributes = Optional.ofNullable(requestDTO.getAttributes())
                 .orElse(Collections.emptyList())
@@ -180,11 +187,17 @@ public class ProductServiceImpl implements ProductService {
                     return productAttribute;
                 })
                 .toList();
-        product.setAttributes(updatedAttributes);
+
+        Iterator<ProductAttribute> productAttributeIterator = product.getAttributes().iterator();
+        while (productAttributeIterator.hasNext()) {
+            productAttributeIterator.next();
+            productAttributeIterator.remove();
+        }
+
+        product.getAttributes().addAll(updatedAttributes);
 
         if (images != null && !images.isEmpty()) {
-            product.getImages().clear();
-
+            // 1. Upload new images
             List<ProductImage> updatedImages = images.stream()
                     .map(image -> {
                         String newImageUrl = uploadFileUtil.uploadFile(image);
@@ -195,10 +208,17 @@ public class ProductServiceImpl implements ProductService {
                     })
                     .toList();
 
-            product.setImages(updatedImages);
-        }
+            // 2. Handle old images
+            Iterator<ProductImage> productImageIterator = product.getImages().iterator();
+            while (productImageIterator.hasNext()) {
+                ProductImage img = productImageIterator.next();
+                uploadFileUtil.destroyFileWithUrl(img.getImageUrl());
+                productImageIterator.remove();
+            }
 
-        productRepository.save(product);
+            // 3. Add new images
+            product.getImages().addAll(updatedImages);
+        }
 
         String message = messageUtil.getMessage(SuccessMessage.UPDATE);
         return new CommonResponseDTO(message, product);

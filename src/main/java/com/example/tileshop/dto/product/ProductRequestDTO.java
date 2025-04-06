@@ -19,6 +19,7 @@ public class ProductRequestDTO {
     private String description;
 
     @NotNull(message = ErrorMessage.INVALID_SOME_THING_FIELD_IS_REQUIRED)
+    @Min(value = 1000, message = ErrorMessage.INVALID_SOME_THING_FIELD)
     private Double price;
 
     @NotNull(message = ErrorMessage.INVALID_SOME_THING_FIELD_IS_REQUIRED)

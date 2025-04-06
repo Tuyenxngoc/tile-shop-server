@@ -24,6 +24,8 @@ public class ProductResponseDTO {
 
     private double averageRating;
 
+    private String imageUrl;
+
     public ProductResponseDTO(Product product) {
         this.id = product.getId();
         this.name = product.getName();
@@ -33,6 +35,7 @@ public class ProductResponseDTO {
         this.discountPercentage = product.getDiscountPercentage();
         this.stockQuantity = product.getStockQuantity();
         this.averageRating = product.getAverageRating();
+        this.imageUrl = product.getImages().getFirst().getImageUrl();
     }
 
 }
