@@ -9,6 +9,7 @@ import com.example.tileshop.dto.pagination.PaginationResponseDTO;
 import com.example.tileshop.dto.pagination.PagingMeta;
 import com.example.tileshop.dto.product.ProductRequestDTO;
 import com.example.tileshop.dto.product.ProductResponseDTO;
+import com.example.tileshop.dto.product.ProductUpdateResponseDTO;
 import com.example.tileshop.dto.productattribute.ProductAttributeRequestDTO;
 import com.example.tileshop.entity.*;
 import com.example.tileshop.exception.BadRequestException;
@@ -29,10 +30,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -135,7 +133,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @Transactional
-    public CommonResponseDTO update(Long id, ProductRequestDTO requestDTO, List<MultipartFile> images) {
+    public CommonResponseDTO update(Long id, ProductRequestDTO requestDTO, List<MultipartFile> images, Set<String> existingImageUrls) {
         Product product = getEntity(id);
 
         // Validate images
@@ -143,7 +141,7 @@ public class ProductServiceImpl implements ProductService {
             throw new BadRequestException(ErrorMessage.INVALID_FILE_TYPE);
         }
 
-        // Update Category if id modified
+        // Update Category if changed
         if (!requestDTO.getCategoryId().equals(product.getCategory().getId())) {
             Category category = categoryRepository.findById(requestDTO.getCategoryId())
                     .orElseThrow(() -> new NotFoundException(ErrorMessage.Category.ERR_NOT_FOUND_ID,
@@ -151,7 +149,7 @@ public class ProductServiceImpl implements ProductService {
             product.setCategory(category);
         }
 
-        // Update Brand if id modified
+        // Update Brand if changed
         if (requestDTO.getBrandId() != null && !requestDTO.getBrandId().equals(product.getBrand().getId())) {
             Brand brand = brandRepository.findById(requestDTO.getBrandId())
                     .orElseThrow(() -> new NotFoundException(ErrorMessage.Brand.ERR_NOT_FOUND_ID,
@@ -159,7 +157,7 @@ public class ProductServiceImpl implements ProductService {
             product.setBrand(brand);
         }
 
-        // Update slug
+        // Update Slug if name changed
         if (!requestDTO.getName().trim().equals(product.getName())) {
             String baseSlug = SlugUtil.toSlug(requestDTO.getName().trim());
             String uniqueSlug = generateUniqueSlug(baseSlug);
@@ -172,6 +170,7 @@ public class ProductServiceImpl implements ProductService {
         product.setDiscountPercentage(requestDTO.getDiscountPercentage());
         product.setStockQuantity(requestDTO.getStockQuantity());
 
+        // Update attributes
         List<ProductAttribute> updatedAttributes = Optional.ofNullable(requestDTO.getAttributes())
                 .orElse(Collections.emptyList())
                 .stream()
@@ -187,38 +186,34 @@ public class ProductServiceImpl implements ProductService {
                     return productAttribute;
                 })
                 .toList();
-
-        Iterator<ProductAttribute> productAttributeIterator = product.getAttributes().iterator();
-        while (productAttributeIterator.hasNext()) {
-            productAttributeIterator.next();
-            productAttributeIterator.remove();
-        }
-
+        product.getAttributes().clear();
         product.getAttributes().addAll(updatedAttributes);
 
-        if (images != null && !images.isEmpty()) {
-            // 1. Upload new images
-            List<ProductImage> updatedImages = images.stream()
-                    .map(image -> {
-                        String newImageUrl = uploadFileUtil.uploadFile(image);
-                        ProductImage productImage = new ProductImage();
-                        productImage.setImageUrl(newImageUrl);
-                        productImage.setProduct(product);
-                        return productImage;
-                    })
-                    .toList();
+        // Upload new images
+        List<ProductImage> updatedImages = Optional.ofNullable(images)
+                .orElse(Collections.emptyList())
+                .stream()
+                .map(image -> {
+                    String newImageUrl = uploadFileUtil.uploadFile(image);
+                    ProductImage productImage = new ProductImage();
+                    productImage.setImageUrl(newImageUrl);
+                    productImage.setProduct(product);
+                    return productImage;
+                })
+                .toList();
 
-            // 2. Handle old images
-            Iterator<ProductImage> productImageIterator = product.getImages().iterator();
-            while (productImageIterator.hasNext()) {
-                ProductImage img = productImageIterator.next();
-                uploadFileUtil.destroyFileWithUrl(img.getImageUrl());
+        // Handle old images
+        Iterator<ProductImage> productImageIterator = product.getImages().iterator();
+        while (productImageIterator.hasNext()) {
+            ProductImage oldImage = productImageIterator.next();
+            if (existingImageUrls == null || !existingImageUrls.contains(oldImage.getImageUrl())) {
+                uploadFileUtil.destroyFileWithUrl(oldImage.getImageUrl());
                 productImageIterator.remove();
             }
-
-            // 3. Add new images
-            product.getImages().addAll(updatedImages);
         }
+
+        // Add new images
+        product.getImages().addAll(updatedImages);
 
         String message = messageUtil.getMessage(SuccessMessage.UPDATE);
         return new CommonResponseDTO(message, product);
@@ -252,9 +247,9 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductRequestDTO findById(Long id) {
+    public ProductUpdateResponseDTO findById(Long id) {
         Product product = getEntity(id);
-        ProductRequestDTO responseDTO = new ProductRequestDTO();
+        ProductUpdateResponseDTO responseDTO = new ProductUpdateResponseDTO();
         responseDTO.setName(product.getName());
         responseDTO.setDescription(product.getDescription());
         responseDTO.setPrice(product.getPrice());
@@ -269,7 +264,11 @@ public class ProductServiceImpl implements ProductService {
                             a.setValue(attr.getValue());
                             return a;
                         }
-                ).toList());
+                )
+                .toList());
+        responseDTO.setImages(product.getImages().stream()
+                .map(ProductImage::getImageUrl)
+                .toList());
         return responseDTO;
     }
 

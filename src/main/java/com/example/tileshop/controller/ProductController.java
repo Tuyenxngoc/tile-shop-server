@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Set;
 
 @RestApiV1
 @RequiredArgsConstructor
@@ -45,9 +46,10 @@ public class ProductController {
     public ResponseEntity<?> updateProduct(
             @PathVariable Long id,
             @RequestPart("product") @Valid ProductRequestDTO requestDTO,
-            @RequestPart(value = "images", required = false) List<MultipartFile> images
+            @RequestPart(value = "images", required = false) List<MultipartFile> images,
+            @RequestPart(value = "existingImages", required = false) Set<String> existingImageUrls
     ) {
-        return VsResponseUtil.success(productService.update(id, requestDTO, images));
+        return VsResponseUtil.success(productService.update(id, requestDTO, images, existingImageUrls));
     }
 
     @Operation(summary = "API Delete Product")
