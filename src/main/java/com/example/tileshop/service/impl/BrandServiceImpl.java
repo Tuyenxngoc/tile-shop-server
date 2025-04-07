@@ -3,6 +3,7 @@ package com.example.tileshop.service.impl;
 import com.example.tileshop.constant.ErrorMessage;
 import com.example.tileshop.constant.SortByDataConstant;
 import com.example.tileshop.constant.SuccessMessage;
+import com.example.tileshop.dto.brand.BrandForUserResponseDTO;
 import com.example.tileshop.dto.brand.BrandRequestDTO;
 import com.example.tileshop.dto.brand.BrandResponseDTO;
 import com.example.tileshop.dto.common.CommonResponseDTO;
@@ -133,5 +134,31 @@ public class BrandServiceImpl implements BrandService {
         Brand brand = getEntity(id);
 
         return new BrandResponseDTO(brand);
+    }
+
+    @Override
+    public PaginationResponseDTO<BrandForUserResponseDTO> userFindAll(PaginationFullRequestDTO requestDTO) {
+        Pageable pageable = PaginationUtil.buildPageable(requestDTO, SortByDataConstant.BRAND);
+
+        Page<Brand> page = brandRepository.findAll(BrandSpecification.filterByField(requestDTO.getSearchBy(), requestDTO.getKeyword()), pageable);
+
+        List<BrandForUserResponseDTO> items = page.getContent().stream()
+                .map(BrandForUserResponseDTO::new)
+                .toList();
+
+        PagingMeta pagingMeta = PaginationUtil.buildPagingMeta(requestDTO, SortByDataConstant.BRAND, page);
+
+        PaginationResponseDTO<BrandForUserResponseDTO> responseDTO = new PaginationResponseDTO<>();
+        responseDTO.setItems(items);
+        responseDTO.setMeta(pagingMeta);
+
+        return responseDTO;
+    }
+
+    @Override
+    public BrandForUserResponseDTO userFindById(Long id) {
+        Brand brand = getEntity(id);
+
+        return new BrandForUserResponseDTO(brand);
     }
 }

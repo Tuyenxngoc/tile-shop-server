@@ -28,7 +28,10 @@ import java.util.Set;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Tag(name = "Product")
 public class ProductController {
+
     ProductService productService;
+
+    // -------------------- ADMIN APIs --------------------
 
     @Operation(summary = "API Create Product")
     @PreAuthorize("hasRole('ADMIN')")
@@ -73,9 +76,23 @@ public class ProductController {
         return VsResponseUtil.success(productService.findById(id));
     }
 
-    @Operation(summary = "API Get Product By Slug")
+    // -------------------- USER APIs --------------------
+
+    @Operation(summary = "User - API Get Products")
+    @GetMapping(UrlConstant.Product.User.GET_ALL)
+    public ResponseEntity<?> getAllProductsForUser(@ParameterObject PaginationFullRequestDTO requestDTO) {
+        return VsResponseUtil.success(productService.userFindAll(requestDTO));
+    }
+
+    @Operation(summary = "User - API Get Product By Id")
+    @GetMapping(UrlConstant.Product.User.GET_BY_ID)
+    public ResponseEntity<?> getProductDetailsById(@PathVariable Long id) {
+        return VsResponseUtil.success(productService.userFindById(id));
+    }
+
+    @Operation(summary = "User - API Get Product By Slug")
     @GetMapping(UrlConstant.Product.User.GET_BY_SLUG)
-    public ResponseEntity<?> getProductBySlug(@PathVariable String slug) {
-        return VsResponseUtil.success(productService.findBySlug(slug));
+    public ResponseEntity<?> getProductDetailsBySlug(@PathVariable String slug) {
+        return VsResponseUtil.success(productService.userFindBySlug(slug));
     }
 }

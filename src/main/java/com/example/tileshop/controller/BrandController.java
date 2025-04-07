@@ -25,11 +25,14 @@ import org.springframework.web.multipart.MultipartFile;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Tag(name = "Brand")
 public class BrandController {
+
     BrandService brandService;
+
+    // -------------------- ADMIN APIs --------------------
 
     @Operation(summary = "API Create Brand")
     @PreAuthorize("hasRole('ADMIN')")
-    @PostMapping(value = UrlConstant.Brand.CREATE, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = UrlConstant.Brand.Admin.CREATE, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> createBrand(
             @RequestPart("brand") @Valid BrandRequestDTO requestDTO,
             @RequestPart(value = "image") MultipartFile image
@@ -39,7 +42,7 @@ public class BrandController {
 
     @Operation(summary = "API Update Brand")
     @PreAuthorize("hasRole('ADMIN')")
-    @PutMapping(value = UrlConstant.Brand.UPDATE, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PutMapping(value = UrlConstant.Brand.Admin.UPDATE, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> updateBrand(
             @PathVariable Long id,
             @RequestPart("brand") @Valid BrandRequestDTO requestDTO,
@@ -50,22 +53,37 @@ public class BrandController {
 
     @Operation(summary = "API Delete Brand")
     @PreAuthorize("hasRole('ADMIN')")
-    @DeleteMapping(UrlConstant.Brand.DELETE)
+    @DeleteMapping(UrlConstant.Brand.Admin.DELETE)
     public ResponseEntity<?> deleteBrand(@PathVariable Long id) {
         return VsResponseUtil.success(brandService.delete(id));
     }
 
     @Operation(summary = "API Get Brands")
     @PreAuthorize("hasRole('ADMIN')")
-    @GetMapping(UrlConstant.Brand.GET_ALL)
+    @GetMapping(UrlConstant.Brand.Admin.GET_ALL)
     public ResponseEntity<?> getBrands(@ParameterObject PaginationFullRequestDTO requestDTO) {
         return VsResponseUtil.success(brandService.findAll(requestDTO));
     }
 
     @Operation(summary = "API Get Brand By Id")
     @PreAuthorize("hasRole('ADMIN')")
-    @GetMapping(UrlConstant.Brand.GET_BY_ID)
+    @GetMapping(UrlConstant.Brand.Admin.GET_BY_ID)
     public ResponseEntity<?> getBrandById(@PathVariable Long id) {
         return VsResponseUtil.success(brandService.findById(id));
     }
+
+    // -------------------- USER APIs --------------------
+
+    @Operation(summary = "User - API Get All Brands")
+    @GetMapping(UrlConstant.Brand.User.GET_ALL)
+    public ResponseEntity<?> getAllBrandsForUser(@ParameterObject PaginationFullRequestDTO requestDTO) {
+        return VsResponseUtil.success(brandService.userFindAll(requestDTO));
+    }
+
+    @Operation(summary = "User - API Get Brand By Id")
+    @GetMapping(UrlConstant.Brand.User.GET_BY_ID)
+    public ResponseEntity<?> getBrandDetailsById(@PathVariable Long id) {
+        return VsResponseUtil.success(brandService.userFindById(id));
+    }
+
 }

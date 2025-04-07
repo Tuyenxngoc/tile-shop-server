@@ -7,9 +7,7 @@ import com.example.tileshop.dto.common.CommonResponseDTO;
 import com.example.tileshop.dto.pagination.PaginationFullRequestDTO;
 import com.example.tileshop.dto.pagination.PaginationResponseDTO;
 import com.example.tileshop.dto.pagination.PagingMeta;
-import com.example.tileshop.dto.product.ProductRequestDTO;
-import com.example.tileshop.dto.product.ProductResponseDTO;
-import com.example.tileshop.dto.product.ProductUpdateResponseDTO;
+import com.example.tileshop.dto.product.*;
 import com.example.tileshop.dto.productattribute.ProductAttributeRequestDTO;
 import com.example.tileshop.entity.*;
 import com.example.tileshop.exception.BadRequestException;
@@ -49,7 +47,7 @@ public class ProductServiceImpl implements ProductService {
 
     private Product getEntity(Long id) {
         return productRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException(ErrorMessage.News.ERR_NOT_FOUND_ID, id));
+                .orElseThrow(() -> new NotFoundException(ErrorMessage.Product.ERR_NOT_FOUND_ID, id));
     }
 
     private String generateUniqueSlug(String baseSlug) {
@@ -273,7 +271,34 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Object findBySlug(String slug) {
-        return null;
+    public PaginationResponseDTO<ProductForUserResponseDTO> userFindAll(PaginationFullRequestDTO requestDTO) {
+        Pageable pageable = PaginationUtil.buildPageable(requestDTO, SortByDataConstant.PRODUCT);
+
+        Page<Product> page = productRepository.findAll(pageable);
+
+        List<ProductForUserResponseDTO> items = page.getContent().stream()
+                .map(ProductForUserResponseDTO::new)
+                .toList();
+
+        PagingMeta pagingMeta = PaginationUtil.buildPagingMeta(requestDTO, SortByDataConstant.PRODUCT, page);
+
+        PaginationResponseDTO<ProductForUserResponseDTO> responseDTO = new PaginationResponseDTO<>();
+        responseDTO.setItems(items);
+        responseDTO.setMeta(pagingMeta);
+
+        return responseDTO;
+    }
+
+    @Override
+    public ProductDetailResponseDTO userFindById(Long id) {
+        Product product = getEntity(id);
+        return new ProductDetailResponseDTO(product);
+    }
+
+    @Override
+    public ProductDetailResponseDTO userFindBySlug(String slug) {
+        Product product = productRepository.findBySlug(slug)
+                .orElseThrow(() -> new NotFoundException(ErrorMessage.Product.ERR_NOT_FOUND_SLUG, slug));
+        return new ProductDetailResponseDTO(product);
     }
 }

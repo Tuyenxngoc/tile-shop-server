@@ -63,6 +63,17 @@ public class SecurityConfig {
             "/api/v1/news",
             "/api/v1/news/*",
             "/api/v1/news/slug/*",
+
+            //Product
+            "/api/v1/products",
+            "/api/v1/products/*",
+            "/api/v1/products/slug/*",
+
+            //Brand
+            "/api/v1/brands",
+
+            //Category
+            "/api/v1/categories",
     };
 
     private static final String[] POST_WHITELIST_URL = {
