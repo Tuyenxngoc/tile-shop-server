@@ -1,5 +1,7 @@
 package com.example.tileshop.dto.product;
 
+import com.example.tileshop.dto.brand.BrandResponseDTO;
+import com.example.tileshop.dto.productattribute.ProductAttributeResponseDTO;
 import com.example.tileshop.dto.review.ReviewResponseDTO;
 import com.example.tileshop.entity.*;
 import lombok.AllArgsConstructor;
@@ -31,13 +33,13 @@ public class ProductDetailResponseDTO {
 
     private Category category;
 
-    private Brand brand;
+    private BrandResponseDTO brand;
 
     private List<String> images;
 
     private List<ReviewResponseDTO> reviews;
 
-    private List<ProductAttribute> attributes;
+    private List<ProductAttributeResponseDTO> attributes;
 
     public ProductDetailResponseDTO(Product product) {
         this.id = product.getId();
@@ -52,7 +54,9 @@ public class ProductDetailResponseDTO {
 
 //        this.category = product.getCategory();
 //
-//        this.brand = product.getBrand();
+        if (product.getBrand() != null) {
+            this.brand = new BrandResponseDTO(product.getBrand());
+        }
 
         this.images = product.getImages().stream()
                 .map(ProductImage::getImageUrl)
@@ -63,9 +67,9 @@ public class ProductDetailResponseDTO {
             this.reviews.add(new ReviewResponseDTO(review));
         }
 
-//        this.attributes = new ArrayList<>();
-//        for (ProductAttribute attribute : product.getAttributes()) {
-//            this.attributes.add(new ProductAttributeResponseDTO(attribute));
-//        }
+        this.attributes = new ArrayList<>();
+        for (ProductAttribute attribute : product.getAttributes()) {
+            this.attributes.add(new ProductAttributeResponseDTO(attribute));
+        }
     }
 }

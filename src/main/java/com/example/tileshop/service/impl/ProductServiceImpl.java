@@ -148,11 +148,15 @@ public class ProductServiceImpl implements ProductService {
         }
 
         // Update Brand if changed
-        if (requestDTO.getBrandId() != null && !requestDTO.getBrandId().equals(product.getBrand().getId())) {
-            Brand brand = brandRepository.findById(requestDTO.getBrandId())
-                    .orElseThrow(() -> new NotFoundException(ErrorMessage.Brand.ERR_NOT_FOUND_ID,
-                            requestDTO.getBrandId()));
-            product.setBrand(brand);
+        if (requestDTO.getBrandId() != null) {
+            Long newBrandId = requestDTO.getBrandId();
+            Long currentBrandId = (product.getBrand() != null) ? product.getBrand().getId() : null;
+
+            if (!newBrandId.equals(currentBrandId)) {
+                Brand brand = brandRepository.findById(newBrandId)
+                        .orElseThrow(() -> new NotFoundException(ErrorMessage.Brand.ERR_NOT_FOUND_ID, newBrandId));
+                product.setBrand(brand);
+            }
         }
 
         // Update Slug if name changed
