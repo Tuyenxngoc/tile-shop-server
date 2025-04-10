@@ -135,6 +135,7 @@ public class ErrorMessage {
 
     public static class Review {
         public static final String ERR_NOT_FOUND_ID = "exception.review.not.found.id";
+        public static final String ERR_MAX_IMAGES = "exception.review.max.images";
     }
 
     public static class Role {

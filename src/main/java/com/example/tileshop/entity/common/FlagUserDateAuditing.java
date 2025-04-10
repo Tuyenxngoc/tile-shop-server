@@ -11,9 +11,9 @@ import lombok.Setter;
 public abstract class FlagUserDateAuditing extends UserDateAuditing {
 
     @Column(name = "delete_flag", nullable = false)
-    private Boolean deleteFlag = Boolean.FALSE;
+    protected Boolean deleteFlag = Boolean.FALSE;
 
     @Column(name = "active_flag", nullable = false)
-    private Boolean activeFlag = Boolean.TRUE;
+    protected Boolean activeFlag = Boolean.TRUE;
 
 }

@@ -53,6 +53,8 @@ public class SuccessMessage {
     }
 
     public static class Review {
+        public static final String APPROVE = "success.review.approve";
+        public static final String REJECT = "success.review.reject";
     }
 
     public static class Role {

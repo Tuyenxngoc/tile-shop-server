@@ -17,10 +17,10 @@ public abstract class UserDateAuditing extends DateAuditing {
 
     @CreatedBy
     @Column(name = "created_by", updatable = false, nullable = false)
-    private String createdBy;
+    protected String createdBy;
 
     @LastModifiedBy
     @Column(name = "last_modified_by", nullable = false)
-    private String lastModifiedBy;
+    protected String lastModifiedBy;
 
 }

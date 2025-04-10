@@ -165,7 +165,12 @@ public class UrlConstant {
         private static final String PRE_FIX = "/reviews";
 
         public static final String CREATE = PRE_FIX;
+        public static final String DELETE = PRE_FIX + "/{id}";
         public static final String GET_BY_PRODUCT_ID = PRE_FIX + "/product/{productId}";
+        public static final String GET_SUMMARY_BY_PRODUCT_ID = PRE_FIX + "/summary/{productId}";
+        public static final String GET_PENDING = PRE_FIX + "/pending";
+        public static final String APPROVE = PRE_FIX + "/{id}/approve";
+        public static final String REJECT = PRE_FIX + "/{id}/reject";
     }
 
     public static class Role {

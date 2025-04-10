@@ -17,10 +17,10 @@ public abstract class UserAuditing {
 
     @CreatedBy
     @Column(updatable = false)
-    private String createdBy;
+    protected String createdBy;
 
     @LastModifiedBy
     @Column(nullable = false)
-    private String lastModifiedBy;
+    protected String lastModifiedBy;
 
 }

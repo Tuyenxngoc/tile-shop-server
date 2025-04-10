@@ -74,6 +74,10 @@ public class SecurityConfig {
 
             //Category
             "/api/v1/categories",
+
+            //Review
+            "/api/v1/reviews/product/*",
+            "/api/v1/reviews/summary/*"
     };
 
     private static final String[] POST_WHITELIST_URL = {

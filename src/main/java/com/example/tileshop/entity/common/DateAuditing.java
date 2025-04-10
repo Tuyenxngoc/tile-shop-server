@@ -19,10 +19,10 @@ public abstract class DateAuditing {
 
     @CreatedDate
     @Column(name = "created_date", nullable = false, updatable = false)
-    private LocalDateTime createdDate;
+    protected LocalDateTime createdDate;
 
     @LastModifiedDate
     @Column(name = "last_modified_date", nullable = false)
-    private LocalDateTime lastModifiedDate;
+    protected LocalDateTime lastModifiedDate;
 
 }

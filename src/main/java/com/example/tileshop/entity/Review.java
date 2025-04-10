@@ -6,6 +6,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Getter
 @Setter
 @Builder
@@ -23,9 +26,8 @@ public class Review extends DateAuditing {
 
     private int rating;
 
+    @Column(name = "comment", length = 500)
     private String comment;
-
-    private String imageUrl;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
@@ -42,5 +44,9 @@ public class Review extends DateAuditing {
     @JoinColumn(name = "product_id", foreignKey = @ForeignKey(name = "FK_REVIEW_PRODUCT_ID"), nullable = false)
     @JsonIgnore
     private Product product;
+
+    @OneToMany(mappedBy = "review", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @JsonIgnore
+    private List<ReviewImage> images = new ArrayList<>();
 
 }
