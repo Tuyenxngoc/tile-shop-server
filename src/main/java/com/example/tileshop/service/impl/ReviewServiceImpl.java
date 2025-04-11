@@ -12,11 +12,13 @@ import com.example.tileshop.dto.pagination.PagingMeta;
 import com.example.tileshop.dto.review.CreateReviewRequestDTO;
 import com.example.tileshop.dto.review.ReviewResponseDTO;
 import com.example.tileshop.dto.review.ReviewSummaryResponseDTO;
+import com.example.tileshop.entity.Customer;
 import com.example.tileshop.entity.Product;
 import com.example.tileshop.entity.Review;
 import com.example.tileshop.entity.ReviewImage;
 import com.example.tileshop.exception.BadRequestException;
 import com.example.tileshop.exception.NotFoundException;
+import com.example.tileshop.repository.CustomerRepository;
 import com.example.tileshop.repository.ProductRepository;
 import com.example.tileshop.repository.ReviewRepository;
 import com.example.tileshop.service.ReviewService;
@@ -27,6 +29,7 @@ import com.example.tileshop.util.UploadFileUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -44,6 +47,8 @@ public class ReviewServiceImpl implements ReviewService {
     private final UploadFileUtil uploadFileUtil;
 
     private final ProductRepository productRepository;
+    
+    private final CustomerRepository customerRepository;
 
     private final MessageUtil messageUtil;
 
@@ -53,10 +58,14 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
-    public PaginationResponseDTO<ReviewResponseDTO> getReviewsByProductId(String productId, PaginationSortRequestDTO requestDTO) {
+    public PaginationResponseDTO<ReviewResponseDTO> getReviewsByProductId(Long productId, PaginationSortRequestDTO requestDTO) {
         Pageable pageable = PaginationUtil.buildPageable(requestDTO, SortByDataConstant.REVIEW);
 
-        Page<Review> page = reviewRepository.findAll(ReviewSpecification.filterByProductSlug(productId), pageable);
+        Specification<Review> spec = Specification
+                .where(ReviewSpecification.filterByProductId(productId))
+                .and(ReviewSpecification.filterByStatus(ReviewStatus.APPROVED));
+
+        Page<Review> page = reviewRepository.findAll(spec, pageable);
 
         List<ReviewResponseDTO> items = page.getContent().stream()
                 .map(ReviewResponseDTO::new)
@@ -72,8 +81,8 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
-    public ReviewSummaryResponseDTO getReviewSummary(String productId) {
-        List<Review> approvedReviews = reviewRepository.findByProductSlugAndStatus(productId, ReviewStatus.APPROVED);
+    public ReviewSummaryResponseDTO getReviewSummary(Long productId) {
+        List<Review> approvedReviews = reviewRepository.findByProductIdAndStatus(productId, ReviewStatus.APPROVED);
         int totalReviews = approvedReviews.size();
 
         // Nếu chưa có review, mặc định 5 sao và map với 5 -> 100%, còn lại 0%
@@ -82,7 +91,7 @@ public class ReviewServiceImpl implements ReviewService {
             for (int i = 1; i <= 5; i++) {
                 ReviewSummaryResponseDTO.RatingDetail detail = new ReviewSummaryResponseDTO.RatingDetail();
                 if (i == 5) {
-                    detail.setCount(0);
+                    detail.setCount(1);
                     detail.setPercentage(100.0);
                 } else {
                     detail.setCount(0);
@@ -91,7 +100,7 @@ public class ReviewServiceImpl implements ReviewService {
                 defaultBreakdown.put(i, detail);
             }
 
-            return new ReviewSummaryResponseDTO(5.0, 0, defaultBreakdown);
+            return new ReviewSummaryResponseDTO(5.0, 1, defaultBreakdown);
         }
 
         double totalRating = 0.0;
@@ -147,7 +156,7 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
-    public CommonResponseDTO addReview(CreateReviewRequestDTO requestDTO, List<MultipartFile> images) {
+    public CommonResponseDTO addReview(CreateReviewRequestDTO requestDTO, List<MultipartFile> images,  String userId) {
         //Kiểm tra hình ảnh
         if (images != null) {
             if (images.size() > 3) {
@@ -160,6 +169,15 @@ public class ReviewServiceImpl implements ReviewService {
 
         Product product = productRepository.findById(requestDTO.getProductId())
                 .orElseThrow(() -> new NotFoundException(ErrorMessage.Product.ERR_NOT_FOUND_ID, requestDTO.getProductId()));
+        
+        Customer customer = customerRepository.findByUserId(userId)
+        		  .orElseThrow(() -> new NotFoundException(ErrorMessage.Customer.ERR_NOT_FOUND_ID, userId));
+        
+        long pendingReviewCount = reviewRepository.countByCustomerAndProductAndStatus(customer, product, ReviewStatus.PENDING);
+
+    	if (pendingReviewCount >= 5) {
+    	    throw new BadRequestException(ErrorMessage.Review.ERR_PENDING_LIMIT);
+    	}
 
         Review review = new Review();
 
@@ -180,6 +198,7 @@ public class ReviewServiceImpl implements ReviewService {
         review.setComment(requestDTO.getComment().trim());
         review.setRating(requestDTO.getRating());
         review.setProduct(product);
+        review.setCustomer(customer);
 
         reviewRepository.save(review);
 

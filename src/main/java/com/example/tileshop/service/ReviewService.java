@@ -12,13 +12,13 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 public interface ReviewService {
-    PaginationResponseDTO<ReviewResponseDTO> getReviewsByProductId(String productId, PaginationSortRequestDTO requestDTO);
+    PaginationResponseDTO<ReviewResponseDTO> getReviewsByProductId(Long productId, PaginationSortRequestDTO requestDTO);
 
-    ReviewSummaryResponseDTO getReviewSummary(String productId);
+    ReviewSummaryResponseDTO getReviewSummary(Long productId);
 
     PaginationResponseDTO<ReviewResponseDTO> getPendingReviews(PaginationFullRequestDTO requestDTO);
 
-    CommonResponseDTO addReview(CreateReviewRequestDTO requestDTO, List<MultipartFile> images);
+    CommonResponseDTO addReview(CreateReviewRequestDTO requestDTO, List<MultipartFile> images, String userId);
 
     CommonResponseDTO approveReview(Long id, String username);
 

@@ -1,5 +1,7 @@
 package com.example.tileshop.specification;
 
+import com.example.tileshop.constant.ReviewStatus;
+import com.example.tileshop.entity.Product;
 import com.example.tileshop.entity.Product_;
 import com.example.tileshop.entity.Review;
 import com.example.tileshop.entity.Review_;
@@ -8,15 +10,28 @@ import jakarta.persistence.criteria.Predicate;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.jpa.domain.Specification;
 
-public class ReviewSpecification {
+import jakarta.persistence.criteria.Join;
 
-    public static Specification<Review> filterByProductSlug(String slug) {
+public class ReviewSpecification {
+    
+    public static Specification<Review> filterByProductId(Long productId) {
         return (root, query, builder) -> {
-            if (StringUtils.isBlank(slug)) {
+            if (productId == null) {
                 return builder.conjunction();
             }
 
-            return builder.equal(root.join(Review_.product).get(Product_.slug), slug);
+            Join<Review, Product> productJoin = root.join(Review_.product);
+            return builder.equal(productJoin.get(Product_.id), productId);
+        };
+    }
+
+    public static Specification<Review> filterByStatus(ReviewStatus status) {
+        return (root, query, builder) -> {
+            if (status == null) {
+                return builder.conjunction();
+            }
+
+            return builder.equal(root.get(Review_.status), status);
         };
     }
 

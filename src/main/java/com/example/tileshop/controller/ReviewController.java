@@ -34,13 +34,13 @@ public class ReviewController {
 
     @Operation(summary = "Get reviews by product ID")
     @GetMapping(UrlConstant.Review.GET_BY_PRODUCT_ID)
-    public ResponseEntity<?> getReviewsByProductId(@PathVariable String productId, PaginationSortRequestDTO requestDTO) {
+    public ResponseEntity<?> getReviewsByProductId(@PathVariable Long productId, PaginationSortRequestDTO requestDTO) {
         return VsResponseUtil.success(reviewService.getReviewsByProductId(productId, requestDTO));
     }
 
     @Operation(summary = "Get review summary by product ID")
     @GetMapping(UrlConstant.Review.GET_SUMMARY_BY_PRODUCT_ID)
-    public ResponseEntity<?> getReviewSummary(@PathVariable String productId) {
+    public ResponseEntity<?> getReviewSummary(@PathVariable Long productId) {
         return VsResponseUtil.success(reviewService.getReviewSummary(productId));
     }
 
@@ -55,9 +55,10 @@ public class ReviewController {
     @PostMapping(value = UrlConstant.Review.CREATE, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> addReview(
             @RequestPart("review") @Valid CreateReviewRequestDTO requestDTO,
-            @RequestPart(value = "images", required = false) List<MultipartFile> images
+            @RequestPart(value = "images", required = false) List<MultipartFile> images,
+            @CurrentUser CustomUserDetails userDetails
     ) {
-        return VsResponseUtil.success(HttpStatus.CREATED, reviewService.addReview(requestDTO, images));
+        return VsResponseUtil.success(HttpStatus.CREATED, reviewService.addReview(requestDTO, images, userDetails.getUserId()));
     }
 
     @Operation(summary = "Approve a review")
