@@ -1,6 +1,7 @@
 package com.example.tileshop.dto.product;
 
 import com.example.tileshop.dto.brand.BrandResponseDTO;
+import com.example.tileshop.dto.category.CategorySimpleResponseDTO;
 import com.example.tileshop.dto.productattribute.ProductAttributeResponseDTO;
 import com.example.tileshop.entity.Category;
 import com.example.tileshop.entity.Product;
@@ -10,12 +11,13 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Getter
 @AllArgsConstructor
 public class ProductDetailResponseDTO {
-    private Long id;
+    private long id;
 
     private String name;
 
@@ -33,7 +35,7 @@ public class ProductDetailResponseDTO {
 
     private double averageRating;
 
-    private Category category;
+    private List<CategorySimpleResponseDTO> categoryPath;
 
     private BrandResponseDTO brand;
 
@@ -52,8 +54,8 @@ public class ProductDetailResponseDTO {
         this.stockQuantity = product.getStockQuantity();
         this.averageRating = product.getAverageRating();
 
-//        this.category = product.getCategory();
-//
+        this.categoryPath = buildBreadcrumb(product.getCategory());
+
         if (product.getBrand() != null) {
             this.brand = new BrandResponseDTO(product.getBrand());
         }
@@ -67,4 +69,18 @@ public class ProductDetailResponseDTO {
             this.attributes.add(new ProductAttributeResponseDTO(attribute));
         }
     }
+
+    public List<CategorySimpleResponseDTO> buildBreadcrumb(Category category) {
+        List<CategorySimpleResponseDTO> breadcrumb = new ArrayList<>();
+        Category current = category;
+
+        while (current != null) {
+            breadcrumb.add(new CategorySimpleResponseDTO(current.getId(), current.getName()));
+            current = current.getParent();
+        }
+
+        Collections.reverse(breadcrumb);
+        return breadcrumb;
+    }
+
 }
