@@ -1,6 +1,7 @@
 package com.example.tileshop.service;
 
 import com.example.tileshop.dto.common.CommonResponseDTO;
+import com.example.tileshop.dto.filter.ReviewFilterDTO;
 import com.example.tileshop.dto.pagination.PaginationFullRequestDTO;
 import com.example.tileshop.dto.pagination.PaginationResponseDTO;
 import com.example.tileshop.dto.pagination.PaginationSortRequestDTO;
@@ -17,7 +18,7 @@ public interface ReviewService {
 
     ReviewSummaryResponseDTO getReviewSummary(Long productId);
 
-    PaginationResponseDTO<ReviewResponseDTO> findAll(PaginationFullRequestDTO requestDTO);
+    PaginationResponseDTO<ReviewResponseDTO> findAll(PaginationFullRequestDTO requestDTO, ReviewFilterDTO filterDTO);
 
     CommonResponseDTO addReview(CreateReviewRequestDTO requestDTO, List<MultipartFile> images, String userId);
 

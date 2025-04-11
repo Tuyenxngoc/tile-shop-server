@@ -3,6 +3,7 @@ package com.example.tileshop.controller;
 import com.example.tileshop.annotation.CurrentUser;
 import com.example.tileshop.annotation.RestApiV1;
 import com.example.tileshop.constant.UrlConstant;
+import com.example.tileshop.dto.filter.ReviewFilterDTO;
 import com.example.tileshop.dto.pagination.PaginationFullRequestDTO;
 import com.example.tileshop.dto.pagination.PaginationSortRequestDTO;
 import com.example.tileshop.dto.review.CreateReviewRequestDTO;
@@ -49,8 +50,8 @@ public class ReviewController {
     @Operation(summary = "API Get reviews")
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping(UrlConstant.Review.GET_ALL)
-    public ResponseEntity<?> getReviews(@ParameterObject PaginationFullRequestDTO requestDTO) {
-        return VsResponseUtil.success(reviewService.findAll(requestDTO));
+    public ResponseEntity<?> getReviews(@ParameterObject PaginationFullRequestDTO requestDTO, @ParameterObject ReviewFilterDTO filterDTO) {
+        return VsResponseUtil.success(reviewService.findAll(requestDTO, filterDTO));
     }
 
     @Operation(summary = "API Create a new review")

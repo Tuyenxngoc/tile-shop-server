@@ -5,6 +5,7 @@ import com.example.tileshop.constant.ReviewStatus;
 import com.example.tileshop.constant.SortByDataConstant;
 import com.example.tileshop.constant.SuccessMessage;
 import com.example.tileshop.dto.common.CommonResponseDTO;
+import com.example.tileshop.dto.filter.ReviewFilterDTO;
 import com.example.tileshop.dto.pagination.PaginationFullRequestDTO;
 import com.example.tileshop.dto.pagination.PaginationResponseDTO;
 import com.example.tileshop.dto.pagination.PaginationSortRequestDTO;
@@ -140,10 +141,15 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
-    public PaginationResponseDTO<ReviewResponseDTO> findAll(PaginationFullRequestDTO requestDTO) {
+    public PaginationResponseDTO<ReviewResponseDTO> findAll(PaginationFullRequestDTO requestDTO, ReviewFilterDTO filterDTO) {
         Pageable pageable = PaginationUtil.buildPageable(requestDTO, SortByDataConstant.REVIEW);
 
-        Page<Review> page = reviewRepository.findAll(ReviewSpecification.filterByField(requestDTO.getSearchBy(), requestDTO.getKeyword()), pageable);
+        Specification<Review> spec = Specification
+                .where(ReviewSpecification.filterByField(requestDTO.getSearchBy(), requestDTO.getKeyword()))
+                .and(ReviewSpecification.filterByStatus(filterDTO.getStatus()))
+                .and(ReviewSpecification.filterByReviewFilterDTO(filterDTO));
+        
+        Page<Review> page = reviewRepository.findAll(spec, pageable);
 
         List<ReviewResponseDTO> items = page.getContent().stream()
                 .map(ReviewResponseDTO::new)
@@ -198,7 +204,9 @@ public class ReviewServiceImpl implements ReviewService {
             review.setImages(productImages);
         }
 
-        review.setComment(requestDTO.getComment().trim());
+	    if(requestDTO.getComment() != null) {
+	    	review.setComment(requestDTO.getComment().trim());
+	    }
         review.setRating(requestDTO.getRating());
         review.setProduct(product);
         review.setCustomer(customer);
@@ -220,7 +228,7 @@ public class ReviewServiceImpl implements ReviewService {
         }
 
         String message = messageUtil.getMessage(SuccessMessage.Review.APPROVE);
-        return new CommonResponseDTO(message, review);
+        return new CommonResponseDTO(message, new ReviewResponseDTO(review));
     }
 
     @Override
@@ -233,7 +241,7 @@ public class ReviewServiceImpl implements ReviewService {
         }
 
         String message = messageUtil.getMessage(SuccessMessage.Review.REJECT);
-        return new CommonResponseDTO(message, review);
+        return new CommonResponseDTO(message, new ReviewResponseDTO(review));
     }
 
     @Override
@@ -251,7 +259,7 @@ public class ReviewServiceImpl implements ReviewService {
         reviewRepository.delete(review);
 
         String message = messageUtil.getMessage(SuccessMessage.DELETE);
-        return new CommonResponseDTO(message);
+        return new CommonResponseDTO(message, true);
     }
 
 }

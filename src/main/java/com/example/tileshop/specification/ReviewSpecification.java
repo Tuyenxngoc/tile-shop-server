@@ -1,6 +1,9 @@
 package com.example.tileshop.specification;
 
 import com.example.tileshop.constant.ReviewStatus;
+import com.example.tileshop.dto.filter.ReviewFilterDTO;
+import com.example.tileshop.entity.Category;
+import com.example.tileshop.entity.Category_;
 import com.example.tileshop.entity.Product;
 import com.example.tileshop.entity.Product_;
 import com.example.tileshop.entity.Review;
@@ -49,7 +52,58 @@ public class ReviewSpecification {
                             builder.lower(root.get(Review_.comment)),
                             "%" + keyword.toLowerCase() + "%"
                     ));
+                    
+                    case Product_.NAME -> {
+                        Join<Review, Product> productJoin = root.join(Review_.product);
+                        predicate = builder.and(predicate,
+                                builder.like(
+                                        builder.lower(productJoin.get(Product_.name)),
+                                        "%" + keyword.toLowerCase() + "%"
+                                )
+                        );
+                    }
+
+                    case Product_.CATEGORY -> {
+                        Join<Review, Product> productJoin = root.join(Review_.product);
+                        Join<Product, Category> categoryJoin = productJoin.join(Product_.category);
+                        predicate = builder.and(predicate,
+                                builder.like(
+                                        builder.lower(categoryJoin.get(Category_.name)), 
+                                        "%" + keyword.toLowerCase() + "%"
+                                )
+                        );
+                    }
                 }
+            }
+
+            return predicate;
+        };
+    }
+
+    public static Specification<Review> filterByReviewFilterDTO(ReviewFilterDTO filterDTO) {
+        return (root, query, builder) -> {
+            Predicate predicate = builder.conjunction();
+
+            if (filterDTO == null) {
+                return predicate;
+            }
+
+            // Lọc theo rating (số sao)
+            if (filterDTO.getRating() != null) {
+                predicate = builder.and(predicate, builder.equal(root.get(Review_.rating), filterDTO.getRating()));
+            }
+
+            // Lọc review có hình ảnh
+            if (Boolean.TRUE.equals(filterDTO.getHasImage())) {
+                predicate = builder.and(predicate, builder.isNotEmpty(root.get(Review_.images)));
+            }
+
+            // Lọc review có nội dung
+            if (Boolean.TRUE.equals(filterDTO.getHasContent())) {
+                predicate = builder.and(predicate,
+                        builder.isNotNull(root.get(Review_.comment)),
+                        builder.notEqual(builder.trim(root.get(Review_.comment)), "")
+                );
             }
 
             return predicate;
