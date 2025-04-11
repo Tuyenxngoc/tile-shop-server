@@ -5,6 +5,7 @@ import com.example.tileshop.dto.pagination.PaginationFullRequestDTO;
 import com.example.tileshop.dto.pagination.PaginationResponseDTO;
 import com.example.tileshop.dto.pagination.PaginationSortRequestDTO;
 import com.example.tileshop.dto.review.CreateReviewRequestDTO;
+import com.example.tileshop.dto.review.ReviewForUserResponseDTO;
 import com.example.tileshop.dto.review.ReviewResponseDTO;
 import com.example.tileshop.dto.review.ReviewSummaryResponseDTO;
 import org.springframework.web.multipart.MultipartFile;
@@ -12,7 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 public interface ReviewService {
-    PaginationResponseDTO<ReviewResponseDTO> getReviewsByProductId(Long productId, PaginationSortRequestDTO requestDTO);
+    PaginationResponseDTO<ReviewForUserResponseDTO> getReviewsByProductId(Long productId, PaginationSortRequestDTO requestDTO);
 
     ReviewSummaryResponseDTO getReviewSummary(Long productId);
 

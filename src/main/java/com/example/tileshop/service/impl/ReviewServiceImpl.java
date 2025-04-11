@@ -10,6 +10,7 @@ import com.example.tileshop.dto.pagination.PaginationResponseDTO;
 import com.example.tileshop.dto.pagination.PaginationSortRequestDTO;
 import com.example.tileshop.dto.pagination.PagingMeta;
 import com.example.tileshop.dto.review.CreateReviewRequestDTO;
+import com.example.tileshop.dto.review.ReviewForUserResponseDTO;
 import com.example.tileshop.dto.review.ReviewResponseDTO;
 import com.example.tileshop.dto.review.ReviewSummaryResponseDTO;
 import com.example.tileshop.entity.Customer;
@@ -58,7 +59,7 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
-    public PaginationResponseDTO<ReviewResponseDTO> getReviewsByProductId(Long productId, PaginationSortRequestDTO requestDTO) {
+    public PaginationResponseDTO<ReviewForUserResponseDTO> getReviewsByProductId(Long productId, PaginationSortRequestDTO requestDTO) {
         Pageable pageable = PaginationUtil.buildPageable(requestDTO, SortByDataConstant.REVIEW);
 
         Specification<Review> spec = Specification
@@ -67,13 +68,13 @@ public class ReviewServiceImpl implements ReviewService {
 
         Page<Review> page = reviewRepository.findAll(spec, pageable);
 
-        List<ReviewResponseDTO> items = page.getContent().stream()
-                .map(ReviewResponseDTO::new)
+        List<ReviewForUserResponseDTO> items = page.getContent().stream()
+                .map(ReviewForUserResponseDTO::new)
                 .toList();
 
         PagingMeta pagingMeta = PaginationUtil.buildPagingMeta(requestDTO, SortByDataConstant.REVIEW, page);
 
-        PaginationResponseDTO<ReviewResponseDTO> responseDTO = new PaginationResponseDTO<>();
+        PaginationResponseDTO<ReviewForUserResponseDTO> responseDTO = new PaginationResponseDTO<>();
         responseDTO.setItems(items);
         responseDTO.setMeta(pagingMeta);
 
