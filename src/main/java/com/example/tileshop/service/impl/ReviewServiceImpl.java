@@ -49,7 +49,7 @@ public class ReviewServiceImpl implements ReviewService {
     private final UploadFileUtil uploadFileUtil;
 
     private final ProductRepository productRepository;
-    
+
     private final CustomerRepository customerRepository;
 
     private final MessageUtil messageUtil;
@@ -148,7 +148,7 @@ public class ReviewServiceImpl implements ReviewService {
                 .where(ReviewSpecification.filterByField(requestDTO.getSearchBy(), requestDTO.getKeyword()))
                 .and(ReviewSpecification.filterByStatus(filterDTO.getStatus()))
                 .and(ReviewSpecification.filterByReviewFilterDTO(filterDTO));
-        
+
         Page<Review> page = reviewRepository.findAll(spec, pageable);
 
         List<ReviewResponseDTO> items = page.getContent().stream()
@@ -165,7 +165,7 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
-    public CommonResponseDTO addReview(CreateReviewRequestDTO requestDTO, List<MultipartFile> images,  String userId) {
+    public CommonResponseDTO addReview(CreateReviewRequestDTO requestDTO, List<MultipartFile> images, String userId) {
         //Kiểm tra hình ảnh
         if (images != null) {
             if (images.size() > 3) {
@@ -178,15 +178,15 @@ public class ReviewServiceImpl implements ReviewService {
 
         Product product = productRepository.findById(requestDTO.getProductId())
                 .orElseThrow(() -> new NotFoundException(ErrorMessage.Product.ERR_NOT_FOUND_ID, requestDTO.getProductId()));
-        
+
         Customer customer = customerRepository.findByUserId(userId)
-        		  .orElseThrow(() -> new NotFoundException(ErrorMessage.Customer.ERR_NOT_FOUND_ID, userId));
-        
+                .orElseThrow(() -> new NotFoundException(ErrorMessage.Customer.ERR_NOT_FOUND_ID, userId));
+
         long pendingReviewCount = reviewRepository.countByCustomerAndProductAndStatus(customer, product, ReviewStatus.PENDING);
 
-    	if (pendingReviewCount >= 5) {
-    	    throw new BadRequestException(ErrorMessage.Review.ERR_PENDING_LIMIT);
-    	}
+        if (pendingReviewCount >= 5) {
+            throw new BadRequestException(ErrorMessage.Review.ERR_PENDING_LIMIT);
+        }
 
         Review review = new Review();
 
@@ -204,9 +204,9 @@ public class ReviewServiceImpl implements ReviewService {
             review.setImages(productImages);
         }
 
-	    if(requestDTO.getComment() != null) {
-	    	review.setComment(requestDTO.getComment().trim());
-	    }
+        if (requestDTO.getComment() != null) {
+            review.setComment(requestDTO.getComment().trim());
+        }
         review.setRating(requestDTO.getRating());
         review.setProduct(product);
         review.setCustomer(customer);

@@ -19,13 +19,13 @@ public class ReviewResponseDTO extends DateAuditingDTO {
     private int rating;
 
     private String comment;
-    
+
     private ReviewStatus status;
 
     private List<String> images;
 
     private CustomerResponseDTO customer;
-    
+
     private ProductResponseDTO product;
 
     public ReviewResponseDTO(Review review) {

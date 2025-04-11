@@ -16,7 +16,6 @@ import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -37,7 +36,7 @@ public class ReviewController {
 
     @Operation(summary = "API Get reviews by product ID")
     @GetMapping(UrlConstant.Review.GET_BY_PRODUCT_ID)
-    public ResponseEntity<?> getReviewsByProductId(@PathVariable Long productId,@ParameterObject  PaginationSortRequestDTO requestDTO) {
+    public ResponseEntity<?> getReviewsByProductId(@PathVariable Long productId, @ParameterObject PaginationSortRequestDTO requestDTO) {
         return VsResponseUtil.success(reviewService.getReviewsByProductId(productId, requestDTO));
     }
 

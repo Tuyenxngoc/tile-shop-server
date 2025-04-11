@@ -14,5 +14,5 @@ import java.util.List;
 public interface ReviewRepository extends JpaRepository<Review, Long>, JpaSpecificationExecutor<Review> {
     List<Review> findByProductIdAndStatus(Long productId, ReviewStatus reviewStatus);
 
-	long countByCustomerAndProductAndStatus(Customer customer, Product product, ReviewStatus pending);
+    long countByCustomerAndProductAndStatus(Customer customer, Product product, ReviewStatus pending);
 }

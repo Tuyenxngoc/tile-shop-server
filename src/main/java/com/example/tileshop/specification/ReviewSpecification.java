@@ -2,21 +2,15 @@ package com.example.tileshop.specification;
 
 import com.example.tileshop.constant.ReviewStatus;
 import com.example.tileshop.dto.filter.ReviewFilterDTO;
-import com.example.tileshop.entity.Category;
-import com.example.tileshop.entity.Category_;
-import com.example.tileshop.entity.Product;
-import com.example.tileshop.entity.Product_;
-import com.example.tileshop.entity.Review;
-import com.example.tileshop.entity.Review_;
+import com.example.tileshop.entity.*;
 import com.example.tileshop.util.SpecificationsUtil;
+import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.Predicate;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.jpa.domain.Specification;
 
-import jakarta.persistence.criteria.Join;
-
 public class ReviewSpecification {
-    
+
     public static Specification<Review> filterByProductId(Long productId) {
         return (root, query, builder) -> {
             if (productId == null) {
@@ -52,7 +46,7 @@ public class ReviewSpecification {
                             builder.lower(root.get(Review_.comment)),
                             "%" + keyword.toLowerCase() + "%"
                     ));
-                    
+
                     case Product_.NAME -> {
                         Join<Review, Product> productJoin = root.join(Review_.product);
                         predicate = builder.and(predicate,
@@ -68,7 +62,7 @@ public class ReviewSpecification {
                         Join<Product, Category> categoryJoin = productJoin.join(Product_.category);
                         predicate = builder.and(predicate,
                                 builder.like(
-                                        builder.lower(categoryJoin.get(Category_.name)), 
+                                        builder.lower(categoryJoin.get(Category_.name)),
                                         "%" + keyword.toLowerCase() + "%"
                                 )
                         );
