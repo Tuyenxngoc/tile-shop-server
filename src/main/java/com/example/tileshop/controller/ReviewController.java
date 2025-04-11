@@ -15,6 +15,8 @@ import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -32,26 +34,26 @@ public class ReviewController {
 
     ReviewService reviewService;
 
-    @Operation(summary = "Get reviews by product ID")
+    @Operation(summary = "API Get reviews by product ID")
     @GetMapping(UrlConstant.Review.GET_BY_PRODUCT_ID)
-    public ResponseEntity<?> getReviewsByProductId(@PathVariable Long productId, PaginationSortRequestDTO requestDTO) {
+    public ResponseEntity<?> getReviewsByProductId(@PathVariable Long productId,@ParameterObject  PaginationSortRequestDTO requestDTO) {
         return VsResponseUtil.success(reviewService.getReviewsByProductId(productId, requestDTO));
     }
 
-    @Operation(summary = "Get review summary by product ID")
+    @Operation(summary = "API Get review summary by product ID")
     @GetMapping(UrlConstant.Review.GET_SUMMARY_BY_PRODUCT_ID)
     public ResponseEntity<?> getReviewSummary(@PathVariable Long productId) {
         return VsResponseUtil.success(reviewService.getReviewSummary(productId));
     }
 
-    @Operation(summary = "Get pending reviews")
+    @Operation(summary = "API Get reviews")
     @PreAuthorize("hasRole('ADMIN')")
-    @GetMapping(UrlConstant.Review.GET_PENDING)
-    public ResponseEntity<?> getPendingReviews(PaginationFullRequestDTO requestDTO) {
-        return VsResponseUtil.success(reviewService.getPendingReviews(requestDTO));
+    @GetMapping(UrlConstant.Review.GET_ALL)
+    public ResponseEntity<?> getReviews(@ParameterObject PaginationFullRequestDTO requestDTO) {
+        return VsResponseUtil.success(reviewService.findAll(requestDTO));
     }
 
-    @Operation(summary = "Create a new review")
+    @Operation(summary = "API Create a new review")
     @PostMapping(value = UrlConstant.Review.CREATE, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> addReview(
             @RequestPart("review") @Valid CreateReviewRequestDTO requestDTO,
@@ -61,21 +63,21 @@ public class ReviewController {
         return VsResponseUtil.success(HttpStatus.CREATED, reviewService.addReview(requestDTO, images, userDetails.getUserId()));
     }
 
-    @Operation(summary = "Approve a review")
+    @Operation(summary = "API Approve a review")
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping(UrlConstant.Review.APPROVE)
     public ResponseEntity<?> approveReview(@PathVariable Long id, @CurrentUser CustomUserDetails userDetails) {
         return VsResponseUtil.success(reviewService.approveReview(id, userDetails.getUsername()));
     }
 
-    @Operation(summary = "Reject a review")
+    @Operation(summary = "API Reject a review")
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping(UrlConstant.Review.REJECT)
     public ResponseEntity<?> rejectReview(@PathVariable Long id) {
         return VsResponseUtil.success(reviewService.rejectReview(id));
     }
 
-    @Operation(summary = "Delete a review")
+    @Operation(summary = "API Delete a review")
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping(UrlConstant.Review.DELETE)
     public ResponseEntity<?> deleteReview(@PathVariable Long id) {

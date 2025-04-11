@@ -16,7 +16,7 @@ public interface ReviewService {
 
     ReviewSummaryResponseDTO getReviewSummary(Long productId);
 
-    PaginationResponseDTO<ReviewResponseDTO> getPendingReviews(PaginationFullRequestDTO requestDTO);
+    PaginationResponseDTO<ReviewResponseDTO> findAll(PaginationFullRequestDTO requestDTO);
 
     CommonResponseDTO addReview(CreateReviewRequestDTO requestDTO, List<MultipartFile> images, String userId);
 

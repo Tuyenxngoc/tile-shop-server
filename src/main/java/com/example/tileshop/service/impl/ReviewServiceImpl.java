@@ -119,12 +119,14 @@ public class ReviewServiceImpl implements ReviewService {
         }
 
         double averageRating = totalRating / totalReviews;
+        averageRating = Math.round(averageRating * 10.0) / 10.0;
 
         // Duyệt qua từng mức sao để tính phần trăm
         Map<Integer, ReviewSummaryResponseDTO.RatingDetail> breakdown = new HashMap<>();
         for (int i = 1; i <= 5; i++) {
             int count = ratingCountMap.get(i);
             double percentage = (count * 100.0) / totalReviews;
+            percentage = Math.round(percentage * 10.0) / 10.0;
 
             ReviewSummaryResponseDTO.RatingDetail detail = new ReviewSummaryResponseDTO.RatingDetail();
             detail.setCount(count);
@@ -137,7 +139,7 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
-    public PaginationResponseDTO<ReviewResponseDTO> getPendingReviews(PaginationFullRequestDTO requestDTO) {
+    public PaginationResponseDTO<ReviewResponseDTO> findAll(PaginationFullRequestDTO requestDTO) {
         Pageable pageable = PaginationUtil.buildPageable(requestDTO, SortByDataConstant.REVIEW);
 
         Page<Review> page = reviewRepository.findAll(ReviewSpecification.filterByField(requestDTO.getSearchBy(), requestDTO.getKeyword()), pageable);
