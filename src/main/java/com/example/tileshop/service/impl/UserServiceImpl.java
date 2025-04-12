@@ -3,6 +3,11 @@ package com.example.tileshop.service.impl;
 import com.example.tileshop.constant.CommonConstant;
 import com.example.tileshop.constant.ErrorMessage;
 import com.example.tileshop.constant.RoleConstant;
+import com.example.tileshop.dto.common.CommonResponseDTO;
+import com.example.tileshop.dto.pagination.PaginationFullRequestDTO;
+import com.example.tileshop.dto.pagination.PaginationResponseDTO;
+import com.example.tileshop.dto.user.UserRequestDTO;
+import com.example.tileshop.dto.user.UserResponseDTO;
 import com.example.tileshop.entity.User;
 import com.example.tileshop.exception.BadRequestException;
 import com.example.tileshop.exception.NotFoundException;
@@ -53,6 +58,34 @@ public class UserServiceImpl implements UserService {
 
         userRepository.save(user);
         log.info("Initial admin user created successfully with username: {}", user.getUsername());
+    }
+
+    @Override
+    public CommonResponseDTO save(UserRequestDTO requestDTO) {
+        return null;
+    }
+
+    @Override
+    public CommonResponseDTO update(String id, UserRequestDTO requestDTO) {
+        User user = getEntity(id);
+        return null;
+    }
+
+    @Override
+    public CommonResponseDTO delete(String id) {
+        User user = getEntity(id);
+        return null;
+    }
+
+    @Override
+    public PaginationResponseDTO<UserResponseDTO> findAll(PaginationFullRequestDTO requestDTO) {
+        return null;
+    }
+
+    @Override
+    public UserResponseDTO findById(String id) {
+        User user = getEntity(id);
+        return null;
     }
 
 }

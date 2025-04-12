@@ -1,6 +1,6 @@
 package com.example.tileshop.entity;
 
-import com.example.tileshop.entity.common.DateAuditing;
+import com.example.tileshop.entity.common.FlagDateAuditing;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
@@ -24,7 +24,7 @@ import java.util.List;
                 @UniqueConstraint(name = "UN_PRODUCT_SLUG", columnNames = "slug")
         }
 )
-public class Product extends DateAuditing {
+public class Product extends FlagDateAuditing {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
