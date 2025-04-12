@@ -11,9 +11,9 @@ import lombok.Setter;
 @AllArgsConstructor
 public class CartItemResponseDTO {
 
-    private long id;
-
     private int quantity;
+
+    private long productId;
 
     private String name;
 
@@ -26,9 +26,9 @@ public class CartItemResponseDTO {
     private String imageUrl;
 
     public CartItemResponseDTO(CartItem cartItem) {
-        this.id = cartItem.getId();
         this.quantity = cartItem.getQuantity();
         Product product = cartItem.getProduct();
+        this.productId = product.getId();
         this.name = product.getName();
         this.price = product.getPrice();
         this.discountPercentage = product.getDiscountPercentage();

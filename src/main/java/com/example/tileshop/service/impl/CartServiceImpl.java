@@ -111,7 +111,7 @@ public class CartServiceImpl implements CartService {
         cartItemRepository.save(cartItem);
 
         String message = messageUtil.getMessage(SuccessMessage.CartItem.ADD);
-        return new CommonResponseDTO(message, cartItem);
+        return new CommonResponseDTO(message, new CartItemResponseDTO(cartItem));
     }
 
     @Override
@@ -133,7 +133,7 @@ public class CartServiceImpl implements CartService {
         cartItemRepository.save(cartItem);
 
         String message = messageUtil.getMessage(SuccessMessage.CartItem.UPDATE);
-        return new CommonResponseDTO(message, cartItem);
+        return new CommonResponseDTO(message, new CartItemResponseDTO(cartItem));
     }
 
     @Override
