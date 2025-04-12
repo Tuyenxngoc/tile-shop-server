@@ -60,7 +60,7 @@ public class ReviewController {
             @RequestPart(value = "images", required = false) List<MultipartFile> images,
             @CurrentUser CustomUserDetails userDetails
     ) {
-        return VsResponseUtil.success(HttpStatus.CREATED, reviewService.addReview(requestDTO, images, userDetails.getUserId()));
+        return VsResponseUtil.success(HttpStatus.CREATED, reviewService.addReview(requestDTO, images, userDetails.getCustomerId()));
     }
 
     @Operation(summary = "API Approve a review")

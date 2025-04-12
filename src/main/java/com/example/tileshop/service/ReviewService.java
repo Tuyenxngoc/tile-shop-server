@@ -20,7 +20,7 @@ public interface ReviewService {
 
     PaginationResponseDTO<ReviewResponseDTO> findAll(PaginationFullRequestDTO requestDTO, ReviewFilterDTO filterDTO);
 
-    CommonResponseDTO addReview(CreateReviewRequestDTO requestDTO, List<MultipartFile> images, String userId);
+    CommonResponseDTO addReview(CreateReviewRequestDTO requestDTO, List<MultipartFile> images, Long customerId);
 
     CommonResponseDTO approveReview(Long id, String username);
 

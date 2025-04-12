@@ -78,6 +78,8 @@ public class ErrorMessage {
 
     public static class Cart {
         public static final String ERR_NOT_FOUND_ID = "exception.cart.not.found.id";
+        public static final String ERR_MAX_ITEMS = "exception.cart.max-items";
+        public static final String ERR_NOT_FOUND_ITEM_IN_CART = "exception.cart.item.not.found";
     }
 
     public static class CartItem {
@@ -122,7 +124,7 @@ public class ErrorMessage {
     public static class Product {
         public static final String ERR_NOT_FOUND_ID = "exception.product.not.found.id";
         public static final String ERR_NOT_FOUND_SLUG = "exception.product.not.found.slug";
-
+        public static final String ERR_OUT_OF_STOCK = "exception.product.out-of-stock";
     }
 
     public static class ProductAttribute {

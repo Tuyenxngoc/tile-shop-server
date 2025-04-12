@@ -16,6 +16,9 @@ public class CustomUserDetails implements UserDetails {
     @Getter
     private final String userId;
 
+    @Getter
+    private final Long customerId;
+
     @JsonIgnore
     private final String username;
 

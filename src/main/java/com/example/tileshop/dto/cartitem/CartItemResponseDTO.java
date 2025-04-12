@@ -1,20 +1,21 @@
-package com.example.tileshop.dto.product;
+package com.example.tileshop.dto.cartitem;
 
+import com.example.tileshop.entity.CartItem;
 import com.example.tileshop.entity.Product;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter
+@Setter
 @AllArgsConstructor
-public class ProductResponseDTO {
+public class CartItemResponseDTO {
 
     private long id;
 
+    private int quantity;
+
     private String name;
-
-    private String slug;
-
-    private String description;
 
     private double price;
 
@@ -22,22 +23,16 @@ public class ProductResponseDTO {
 
     private double salePrice;
 
-    private int stockQuantity;
-
-    private double averageRating;
-
     private String imageUrl;
 
-    public ProductResponseDTO(Product product) {
-        this.id = product.getId();
+    public CartItemResponseDTO(CartItem cartItem) {
+        this.id = cartItem.getId();
+        this.quantity = cartItem.getQuantity();
+        Product product = cartItem.getProduct();
         this.name = product.getName();
-        this.slug = product.getSlug();
-        this.description = product.getDescription();
         this.price = product.getPrice();
         this.discountPercentage = product.getDiscountPercentage();
         this.salePrice = product.getPrice() - (product.getPrice() * product.getDiscountPercentage() / 100);
-        this.stockQuantity = product.getStockQuantity();
-        this.averageRating = product.getAverageRating();
         this.imageUrl = product.getImages().getFirst().getImageUrl();
     }
 

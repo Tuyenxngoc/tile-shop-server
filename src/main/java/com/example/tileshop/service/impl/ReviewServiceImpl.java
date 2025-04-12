@@ -19,6 +19,7 @@ import com.example.tileshop.entity.Product;
 import com.example.tileshop.entity.Review;
 import com.example.tileshop.entity.ReviewImage;
 import com.example.tileshop.exception.BadRequestException;
+import com.example.tileshop.exception.ForbiddenException;
 import com.example.tileshop.exception.NotFoundException;
 import com.example.tileshop.repository.CustomerRepository;
 import com.example.tileshop.repository.ProductRepository;
@@ -165,7 +166,12 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
-    public CommonResponseDTO addReview(CreateReviewRequestDTO requestDTO, List<MultipartFile> images, String userId) {
+    public CommonResponseDTO addReview(CreateReviewRequestDTO requestDTO, List<MultipartFile> images, Long customerId) {
+        //Nếu không có customer thì bỏ qua
+        if (customerId == null) {
+            throw new ForbiddenException(ErrorMessage.ERR_FORBIDDEN);
+        }
+
         //Kiểm tra hình ảnh
         if (images != null) {
             if (images.size() > 3) {
@@ -179,8 +185,8 @@ public class ReviewServiceImpl implements ReviewService {
         Product product = productRepository.findById(requestDTO.getProductId())
                 .orElseThrow(() -> new NotFoundException(ErrorMessage.Product.ERR_NOT_FOUND_ID, requestDTO.getProductId()));
 
-        Customer customer = customerRepository.findByUserId(userId)
-                .orElseThrow(() -> new NotFoundException(ErrorMessage.Customer.ERR_NOT_FOUND_ID, userId));
+        Customer customer = new Customer();
+        customer.setId(customerId);
 
         long pendingReviewCount = reviewRepository.countByCustomerAndProductAndStatus(customer, product, ReviewStatus.PENDING);
 

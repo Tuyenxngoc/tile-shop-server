@@ -46,9 +46,12 @@ public class UrlConstant {
     }
 
     public static class Cart {
-        private static final String PRE_FIX = "/cart";
+        public static final String PRE_FIX = "/cart";
 
-        public static final String GET = PRE_FIX;
+        public static final String GET_ALL = PRE_FIX;
+        public static final String ADD_ITEM = PRE_FIX + "/add";
+        public static final String UPDATE_ITEM = PRE_FIX + "/update/{productId}";
+        public static final String REMOVE_ITEM = PRE_FIX + "/remove/{productId}";
         public static final String CLEAR = PRE_FIX + "/clear";
     }
 

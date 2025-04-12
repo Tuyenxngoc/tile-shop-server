@@ -244,23 +244,25 @@ public class AuthServiceImpl implements AuthService {
             throw new ConflictException(ErrorMessage.Auth.ERR_DUPLICATE_EMAIL);
         }
 
+        //Lấy ra quyền người dùng
         Role role = roleRepository.findByCode(RoleConstant.ROLE_USER).orElseThrow(() -> new RuntimeException("Role ROLE_USER not found"));
 
+        //Tạo mới user
         User user = new User();
         user.setUsername(requestDTO.getUsername());
         user.setPassword(passwordEncoder.encode(requestDTO.getPassword()));
         user.setEmail(requestDTO.getEmail());
         user.setRole(role);
-
         userRepository.save(user);
 
+        //Tạo mới customer
         Customer customer = new Customer();
         customer.setFullName(requestDTO.getFullName());
         customer.setPhoneNumber(requestDTO.getPhoneNumber());
         customer.setUser(user);
-
         customerRepository.save(customer);
 
+        //Tạo mới giỏ hàng
         Cart cart = new Cart();
         cart.setCustomer(customer);
         cartRepository.save(cart);
