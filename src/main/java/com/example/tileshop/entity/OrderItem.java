@@ -1,6 +1,5 @@
 package com.example.tileshop.entity;
 
-import com.example.tileshop.entity.common.DateAuditing;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
@@ -13,7 +12,7 @@ import lombok.*;
 
 @Entity
 @Table(name = "order_items")
-public class OrderItem extends DateAuditing {
+public class OrderItem {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -1,7 +1,7 @@
 package com.example.tileshop.entity;
 
 import com.example.tileshop.constant.RoleConstant;
-import com.example.tileshop.entity.common.FlagDateAuditing;
+import com.example.tileshop.entity.common.DateAuditing;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
@@ -18,7 +18,7 @@ import java.util.List;
 @Entity
 @Table(name = "roles",
         uniqueConstraints = @UniqueConstraint(name = "UN_ROLE_CODE", columnNames = "code"))
-public class Role extends FlagDateAuditing {
+public class Role extends DateAuditing {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

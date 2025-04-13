@@ -138,7 +138,7 @@ public class AttributeServiceImpl implements AttributeService {
 
     @Override
     public List<AttributeResponseDTO> findByCategoryId(Long categoryId) {
-        List<Attribute> attributes = attributeRepository.findAllByCategoryAttributes_Category_Id(categoryId);
+        List<Attribute> attributes = attributeRepository.findByCategoryAttributesCategoryId(categoryId);
         return attributes.stream()
                 .map(AttributeResponseDTO::new)
                 .toList();

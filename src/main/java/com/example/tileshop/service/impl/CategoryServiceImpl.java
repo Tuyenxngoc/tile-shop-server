@@ -270,6 +270,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public List<CategoryTreeResponseDTO> getCategoriesTree() {
         List<Category> categories = categoryRepository.findAll();
+
         return buildCategoryTree(categories, null);
     }
 

@@ -1,6 +1,6 @@
 package com.example.tileshop.entity;
 
-import com.example.tileshop.entity.common.FlagDateAuditing;
+import com.example.tileshop.entity.common.DateAuditing;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
@@ -18,7 +18,7 @@ import org.hibernate.annotations.UuidGenerator;
                 @UniqueConstraint(name = "UN_USER_USERNAME", columnNames = "username"),
                 @UniqueConstraint(name = "UN_USER_EMAIL", columnNames = "email")
         })
-public class User extends FlagDateAuditing {
+public class User extends DateAuditing {
 
     @Id
     @UuidGenerator

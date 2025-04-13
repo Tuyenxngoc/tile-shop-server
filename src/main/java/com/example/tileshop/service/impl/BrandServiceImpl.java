@@ -97,12 +97,12 @@ public class BrandServiceImpl implements BrandService {
     public CommonResponseDTO delete(Long id) {
         Brand brand = getEntity(id);
 
-        if (brand.getLogoUrl() != null) {
-            uploadFileUtil.destroyFileWithUrl(brand.getLogoUrl());
-        }
-
         if (!brand.getProducts().isEmpty()) {
             throw new ConflictException(ErrorMessage.Brand.ERR_DELETE_HAS_PRODUCTS, id);
+        }
+
+        if (brand.getLogoUrl() != null) {
+            uploadFileUtil.destroyFileWithUrl(brand.getLogoUrl());
         }
 
         brandRepository.delete(brand);
