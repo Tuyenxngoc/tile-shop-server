@@ -47,6 +47,16 @@ public class ReviewSpecification {
                             "%" + keyword.toLowerCase() + "%"
                     ));
 
+                    case Product_.ID -> {
+                        Join<Review, Product> productJoin = root.join(Review_.product);
+                        predicate = builder.and(predicate,
+                                builder.equal(
+                                        productJoin.get(Product_.id),
+                                        SpecificationsUtil.castToRequiredType(productJoin.get(Product_.id).getJavaType(), keyword)
+                                )
+                        );
+                    }
+
                     case Product_.NAME -> {
                         Join<Review, Product> productJoin = root.join(Review_.product);
                         predicate = builder.and(predicate,
