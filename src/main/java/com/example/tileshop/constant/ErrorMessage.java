@@ -63,6 +63,7 @@ public class ErrorMessage {
         public static final String ERR_DUPLICATE_USERNAME = "exception.auth.duplicate.username";
         public static final String ERR_DUPLICATE_EMAIL = "exception.auth.duplicate.email";
         public static final String ERR_INVALID_REFRESH_TOKEN = "exception.auth.invalid.refresh.token";
+        public static final String ERR_ACCOUNT_DISABLED = "exception.auth.account.disabled";
     }
 
     public static class Attribute {
@@ -148,6 +149,8 @@ public class ErrorMessage {
         public static final String ERR_NOT_FOUND_ID = "exception.user.not.found.id";
         public static final String ERR_NOT_FOUND_ACCOUNT = "exception.user.not.found.account";
         public static final String RATE_LIMIT = "exception.user.rate.limit";
+        public static final String ERR_DELETE_HAS_ORDERS = "exception.user.delete.has.orders";
+        public static final String ERR_DELETE_HAS_REVIEWS = "exception.user.delete.has.reviews";
     }
 
 }

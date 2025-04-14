@@ -1,7 +1,7 @@
 package com.example.tileshop.entity;
 
 import com.example.tileshop.constant.Gender;
-import com.example.tileshop.entity.common.DateAuditing;
+import com.example.tileshop.entity.common.ActiveAuditing;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
@@ -22,7 +22,7 @@ import java.util.List;
                 @UniqueConstraint(name = "UN_USER_USERNAME", columnNames = "username"),
                 @UniqueConstraint(name = "UN_USER_EMAIL", columnNames = "email")
         })
-public class User extends DateAuditing {
+public class User extends ActiveAuditing {
 
     @Id
     @UuidGenerator
@@ -51,11 +51,6 @@ public class User extends DateAuditing {
     @Enumerated(EnumType.STRING)
     private Gender gender;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "role_id", foreignKey = @ForeignKey(name = "FK_USER_ROLE_ID"), nullable = false)
-    @JsonIgnore
-    private Role role;
-
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonIgnore
     private List<Review> reviews = new ArrayList<>();
@@ -63,4 +58,9 @@ public class User extends DateAuditing {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonIgnore
     private List<Order> orders = new ArrayList<>();
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "role_id", foreignKey = @ForeignKey(name = "FK_USER_ROLE_ID"), nullable = false)
+    @JsonIgnore
+    private Role role;
 }

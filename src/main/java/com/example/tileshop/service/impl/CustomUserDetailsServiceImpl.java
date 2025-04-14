@@ -41,6 +41,7 @@ public class CustomUserDetailsServiceImpl implements CustomUserDetailsService {
                 .userId(user.getId())
                 .username(user.getUsername())
                 .password(user.getPassword())
+                .enabled(user.getActiveFlag())
                 .authorities(authorities)
                 .build();
     }
@@ -58,6 +59,7 @@ public class CustomUserDetailsServiceImpl implements CustomUserDetailsService {
                 .userId(user.getId())
                 .username(user.getUsername())
                 .password(user.getPassword())
+                .enabled(user.getActiveFlag())
                 .authorities(authorities)
                 .build();
     }

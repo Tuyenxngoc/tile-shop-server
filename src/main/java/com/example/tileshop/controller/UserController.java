@@ -3,7 +3,8 @@ package com.example.tileshop.controller;
 import com.example.tileshop.annotation.RestApiV1;
 import com.example.tileshop.constant.UrlConstant;
 import com.example.tileshop.dto.pagination.PaginationFullRequestDTO;
-import com.example.tileshop.dto.user.UserRequestDTO;
+import com.example.tileshop.dto.user.CreateUserRequestDTO;
+import com.example.tileshop.dto.user.UpdateUserRequestDTO;
 import com.example.tileshop.service.UserService;
 import com.example.tileshop.util.VsResponseUtil;
 import io.swagger.v3.oas.annotations.Operation;
@@ -29,14 +30,14 @@ public class UserController {
     @Operation(summary = "API Create User")
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping(UrlConstant.User.CREATE)
-    public ResponseEntity<?> createUser(@RequestBody @Valid UserRequestDTO requestDTO) {
+    public ResponseEntity<?> createUser(@RequestBody @Valid CreateUserRequestDTO requestDTO) {
         return VsResponseUtil.success(HttpStatus.CREATED, userService.save(requestDTO));
     }
 
     @Operation(summary = "API Update User")
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping(UrlConstant.User.UPDATE)
-    public ResponseEntity<?> updateUser(@PathVariable String id, @RequestBody @Valid UserRequestDTO requestDTO) {
+    public ResponseEntity<?> updateUser(@PathVariable String id, @RequestBody @Valid UpdateUserRequestDTO requestDTO) {
         return VsResponseUtil.success(userService.update(id, requestDTO));
     }
 
@@ -59,6 +60,13 @@ public class UserController {
     @GetMapping(UrlConstant.User.GET_BY_ID)
     public ResponseEntity<?> getUserById(@PathVariable String id) {
         return VsResponseUtil.success(userService.findById(id));
+    }
+
+    @Operation(summary = "API Toggle Active Flag")
+    @PreAuthorize("hasRole('ADMIN')")
+    @PatchMapping(UrlConstant.User.TOGGLE_ACTIVE)
+    public ResponseEntity<?> toggleActive(@PathVariable String id) {
+        return VsResponseUtil.success(userService.toggleActive(id));
     }
 
 }

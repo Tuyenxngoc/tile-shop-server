@@ -34,6 +34,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -106,12 +107,13 @@ public class AuthServiceImpl implements AuthService {
             String refreshToken = jwtTokenProvider.generateToken(customUserDetails, true);
 
             return new LoginResponseDTO(accessToken, refreshToken);
+        } catch (DisabledException e) {
+            throw new UnauthorizedException(ErrorMessage.Auth.ERR_ACCOUNT_DISABLED);
         } catch (AuthenticationException e) {
             throw new UnauthorizedException(ErrorMessage.Auth.ERR_INCORRECT_USERNAME_PASSWORD);
         } catch (UnauthorizedException e) {
             throw e;
         } catch (Exception e) {
-            e.printStackTrace();
             throw new RuntimeException(ErrorMessage.ERR_EXCEPTION_GENERAL);
         }
     }
@@ -248,9 +250,9 @@ public class AuthServiceImpl implements AuthService {
         user.setUsername(requestDTO.getUsername());
         user.setPassword(passwordEncoder.encode(requestDTO.getPassword()));
         user.setEmail(requestDTO.getEmail());
-        user.setRole(role);
         user.setFullName(requestDTO.getFullName());
         user.setPhoneNumber(requestDTO.getPhoneNumber());
+        user.setRole(role);
         userRepository.save(user);
 
         //Tạo mới giỏ hàng

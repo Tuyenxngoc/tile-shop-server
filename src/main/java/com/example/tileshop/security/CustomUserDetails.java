@@ -22,6 +22,8 @@ public class CustomUserDetails implements UserDetails {
     @JsonIgnore
     private final String password;
 
+    private final boolean enabled;
+
     private final Collection<? extends GrantedAuthority> authorities;
 
     @Override
@@ -37,6 +39,11 @@ public class CustomUserDetails implements UserDetails {
     @Override
     public String getUsername() {
         return username;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return enabled;
     }
 
 }
