@@ -20,7 +20,7 @@ public class ReviewForUserResponseDTO extends DateAuditingDTO {
 
     private List<String> images;
 
-    private BaseEntityDTO customer;
+    private BaseEntityDTO user;
 
     public ReviewForUserResponseDTO(Review review) {
         this.createdDate = review.getCreatedDate();
@@ -29,6 +29,6 @@ public class ReviewForUserResponseDTO extends DateAuditingDTO {
         this.rating = review.getRating();
         this.comment = review.getComment();
         this.images = review.getImages().stream().map(ReviewImage::getImageUrl).toList();
-        this.customer = new BaseEntityDTO(review.getCustomer().getId(), review.getCustomer().getFullName());
+        this.user = new BaseEntityDTO(review.getUser().getId(), review.getUser().getFullName());
     }
 }

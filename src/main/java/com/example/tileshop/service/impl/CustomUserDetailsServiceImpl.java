@@ -2,7 +2,6 @@ package com.example.tileshop.service.impl;
 
 import com.example.tileshop.constant.ErrorMessage;
 import com.example.tileshop.entity.User;
-import com.example.tileshop.repository.CustomerRepository;
 import com.example.tileshop.repository.UserRepository;
 import com.example.tileshop.security.CustomUserDetails;
 import com.example.tileshop.service.CustomUserDetailsService;
@@ -28,7 +27,6 @@ public class CustomUserDetailsServiceImpl implements CustomUserDetailsService {
     UserRepository userRepository;
 
     MessageUtil messageUtil;
-    private final CustomerRepository customerRepository;
 
     @Override
     @Transactional
@@ -36,14 +34,11 @@ public class CustomUserDetailsServiceImpl implements CustomUserDetailsService {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException(messageUtil.getMessage(ErrorMessage.User.ERR_NOT_FOUND_USERNAME, username)));
 
-        Long customerId = customerRepository.findCustomerIdByUserId(user.getId());
-
         List<GrantedAuthority> authorities = new ArrayList<>();
         authorities.add(new SimpleGrantedAuthority(user.getRole().getCode().name()));
 
         return CustomUserDetails.builder()
                 .userId(user.getId())
-                .customerId(customerId)
                 .username(user.getUsername())
                 .password(user.getPassword())
                 .authorities(authorities)
@@ -56,14 +51,11 @@ public class CustomUserDetailsServiceImpl implements CustomUserDetailsService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UsernameNotFoundException(messageUtil.getMessage(ErrorMessage.User.ERR_NOT_FOUND_ID, userId)));
 
-        Long customerId = customerRepository.findCustomerIdByUserId(user.getId());
-
         List<GrantedAuthority> authorities = new ArrayList<>();
         authorities.add(new SimpleGrantedAuthority(user.getRole().getCode().name()));
 
         return CustomUserDetails.builder()
                 .userId(user.getId())
-                .customerId(customerId)
                 .username(user.getUsername())
                 .password(user.getPassword())
                 .authorities(authorities)

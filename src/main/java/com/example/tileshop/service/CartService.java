@@ -7,13 +7,13 @@ import com.example.tileshop.dto.common.CommonResponseDTO;
 import java.util.List;
 
 public interface CartService {
-    List<CartItemResponseDTO> getCartItems(Long customerId);
+    List<CartItemResponseDTO> getCartItems(String userId);
 
-    CommonResponseDTO addItemToCart(CartItemRequestDTO requestDTO, Long customerId);
+    CommonResponseDTO addItemToCart(CartItemRequestDTO requestDTO, String userId);
 
-    CommonResponseDTO updateCartItem(Long productId, int quantity, Long customerId);
+    CommonResponseDTO updateCartItem(Long productId, int quantity, String userId);
 
-    CommonResponseDTO removeItemFromCart(Long productId, Long customerId);
+    CommonResponseDTO removeItemFromCart(Long productId, String userId);
 
-    CommonResponseDTO clearCart(Long customerId);
+    CommonResponseDTO clearCart(String userId);
 }

@@ -28,7 +28,7 @@ public class CartController {
     @Operation(summary = "API Get All Items in Cart")
     @GetMapping(UrlConstant.Cart.GET_ALL)
     public ResponseEntity<?> getCartItems(@CurrentUser CustomUserDetails userDetails) {
-        return VsResponseUtil.success(cartService.getCartItems(userDetails.getCustomerId()));
+        return VsResponseUtil.success(cartService.getCartItems(userDetails.getUserId()));
     }
 
     @Operation(summary = "API Add Item to Cart")
@@ -37,7 +37,7 @@ public class CartController {
             @RequestBody @Valid CartItemRequestDTO requestDTO,
             @CurrentUser CustomUserDetails userDetails
     ) {
-        return VsResponseUtil.success(HttpStatus.CREATED, cartService.addItemToCart(requestDTO, userDetails.getCustomerId()));
+        return VsResponseUtil.success(HttpStatus.CREATED, cartService.addItemToCart(requestDTO, userDetails.getUserId()));
     }
 
     @Operation(summary = "API Update Item Quantity in Cart")
@@ -47,7 +47,7 @@ public class CartController {
             @RequestParam("quantity") int quantity,
             @CurrentUser CustomUserDetails userDetails
     ) {
-        return VsResponseUtil.success(cartService.updateCartItem(productId, quantity, userDetails.getCustomerId()));
+        return VsResponseUtil.success(cartService.updateCartItem(productId, quantity, userDetails.getUserId()));
     }
 
     @Operation(summary = "API Remove Item from Cart")
@@ -56,12 +56,12 @@ public class CartController {
             @PathVariable Long productId,
             @CurrentUser CustomUserDetails userDetails
     ) {
-        return VsResponseUtil.success(cartService.removeItemFromCart(productId, userDetails.getCustomerId()));
+        return VsResponseUtil.success(cartService.removeItemFromCart(productId, userDetails.getUserId()));
     }
 
     @Operation(summary = "API Clear Cart")
     @DeleteMapping(UrlConstant.Cart.CLEAR)
     public ResponseEntity<?> clearCart(@CurrentUser CustomUserDetails userDetails) {
-        return VsResponseUtil.success(cartService.clearCart(userDetails.getCustomerId()));
+        return VsResponseUtil.success(cartService.clearCart(userDetails.getUserId()));
     }
 }

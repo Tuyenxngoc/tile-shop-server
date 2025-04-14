@@ -33,9 +33,6 @@ public class SuccessMessage {
     public static class CategoryAttribute {
     }
 
-    public static class Customer {
-    }
-
     public static class News {
     }
 

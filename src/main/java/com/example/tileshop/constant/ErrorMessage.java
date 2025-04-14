@@ -98,10 +98,6 @@ public class ErrorMessage {
         public static final String ERR_NOT_FOUND_ID = "exception.category.attribute.not.found.id";
     }
 
-    public static class Customer {
-        public static final String ERR_NOT_FOUND_ID = "exception.customer.not.found.id";
-    }
-
     public static class News {
         public static final String ERR_NOT_FOUND_ID = "exception.news.not.found.id";
         public static final String ERR_NOT_FOUND_SLUG = "exception.news.not.found.slug";

@@ -15,7 +15,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "carts",
-        uniqueConstraints = @UniqueConstraint(name = "UK_CART_CUSTOMER_ID", columnNames = "customer_id")
+        uniqueConstraints = @UniqueConstraint(name = "UK_CART_USER_ID", columnNames = "user_id")
 )
 public class Cart {
 
@@ -25,9 +25,9 @@ public class Cart {
     private Long id;
 
     @OneToOne
-    @JoinColumn(name = "customer_id", foreignKey = @ForeignKey(name = "FK_CART_CUSTOMER_ID"), nullable = false)
+    @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "FK_CART_USER_ID"), nullable = false)
     @JsonIgnore
-    private Customer customer;
+    private User user;
 
     @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonIgnore

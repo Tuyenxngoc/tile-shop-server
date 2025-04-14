@@ -1,10 +1,14 @@
 package com.example.tileshop.entity;
 
+import com.example.tileshop.constant.Gender;
 import com.example.tileshop.entity.common.DateAuditing;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.UuidGenerator;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -35,9 +39,28 @@ public class User extends DateAuditing {
     @Column(name = "email", nullable = false)
     private String email;
 
+    @Column(name = "phone_number", nullable = false)
+    private String phoneNumber;
+
+    @Column(name = "full_name")
+    private String fullName;
+
+    @Column(name = "address")
+    private String address;
+
+    @Enumerated(EnumType.STRING)
+    private Gender gender;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "role_id", foreignKey = @ForeignKey(name = "FK_USER_ROLE_ID"), nullable = false)
     @JsonIgnore
     private Role role;
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore
+    private List<Review> reviews = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore
+    private List<Order> orders = new ArrayList<>();
 }

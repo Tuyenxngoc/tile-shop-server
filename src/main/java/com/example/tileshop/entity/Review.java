@@ -36,9 +36,9 @@ public class Review extends DateAuditing {
     private String approvedBy;
 
     @ManyToOne
-    @JoinColumn(name = "customer_id", foreignKey = @ForeignKey(name = "FK_REVIEW_CUSTOMER_ID"), nullable = false)
+    @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "FK_REVIEW_USER_ID"), nullable = false)
     @JsonIgnore
-    private Customer customer;
+    private User user;
 
     @ManyToOne
     @JoinColumn(name = "product_id", foreignKey = @ForeignKey(name = "FK_REVIEW_PRODUCT_ID"), nullable = false)

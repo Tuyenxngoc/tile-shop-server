@@ -2,8 +2,8 @@ package com.example.tileshop.dto.review;
 
 import com.example.tileshop.constant.ReviewStatus;
 import com.example.tileshop.dto.common.DateAuditingDTO;
-import com.example.tileshop.dto.customer.CustomerResponseDTO;
 import com.example.tileshop.dto.product.ProductResponseDTO;
+import com.example.tileshop.dto.user.UserResponseDTO;
 import com.example.tileshop.entity.Review;
 import com.example.tileshop.entity.ReviewImage;
 import lombok.AllArgsConstructor;
@@ -24,7 +24,7 @@ public class ReviewResponseDTO extends DateAuditingDTO {
 
     private List<String> images;
 
-    private CustomerResponseDTO customer;
+    private UserResponseDTO user;
 
     private ProductResponseDTO product;
 
@@ -36,7 +36,7 @@ public class ReviewResponseDTO extends DateAuditingDTO {
         this.comment = review.getComment();
         this.status = review.getStatus();
         this.images = review.getImages().stream().map(ReviewImage::getImageUrl).toList();
-        this.customer = new CustomerResponseDTO(review.getCustomer());
+        this.user = new UserResponseDTO(review.getUser());
         this.product = new ProductResponseDTO(review.getProduct());
     }
 }

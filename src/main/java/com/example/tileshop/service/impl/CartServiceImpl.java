@@ -7,10 +7,9 @@ import com.example.tileshop.dto.cartitem.CartItemResponseDTO;
 import com.example.tileshop.dto.common.CommonResponseDTO;
 import com.example.tileshop.entity.Cart;
 import com.example.tileshop.entity.CartItem;
-import com.example.tileshop.entity.Customer;
 import com.example.tileshop.entity.Product;
+import com.example.tileshop.entity.User;
 import com.example.tileshop.exception.BadRequestException;
-import com.example.tileshop.exception.ForbiddenException;
 import com.example.tileshop.exception.NotFoundException;
 import com.example.tileshop.repository.CartItemRepository;
 import com.example.tileshop.repository.CartRepository;
@@ -40,36 +39,21 @@ public class CartServiceImpl implements CartService {
 
     private final MessageUtil messageUtil;
 
-    /**
-     * Validates the provided customer ID. If the customer ID is null,
-     * a ForbiddenException is thrown to indicate that the operation
-     * is not allowed.
-     *
-     * @param customerId the ID of the customer to validate
-     * @throws ForbiddenException if the customer ID is null
-     */
-    private static void validateCustomerId(Long customerId) {
-        if (customerId == null) {
-            throw new ForbiddenException(ErrorMessage.ERR_FORBIDDEN);
-        }
-    }
-
-    private Cart getOrCreateCart(Long customerId) {
-        return cartRepository.findByCustomerId(customerId)
+    private Cart getOrCreateCart(String userId) {
+        return cartRepository.findByUserId(userId)
                 .orElseGet(() -> {
-                    Customer customer = new Customer();
-                    customer.setId(customerId);
+                    User user = new User();
+                    user.setId(userId);
 
                     Cart cart = new Cart();
-                    cart.setCustomer(customer);
+                    cart.setUser(user);
                     return cartRepository.save(cart);
                 });
     }
 
     @Override
-    public List<CartItemResponseDTO> getCartItems(Long customerId) {
-        validateCustomerId(customerId);
-        Cart cart = getOrCreateCart(customerId);
+    public List<CartItemResponseDTO> getCartItems(String userId) {
+        Cart cart = getOrCreateCart(userId);
         return cartItemRepository.findByCartId(cart.getId())
                 .stream()
                 .map(CartItemResponseDTO::new)
@@ -77,9 +61,8 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public CommonResponseDTO addItemToCart(CartItemRequestDTO requestDTO, Long customerId) {
-        validateCustomerId(customerId);
-        Cart cart = getOrCreateCart(customerId);
+    public CommonResponseDTO addItemToCart(CartItemRequestDTO requestDTO, String userId) {
+        Cart cart = getOrCreateCart(userId);
 
         Product product = productRepository.findById(requestDTO.getProductId())
                 .orElseThrow(() -> new NotFoundException(ErrorMessage.Product.ERR_NOT_FOUND_ID, requestDTO.getProductId()));
@@ -115,9 +98,8 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public CommonResponseDTO updateCartItem(Long productId, int quantity, Long customerId) {
-        validateCustomerId(customerId);
-        Cart cart = getOrCreateCart(customerId);
+    public CommonResponseDTO updateCartItem(Long productId, int quantity, String userId) {
+        Cart cart = getOrCreateCart(userId);
 
         CartItem cartItem = cartItemRepository.findByCartIdAndProductId(cart.getId(), productId)
                 .orElseThrow(() -> new NotFoundException(ErrorMessage.Cart.ERR_NOT_FOUND_ITEM_IN_CART, productId));
@@ -137,9 +119,8 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public CommonResponseDTO removeItemFromCart(Long productId, Long customerId) {
-        validateCustomerId(customerId);
-        Cart cart = getOrCreateCart(customerId);
+    public CommonResponseDTO removeItemFromCart(Long productId, String userId) {
+        Cart cart = getOrCreateCart(userId);
 
         CartItem cartItem = cartItemRepository.findByCartIdAndProductId(cart.getId(), productId)
                 .orElseThrow(() -> new NotFoundException(ErrorMessage.Cart.ERR_NOT_FOUND_ITEM_IN_CART, productId));
@@ -152,9 +133,8 @@ public class CartServiceImpl implements CartService {
 
     @Override
     @Transactional
-    public CommonResponseDTO clearCart(Long customerId) {
-        validateCustomerId(customerId);
-        Cart cart = getOrCreateCart(customerId);
+    public CommonResponseDTO clearCart(String userId) {
+        Cart cart = getOrCreateCart(userId);
 
         List<CartItem> items = cartItemRepository.findByCartId(cart.getId());
         cartItemRepository.deleteAll(items);

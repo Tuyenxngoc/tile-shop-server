@@ -7,7 +7,6 @@ import com.example.tileshop.dto.auth.*;
 import com.example.tileshop.dto.common.CommonResponseDTO;
 import com.example.tileshop.dto.common.DataMailDTO;
 import com.example.tileshop.entity.Cart;
-import com.example.tileshop.entity.Customer;
 import com.example.tileshop.entity.Role;
 import com.example.tileshop.entity.User;
 import com.example.tileshop.exception.BadRequestException;
@@ -15,7 +14,6 @@ import com.example.tileshop.exception.ConflictException;
 import com.example.tileshop.exception.NotFoundException;
 import com.example.tileshop.exception.UnauthorizedException;
 import com.example.tileshop.repository.CartRepository;
-import com.example.tileshop.repository.CustomerRepository;
 import com.example.tileshop.repository.RoleRepository;
 import com.example.tileshop.repository.UserRepository;
 import com.example.tileshop.security.CustomUserDetails;
@@ -68,8 +66,6 @@ public class AuthServiceImpl implements AuthService {
     MessageUtil messageUtil;
 
     UserRepository userRepository;
-
-    CustomerRepository customerRepository;
 
     CartRepository cartRepository;
 
@@ -253,18 +249,13 @@ public class AuthServiceImpl implements AuthService {
         user.setPassword(passwordEncoder.encode(requestDTO.getPassword()));
         user.setEmail(requestDTO.getEmail());
         user.setRole(role);
+        user.setFullName(requestDTO.getFullName());
+        user.setPhoneNumber(requestDTO.getPhoneNumber());
         userRepository.save(user);
-
-        //Tạo mới customer
-        Customer customer = new Customer();
-        customer.setFullName(requestDTO.getFullName());
-        customer.setPhoneNumber(requestDTO.getPhoneNumber());
-        customer.setUser(user);
-        customerRepository.save(customer);
 
         //Tạo mới giỏ hàng
         Cart cart = new Cart();
-        cart.setCustomer(customer);
+        cart.setUser(user);
         cartRepository.save(cart);
 
         Map<String, Object> properties = new HashMap<>();

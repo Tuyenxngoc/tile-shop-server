@@ -34,9 +34,9 @@ public class Order extends DateAuditing {
     private String paymentMethod;
 
     @ManyToOne
-    @JoinColumn(name = "customer_id", foreignKey = @ForeignKey(name = "FK_ORDER_CUSTOMER_ID"), nullable = false)
+    @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "FK_ORDER_USER_ID"), nullable = false)
     @JsonIgnore
-    private Customer customer;
+    private User user;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonIgnore

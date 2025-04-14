@@ -14,14 +14,12 @@ import com.example.tileshop.dto.review.CreateReviewRequestDTO;
 import com.example.tileshop.dto.review.ReviewForUserResponseDTO;
 import com.example.tileshop.dto.review.ReviewResponseDTO;
 import com.example.tileshop.dto.review.ReviewSummaryResponseDTO;
-import com.example.tileshop.entity.Customer;
 import com.example.tileshop.entity.Product;
 import com.example.tileshop.entity.Review;
 import com.example.tileshop.entity.ReviewImage;
+import com.example.tileshop.entity.User;
 import com.example.tileshop.exception.BadRequestException;
-import com.example.tileshop.exception.ForbiddenException;
 import com.example.tileshop.exception.NotFoundException;
-import com.example.tileshop.repository.CustomerRepository;
 import com.example.tileshop.repository.ProductRepository;
 import com.example.tileshop.repository.ReviewRepository;
 import com.example.tileshop.service.ReviewService;
@@ -50,8 +48,6 @@ public class ReviewServiceImpl implements ReviewService {
     private final UploadFileUtil uploadFileUtil;
 
     private final ProductRepository productRepository;
-
-    private final CustomerRepository customerRepository;
 
     private final MessageUtil messageUtil;
 
@@ -166,12 +162,7 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
-    public CommonResponseDTO addReview(CreateReviewRequestDTO requestDTO, List<MultipartFile> images, Long customerId) {
-        //Nếu không có customer thì bỏ qua
-        if (customerId == null) {
-            throw new ForbiddenException(ErrorMessage.ERR_FORBIDDEN);
-        }
-
+    public CommonResponseDTO addReview(CreateReviewRequestDTO requestDTO, List<MultipartFile> images, String userId) {
         //Kiểm tra hình ảnh
         if (images != null) {
             if (images.size() > 3) {
@@ -185,10 +176,10 @@ public class ReviewServiceImpl implements ReviewService {
         Product product = productRepository.findById(requestDTO.getProductId())
                 .orElseThrow(() -> new NotFoundException(ErrorMessage.Product.ERR_NOT_FOUND_ID, requestDTO.getProductId()));
 
-        Customer customer = new Customer();
-        customer.setId(customerId);
+        User user = new User();
+        user.setId(userId);
 
-        long pendingReviewCount = reviewRepository.countByCustomerAndProductAndStatus(customer, product, ReviewStatus.PENDING);
+        long pendingReviewCount = reviewRepository.countByUserAndProductAndStatus(user, product, ReviewStatus.PENDING);
 
         if (pendingReviewCount >= 5) {
             throw new BadRequestException(ErrorMessage.Review.ERR_PENDING_LIMIT);
@@ -215,7 +206,7 @@ public class ReviewServiceImpl implements ReviewService {
         }
         review.setRating(requestDTO.getRating());
         review.setProduct(product);
-        review.setCustomer(customer);
+        review.setUser(user);
 
         reviewRepository.save(review);
 
