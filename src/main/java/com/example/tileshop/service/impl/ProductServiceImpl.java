@@ -108,8 +108,8 @@ public class ProductServiceImpl implements ProductService {
                 })
                 .toList();
 
-        product.setName(requestDTO.getName().trim());
-        product.setDescription(requestDTO.getDescription().trim());
+        product.setName(requestDTO.getName());
+        product.setDescription(requestDTO.getDescription());
         product.setPrice(requestDTO.getPrice());
         product.setDiscountPercentage(requestDTO.getDiscountPercentage());
         product.setStockQuantity(requestDTO.getStockQuantity());
@@ -119,7 +119,7 @@ public class ProductServiceImpl implements ProductService {
         product.setAttributes(productAttributes);
         product.setImages(productImages);
 
-        String baseSlug = SlugUtil.toSlug(requestDTO.getName().trim());
+        String baseSlug = SlugUtil.toSlug(requestDTO.getName());
         String uniqueSlug = generateUniqueSlug(baseSlug);
         product.setSlug(uniqueSlug);
 
@@ -160,14 +160,14 @@ public class ProductServiceImpl implements ProductService {
         }
 
         // Update Slug if name changed
-        if (!requestDTO.getName().trim().equals(product.getName())) {
-            String baseSlug = SlugUtil.toSlug(requestDTO.getName().trim());
+        if (!requestDTO.getName().equals(product.getName())) {
+            String baseSlug = SlugUtil.toSlug(requestDTO.getName());
             String uniqueSlug = generateUniqueSlug(baseSlug);
             product.setSlug(uniqueSlug);
         }
 
-        product.setName(requestDTO.getName().trim());
-        product.setDescription(requestDTO.getDescription().trim());
+        product.setName(requestDTO.getName());
+        product.setDescription(requestDTO.getDescription());
         product.setPrice(requestDTO.getPrice());
         product.setDiscountPercentage(requestDTO.getDiscountPercentage());
         product.setStockQuantity(requestDTO.getStockQuantity());

@@ -201,9 +201,7 @@ public class ReviewServiceImpl implements ReviewService {
             review.setImages(productImages);
         }
 
-        if (requestDTO.getComment() != null) {
-            review.setComment(requestDTO.getComment().trim());
-        }
+        review.setComment(requestDTO.getComment());
         review.setRating(requestDTO.getRating());
         review.setProduct(product);
         review.setUser(user);

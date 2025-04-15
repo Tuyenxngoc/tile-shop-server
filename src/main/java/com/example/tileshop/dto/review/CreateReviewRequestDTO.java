@@ -1,6 +1,8 @@
 package com.example.tileshop.dto.review;
 
+import com.example.tileshop.config.TrimStringDeserializer;
 import com.example.tileshop.constant.ErrorMessage;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
@@ -22,6 +24,7 @@ public class CreateReviewRequestDTO {
     private Integer rating;
 
     @Size(max = 500, message = ErrorMessage.INVALID_TEXT_LENGTH)
+    @JsonDeserialize(using = TrimStringDeserializer.class)
     private String comment;
 
     @NotNull(message = ErrorMessage.INVALID_SOME_THING_FIELD_IS_REQUIRED)
