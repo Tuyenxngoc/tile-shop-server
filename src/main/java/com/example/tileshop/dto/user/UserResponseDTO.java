@@ -11,8 +11,6 @@ public class UserResponseDTO {
 
     private String username;
 
-    private String password;
-
     private String email;
 
     private String phoneNumber;
@@ -30,7 +28,6 @@ public class UserResponseDTO {
     public UserResponseDTO(User user) {
         this.id = user.getId();
         this.username = user.getUsername();
-        this.password = user.getPassword();
         this.email = user.getEmail();
         this.phoneNumber = user.getPhoneNumber();
         this.fullName = user.getFullName();

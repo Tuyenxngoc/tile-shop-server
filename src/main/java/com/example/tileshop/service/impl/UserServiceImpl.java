@@ -107,11 +107,13 @@ public class UserServiceImpl implements UserService {
     @Override
     public CommonResponseDTO update(String id, UpdateUserRequestDTO requestDTO) {
         User user = getEntity(id);
-        boolean isEmailExists = userRepository.existsByEmail(requestDTO.getEmail());
-        if (isEmailExists) {
+
+        // Kiểm tra email trùng lặp
+        if (!requestDTO.getEmail().equals(user.getEmail()) && userRepository.existsByEmail(requestDTO.getEmail())) {
             throw new ConflictException(ErrorMessage.Auth.ERR_DUPLICATE_EMAIL);
         }
 
+        // Lấy ra quyền dựa thep role id
         Role role = roleRepository.findById(requestDTO.getRoleId())
                 .orElseThrow(() -> new NotFoundException(ErrorMessage.Role.ERR_NOT_FOUND_ID, requestDTO.getRoleId()));
 
@@ -120,8 +122,8 @@ public class UserServiceImpl implements UserService {
             throw new ForbiddenException(ErrorMessage.ERR_FORBIDDEN_UPDATE_DELETE);
         }
 
-        user.setEmail(requestDTO.getEmail());
         user.setFullName(requestDTO.getFullName());
+        user.setEmail(requestDTO.getEmail());
         user.setPhoneNumber(requestDTO.getPhoneNumber());
         user.setAddress(requestDTO.getAddress());
         user.setGender(requestDTO.getGender());
