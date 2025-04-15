@@ -1,8 +1,10 @@
 package com.example.tileshop.dto.user;
 
+import com.example.tileshop.config.TrimStringDeserializer;
 import com.example.tileshop.constant.CommonConstant;
 import com.example.tileshop.constant.ErrorMessage;
 import com.example.tileshop.constant.Gender;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -26,9 +28,10 @@ public class UpdateUserRequestDTO {
     private String fullName;
 
     @Size(min = 5, max = 255, message = ErrorMessage.INVALID_TEXT_LENGTH)
+    @JsonDeserialize(using = TrimStringDeserializer.class)
     private String address;
 
-    private Gender gender = Gender.OTHER;
+    private Gender gender;
 
     @NotNull(message = ErrorMessage.INVALID_SOME_THING_FIELD_IS_REQUIRED)
     private Long roleId;

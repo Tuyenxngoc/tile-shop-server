@@ -1,9 +1,6 @@
 package com.example.tileshop.service.impl;
 
-import com.example.tileshop.constant.ErrorMessage;
-import com.example.tileshop.constant.RoleConstant;
-import com.example.tileshop.constant.SortByDataConstant;
-import com.example.tileshop.constant.SuccessMessage;
+import com.example.tileshop.constant.*;
 import com.example.tileshop.dto.common.CommonResponseDTO;
 import com.example.tileshop.dto.pagination.PaginationFullRequestDTO;
 import com.example.tileshop.dto.pagination.PaginationResponseDTO;
@@ -95,7 +92,7 @@ public class UserServiceImpl implements UserService {
         user.setFullName(requestDTO.getFullName());
         user.setPhoneNumber(requestDTO.getPhoneNumber());
         user.setAddress(requestDTO.getAddress());
-        user.setGender(requestDTO.getGender());
+        user.setGender(requestDTO.getGender() == null ? Gender.OTHER : requestDTO.getGender());
         user.setRole(role);
 
         userRepository.save(user);
@@ -126,7 +123,7 @@ public class UserServiceImpl implements UserService {
         user.setEmail(requestDTO.getEmail());
         user.setPhoneNumber(requestDTO.getPhoneNumber());
         user.setAddress(requestDTO.getAddress());
-        user.setGender(requestDTO.getGender());
+        user.setGender(requestDTO.getGender() == null ? Gender.OTHER : requestDTO.getGender());
         user.setRole(role);
 
         userRepository.save(user);
