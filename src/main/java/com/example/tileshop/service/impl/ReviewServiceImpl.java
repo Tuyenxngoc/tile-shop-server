@@ -34,10 +34,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -54,6 +51,27 @@ public class ReviewServiceImpl implements ReviewService {
     private Review getEntity(Long id) {
         return reviewRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException(ErrorMessage.Review.ERR_NOT_FOUND_ID, id));
+    }
+
+    private void updateProductAverageRating(Long productId) {
+        List<Review> approvedReviews = reviewRepository.findByProductIdAndStatus(productId, ReviewStatus.APPROVED);
+
+        if (approvedReviews.isEmpty()) return;
+
+        double totalRating = approvedReviews.stream()
+                .mapToInt(Review::getRating)
+                .sum();
+
+        double averageRating = totalRating / approvedReviews.size();
+        averageRating = Math.round(averageRating * 10.0) / 10.0;
+
+        Optional<Product> optionalProduct = productRepository.findById(productId);
+
+        if (optionalProduct.isPresent()) {
+            Product product = optionalProduct.get();
+            product.setAverageRating(averageRating);
+            productRepository.save(product);
+        }
     }
 
     @Override
@@ -220,6 +238,9 @@ public class ReviewServiceImpl implements ReviewService {
             review.setStatus(ReviewStatus.APPROVED);
             review.setApprovedBy(username);
             reviewRepository.save(review);
+
+            //Cập nhật điểm đánh giá của sản phẩm
+            updateProductAverageRating(review.getProduct().getId());
         }
 
         String message = messageUtil.getMessage(SuccessMessage.Review.APPROVE);
@@ -243,6 +264,9 @@ public class ReviewServiceImpl implements ReviewService {
     public CommonResponseDTO deleteReview(Long id) {
         Review review = getEntity(id);
 
+        Long productId = review.getProduct().getId();
+        boolean wasApproved = ReviewStatus.APPROVED.equals(review.getStatus());
+
         // Handle old images
         Iterator<ReviewImage> iterator = review.getImages().iterator();
         while (iterator.hasNext()) {
@@ -252,6 +276,11 @@ public class ReviewServiceImpl implements ReviewService {
         }
 
         reviewRepository.delete(review);
+
+        // Nếu xóa review đã duyệt thì cập nhật lại điểm
+        if (wasApproved) {
+            updateProductAverageRating(productId);
+        }
 
         String message = messageUtil.getMessage(SuccessMessage.DELETE);
         return new CommonResponseDTO(message, true);
