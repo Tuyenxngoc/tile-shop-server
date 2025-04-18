@@ -2,6 +2,7 @@ package com.example.tileshop;
 
 import com.example.tileshop.config.CloudinaryConfig;
 import com.example.tileshop.config.MailConfig;
+import com.example.tileshop.config.VnPayConfig;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -10,7 +11,7 @@ import org.springframework.core.env.Environment;
 
 @Slf4j
 @SpringBootApplication
-@EnableConfigurationProperties({MailConfig.class, CloudinaryConfig.class})
+@EnableConfigurationProperties({MailConfig.class, CloudinaryConfig.class, VnPayConfig.class})
 public class TileshopApplication {
 
     public static void main(String[] args) {
