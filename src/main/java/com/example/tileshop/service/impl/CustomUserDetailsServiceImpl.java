@@ -53,10 +53,10 @@ public class CustomUserDetailsServiceImpl implements CustomUserDetailsService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UsernameNotFoundException(messageUtil.getMessage(ErrorMessage.User.ERR_NOT_FOUND_ID, userId)));
 
-        if(!user.getActiveFlag()) {
-       	 throw new UnauthorizedException(ErrorMessage.Auth.ERR_ACCOUNT_DISABLED);
-       }
-        
+        if (!user.getActiveFlag()) {
+            throw new UnauthorizedException(ErrorMessage.Auth.ERR_ACCOUNT_DISABLED);
+        }
+
         List<GrantedAuthority> authorities = new ArrayList<>();
         authorities.add(new SimpleGrantedAuthority(user.getRole().getCode().name()));
 

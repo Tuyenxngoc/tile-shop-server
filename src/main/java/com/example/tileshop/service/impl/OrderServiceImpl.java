@@ -14,7 +14,6 @@ import com.example.tileshop.repository.UserRepository;
 import com.example.tileshop.service.OrderService;
 import com.example.tileshop.util.MessageUtil;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

@@ -5,7 +5,6 @@ import com.example.tileshop.annotation.RestApiV1;
 import com.example.tileshop.constant.UrlConstant;
 import com.example.tileshop.dto.order.OrderRequestDTO;
 import com.example.tileshop.dto.pagination.PaginationFullRequestDTO;
-import com.example.tileshop.dto.order.OrderResponseDTO;
 import com.example.tileshop.security.CustomUserDetails;
 import com.example.tileshop.service.OrderService;
 import com.example.tileshop.util.VsResponseUtil;
