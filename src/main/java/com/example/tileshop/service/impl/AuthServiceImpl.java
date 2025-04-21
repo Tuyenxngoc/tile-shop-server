@@ -224,6 +224,11 @@ public class AuthServiceImpl implements AuthService {
         return CurrentUserLoginResponseDTO.builder()
                 .userId(user.getId())
                 .username(user.getUsername())
+                .email(user.getEmail())
+                .phoneNumber(user.getPhoneNumber())
+                .fullName(user.getFullName())
+                .address(user.getAddress())
+                .gender(user.getGender())
                 .roleNames(Set.of(user.getRole().getCode()))
                 .build();
     }

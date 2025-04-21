@@ -2,6 +2,7 @@ package com.example.tileshop.service.impl;
 
 import com.example.tileshop.constant.ErrorMessage;
 import com.example.tileshop.entity.User;
+import com.example.tileshop.exception.UnauthorizedException;
 import com.example.tileshop.repository.UserRepository;
 import com.example.tileshop.security.CustomUserDetails;
 import com.example.tileshop.service.CustomUserDetailsService;
@@ -48,10 +49,14 @@ public class CustomUserDetailsServiceImpl implements CustomUserDetailsService {
 
     @Override
     @Transactional
-    public UserDetails loadUserByUserId(String userId) throws UsernameNotFoundException {
+    public UserDetails loadUserByUserId(String userId) throws UsernameNotFoundException, UnauthorizedException {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UsernameNotFoundException(messageUtil.getMessage(ErrorMessage.User.ERR_NOT_FOUND_ID, userId)));
 
+        if(!user.getActiveFlag()) {
+       	 throw new UnauthorizedException(ErrorMessage.Auth.ERR_ACCOUNT_DISABLED);
+       }
+        
         List<GrantedAuthority> authorities = new ArrayList<>();
         authorities.add(new SimpleGrantedAuthority(user.getRole().getCode().name()));
 

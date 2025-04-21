@@ -1,5 +1,6 @@
 package com.example.tileshop.security.jwt;
 
+import com.example.tileshop.exception.UnauthorizedException;
 import com.example.tileshop.service.CustomUserDetailsService;
 import com.example.tileshop.service.JwtBlacklistService;
 import com.example.tileshop.util.JwtUtil;
@@ -54,6 +55,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         } catch (UsernameNotFoundException e) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             response.getWriter().write("User not found: " + e.getMessage());
+            return;
+        } catch (UnauthorizedException e) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.getWriter().write("User is banned.");
             return;
         } catch (JwtException e) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
