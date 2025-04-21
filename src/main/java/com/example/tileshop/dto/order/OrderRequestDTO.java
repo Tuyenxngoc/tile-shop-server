@@ -2,8 +2,10 @@ package com.example.tileshop.dto.order;
 
 import com.example.tileshop.config.TrimStringDeserializer;
 import com.example.tileshop.constant.CommonConstant;
+import com.example.tileshop.constant.DeliveryMethod;
 import com.example.tileshop.constant.ErrorMessage;
 import com.example.tileshop.constant.Gender;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import jakarta.validation.constraints.*;
 import lombok.Getter;
@@ -31,10 +33,8 @@ public class OrderRequestDTO {
     @Size(min = 5, max = 255, message = ErrorMessage.INVALID_TEXT_LENGTH)
     private String email;
 
-    @NotBlank(message = ErrorMessage.INVALID_NOT_BLANK_FIELD)
-    @Size(max = 255, message = ErrorMessage.INVALID_TEXT_LENGTH)
-    @JsonDeserialize(using = TrimStringDeserializer.class)
-    private String deliveryMethod;
+    @NotNull(message = ErrorMessage.INVALID_SOME_THING_FIELD_IS_REQUIRED)
+    private DeliveryMethod deliveryMethod;
 
     @Size(min = 5, max = 255, message = ErrorMessage.INVALID_TEXT_LENGTH)
     @JsonDeserialize(using = TrimStringDeserializer.class)
@@ -60,5 +60,29 @@ public class OrderRequestDTO {
 
     @JsonDeserialize(using = TrimStringDeserializer.class)
     private String invoiceCompanyAddress;
+
+    @AssertTrue(message = ErrorMessage.Order.ERR_MISSING_INVOICE_INFO)
+    @JsonIgnore
+    public boolean isInvoiceInfoValid() {
+        if (Boolean.TRUE.equals(requestInvoice)) {
+            return isNotBlank(invoiceCompanyName) &&
+                    isNotBlank(invoiceTaxCode) &&
+                    isNotBlank(invoiceCompanyAddress);
+        }
+        return true;
+    }
+
+    @AssertTrue(message = ErrorMessage.Order.ERR_MISSING_SHIPPING_ADDRESS)
+    @JsonIgnore
+    public boolean isShippingAddressValid() {
+        if (DeliveryMethod.HOME_DELIVERY.equals(deliveryMethod)) {
+            return isNotBlank(shippingAddress);
+        }
+        return true;
+    }
+
+    private static boolean isNotBlank(String str) {
+        return str != null && !str.trim().isEmpty();
+    }
 
 }

@@ -7,6 +7,8 @@ import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 import java.util.stream.Collectors;
@@ -72,4 +74,19 @@ public class VNPayUtil {
                                         , StandardCharsets.US_ASCII))
                 .collect(Collectors.joining("&"));
     }
+
+    public static Map<String, String> getParametersFromRequest(HttpServletRequest request) {
+        Map<String, String> params = new HashMap<>();
+
+        // Lấy tất cả các tham số trong request và thêm vào Map
+        Enumeration<String> parameterNames = request.getParameterNames();
+        while (parameterNames.hasMoreElements()) {
+            String paramName = parameterNames.nextElement();
+            String paramValue = request.getParameter(paramName);
+            params.put(paramName, paramValue);
+        }
+
+        return params;
+    }
+
 }

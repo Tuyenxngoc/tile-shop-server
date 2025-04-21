@@ -1,16 +1,18 @@
 package com.example.tileshop.service.impl;
 
 import com.example.tileshop.constant.ErrorMessage;
+import com.example.tileshop.constant.OrderStatus;
+import com.example.tileshop.constant.SuccessMessage;
+import com.example.tileshop.dto.common.CommonResponseDTO;
 import com.example.tileshop.dto.order.OrderRequestDTO;
+import com.example.tileshop.dto.order.OrderResponseDTO;
 import com.example.tileshop.dto.pagination.PaginationFullRequestDTO;
+import com.example.tileshop.dto.pagination.PaginationResponseDTO;
 import com.example.tileshop.entity.*;
 import com.example.tileshop.exception.BadRequestException;
 import com.example.tileshop.exception.ConflictException;
 import com.example.tileshop.exception.NotFoundException;
-import com.example.tileshop.repository.CartItemRepository;
-import com.example.tileshop.repository.OrderItemRepository;
-import com.example.tileshop.repository.OrderRepository;
-import com.example.tileshop.repository.UserRepository;
+import com.example.tileshop.repository.*;
 import com.example.tileshop.service.OrderService;
 import com.example.tileshop.util.MessageUtil;
 import lombok.RequiredArgsConstructor;
@@ -33,41 +35,36 @@ public class OrderServiceImpl implements OrderService {
     private final UserRepository userRepository;
 
     private final MessageUtil messageUtil;
+    private final ProductRepository productRepository;
 
     @Override
-    public Object findAll(PaginationFullRequestDTO requestDTO) {
+    public PaginationResponseDTO<OrderResponseDTO> findAll(PaginationFullRequestDTO requestDTO) {
         return null;
     }
 
     @Override
-    public Object findById(Long id) {
+    public OrderResponseDTO findById(Long id) {
         return null;
     }
 
     @Override
-    public Object updateStatus(Long id, String status) {
+    public CommonResponseDTO updateStatus(Long id, String status) {
         return null;
     }
 
     @Override
-    public Object userFindAll(PaginationFullRequestDTO requestDTO) {
+    public List<OrderResponseDTO> userFindAll(PaginationFullRequestDTO requestDTO, String userId) {
         return null;
     }
 
     @Override
-    public Object userFindById(Long id) {
+    public OrderResponseDTO userFindById(Long id, String userId) {
         return null;
     }
 
     @Override
     @Transactional
-    public Object createOrder(OrderRequestDTO requestDTO, String userId) {
-        if (requestDTO.getDeliveryMethod().equals("home_delivery")) {
-            if (requestDTO.getShippingAddress() == null || requestDTO.getShippingAddress().isEmpty()) {
-                throw new BadRequestException(ErrorMessage.INVALID_NOT_BLANK_FIELD);
-            }
-        }
-
+    public CommonResponseDTO createOrder(OrderRequestDTO requestDTO, String userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException(messageUtil.getMessage(ErrorMessage.User.ERR_NOT_FOUND_ID, userId)));
 
@@ -78,18 +75,25 @@ public class OrderServiceImpl implements OrderService {
 
         Order order = new Order();
         order.setNote(requestDTO.getNote());
-        order.setDeliveryMethod(requestDTO.getDeliveryMethod());
+        order.setDeliveryMethod(requestDTO.getDeliveryMethod().getValue());
         order.setShippingAddress(requestDTO.getShippingAddress());
         order.setPaymentMethod(requestDTO.getPaymentMethod());
         order.setUser(user);
+        order.setStatus(OrderStatus.PENDING);
 
         double totalAmount = 0.0;
         List<OrderItem> orderItems = new ArrayList<>();
         for (CartItem cartItem : cartItems) {
             Product product = cartItem.getProduct();
+
+            // Kiểm tra số lượng tồn kho
             if (product.getStockQuantity() < cartItem.getQuantity()) {
                 throw new ConflictException(ErrorMessage.Product.ERR_OUT_OF_STOCK);
             }
+
+            // Giảm số lượng sản phẩm
+            product.setStockQuantity(product.getStockQuantity() - cartItem.getQuantity());
+            productRepository.save(product);
 
             OrderItem orderItem = new OrderItem();
             orderItem.setOrder(order);
@@ -106,6 +110,8 @@ public class OrderServiceImpl implements OrderService {
         orderRepository.save(order);
         cartItemRepository.deleteByCartUserId(userId);
 
-        return null;
+        String message = messageUtil.getMessage(SuccessMessage.CREATE);
+        return new CommonResponseDTO(message);
     }
+
 }

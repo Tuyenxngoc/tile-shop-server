@@ -56,14 +56,14 @@ public class OrderController {
 
     @Operation(summary = "User - API Get All Orders")
     @GetMapping(UrlConstant.Order.User.GET_ALL)
-    public ResponseEntity<?> getUserOrders(@ParameterObject PaginationFullRequestDTO requestDTO) {
-        return VsResponseUtil.success(orderService.userFindAll(requestDTO));
+    public ResponseEntity<?> getUserOrders(@ParameterObject PaginationFullRequestDTO requestDTO, @CurrentUser CustomUserDetails userDetails) {
+        return VsResponseUtil.success(orderService.userFindAll(requestDTO, userDetails.getUserId()));
     }
 
     @Operation(summary = "User - API Get Order By Id")
     @GetMapping(UrlConstant.Order.User.GET_BY_ID)
-    public ResponseEntity<?> getUserOrderById(@PathVariable Long id) {
-        return VsResponseUtil.success(orderService.userFindById(id));
+    public ResponseEntity<?> getUserOrderById(@PathVariable Long id, @CurrentUser CustomUserDetails userDetails) {
+        return VsResponseUtil.success(orderService.userFindById(id, userDetails.getUserId()));
     }
 
     @Operation(summary = "User - API Create Order")

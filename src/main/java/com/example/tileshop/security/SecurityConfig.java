@@ -77,7 +77,10 @@ public class SecurityConfig {
 
             //Review
             "/api/v1/reviews/product/*",
-            "/api/v1/reviews/summary/*"
+            "/api/v1/reviews/summary/*",
+
+            //VNpay
+            "/api/v1/payment/vnpay-return",
     };
 
     private static final String[] POST_WHITELIST_URL = {
