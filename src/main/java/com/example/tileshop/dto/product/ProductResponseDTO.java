@@ -35,7 +35,7 @@ public class ProductResponseDTO {
         this.description = product.getDescription();
         this.price = product.getPrice();
         this.discountPercentage = product.getDiscountPercentage();
-        this.salePrice = product.getPrice() - (product.getPrice() * product.getDiscountPercentage() / 100);
+        this.salePrice = product.calculateFinalPrice();
         this.stockQuantity = product.getStockQuantity();
         this.averageRating = product.getAverageRating();
         this.imageUrl = product.getImages().getFirst().getImageUrl();

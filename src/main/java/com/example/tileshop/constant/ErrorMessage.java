@@ -81,6 +81,7 @@ public class ErrorMessage {
         public static final String ERR_NOT_FOUND_ID = "exception.cart.not.found.id";
         public static final String ERR_MAX_ITEMS = "exception.cart.max-items";
         public static final String ERR_NOT_FOUND_ITEM_IN_CART = "exception.cart.item.not.found";
+        public static final String ERR_EMPTY_CART = "exception.cart.empty";
     }
 
     public static class CartItem {

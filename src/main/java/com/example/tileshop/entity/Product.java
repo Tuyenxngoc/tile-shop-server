@@ -79,4 +79,12 @@ public class Product extends DateAuditing {
     @JsonIgnore
     private List<CartItem> cartItems = new ArrayList<>();
 
+
+    public double calculateFinalPrice() {
+        if (discountPercentage != null && discountPercentage > 0) {
+            double discountAmount = (price * discountPercentage) / 100;
+            return price - discountAmount;
+        }
+        return price;
+    }
 }

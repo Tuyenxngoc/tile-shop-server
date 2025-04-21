@@ -29,9 +29,13 @@ public class Order extends DateAuditing {
     @Enumerated(EnumType.STRING)
     private OrderStatus status;
 
+    private String deliveryMethod;
+
     private String shippingAddress;
 
     private String paymentMethod;
+
+    private String note;
 
     @ManyToOne
     @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "FK_ORDER_USER_ID"), nullable = false)

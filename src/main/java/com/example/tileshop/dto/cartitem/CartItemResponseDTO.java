@@ -32,7 +32,7 @@ public class CartItemResponseDTO {
         this.name = product.getName();
         this.price = product.getPrice();
         this.discountPercentage = product.getDiscountPercentage();
-        this.salePrice = product.getPrice() - (product.getPrice() * product.getDiscountPercentage() / 100);
+        this.salePrice = product.calculateFinalPrice();
         this.imageUrl = product.getImages().getFirst().getImageUrl();
     }
 

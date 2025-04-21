@@ -105,14 +105,22 @@ public class UrlConstant {
         public static final String DELETE = PRE_FIX + "/{id}";
     }
 
-    public static class Order {
+    public static final class Order {
         private static final String PRE_FIX = "/orders";
+        private static final String PRE_FIX_ADMIN = ADMIN_URL + PRE_FIX;
 
-        public static final String CREATE = PRE_FIX;
-        public static final String GET_ALL = PRE_FIX;
-        public static final String GET_BY_ID = PRE_FIX + "/{id}";
-        public static final String UPDATE_STATUS = PRE_FIX + "/{id}/status";
-        public static final String DELETE = PRE_FIX + "/{id}";
+        public static final class Admin {
+            public static final String GET_ALL = PRE_FIX_ADMIN;
+            public static final String GET_BY_ID = PRE_FIX_ADMIN + "/{id}";
+            public static final String UPDATE_STATUS = PRE_FIX_ADMIN + "/{id}/status";
+            public static final String DELETE = PRE_FIX_ADMIN + "/{id}";
+        }
+
+        public static final class User {
+            public static final String GET_ALL = PRE_FIX;
+            public static final String GET_BY_ID = PRE_FIX + "/{id}";
+            public static final String CREATE = PRE_FIX;
+        }
     }
 
     public static class OrderItem {
