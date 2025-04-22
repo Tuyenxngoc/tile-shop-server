@@ -2,6 +2,7 @@ package com.example.tileshop.controller;
 
 import com.example.tileshop.annotation.CurrentUser;
 import com.example.tileshop.annotation.RestApiV1;
+import com.example.tileshop.constant.OrderStatus;
 import com.example.tileshop.constant.UrlConstant;
 import com.example.tileshop.dto.order.OrderRequestDTO;
 import com.example.tileshop.dto.pagination.PaginationFullRequestDTO;
@@ -55,8 +56,12 @@ public class OrderController {
 
     @Operation(summary = "User - API Get All Orders")
     @GetMapping(UrlConstant.Order.User.GET_ALL)
-    public ResponseEntity<?> getUserOrders(@ParameterObject PaginationFullRequestDTO requestDTO, @CurrentUser CustomUserDetails userDetails) {
-        return VsResponseUtil.success(orderService.userFindAll(requestDTO, userDetails.getUserId()));
+    public ResponseEntity<?> getUserOrders(
+            @RequestParam(required = false) OrderStatus status,
+            @RequestParam(required = false) String keyword,
+            @CurrentUser CustomUserDetails userDetails
+    ) {
+        return VsResponseUtil.success(orderService.userFindAll(userDetails.getUserId(), status, keyword));
     }
 
     @Operation(summary = "User - API Get Order By Id")

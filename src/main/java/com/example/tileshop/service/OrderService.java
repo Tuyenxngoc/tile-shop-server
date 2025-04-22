@@ -1,6 +1,8 @@
 package com.example.tileshop.service;
 
+import com.example.tileshop.constant.OrderStatus;
 import com.example.tileshop.dto.common.CommonResponseDTO;
+import com.example.tileshop.dto.order.OrderForUserResponseDTO;
 import com.example.tileshop.dto.order.OrderRequestDTO;
 import com.example.tileshop.dto.order.OrderResponseDTO;
 import com.example.tileshop.dto.pagination.PaginationFullRequestDTO;
@@ -16,7 +18,7 @@ public interface OrderService {
 
     CommonResponseDTO updateStatus(Long id, String status);
 
-    List<OrderResponseDTO> userFindAll(PaginationFullRequestDTO requestDTO, String userId);
+    List<OrderForUserResponseDTO> userFindAll(String userId, OrderStatus status, String keyword);
 
     OrderResponseDTO userFindById(Long id, String userId);
 

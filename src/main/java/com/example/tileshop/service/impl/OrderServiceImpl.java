@@ -2,6 +2,7 @@ package com.example.tileshop.service.impl;
 
 import com.example.tileshop.constant.*;
 import com.example.tileshop.dto.common.CommonResponseDTO;
+import com.example.tileshop.dto.order.OrderForUserResponseDTO;
 import com.example.tileshop.dto.order.OrderPaymentResponseDTO;
 import com.example.tileshop.dto.order.OrderRequestDTO;
 import com.example.tileshop.dto.order.OrderResponseDTO;
@@ -13,8 +14,10 @@ import com.example.tileshop.exception.ConflictException;
 import com.example.tileshop.exception.NotFoundException;
 import com.example.tileshop.repository.*;
 import com.example.tileshop.service.OrderService;
+import com.example.tileshop.specification.OrderSpecification;
 import com.example.tileshop.util.MessageUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -53,8 +56,22 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<OrderResponseDTO> userFindAll(PaginationFullRequestDTO requestDTO, String userId) {
-        return null;
+    public List<OrderForUserResponseDTO> userFindAll(String userId, OrderStatus status, String keyword) {
+        Specification<Order> spec = Specification.where(OrderSpecification.hasUserId(userId));
+
+        if (status != null) {
+            spec = spec.and(OrderSpecification.hasStatus(status));
+        }
+
+        if (keyword != null && !keyword.isBlank()) {
+            spec = spec.and(OrderSpecification.containsKeyword(keyword));
+        }
+
+        List<Order> orders = orderRepository.findAll(spec);
+
+        return orders.stream()
+                .map(OrderForUserResponseDTO::new)
+                .toList();
     }
 
     @Override
