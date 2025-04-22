@@ -1,6 +1,7 @@
 package com.example.tileshop.service.impl;
 
 import com.example.tileshop.constant.*;
+import com.example.tileshop.dto.auth.CurrentUserLoginResponseDTO;
 import com.example.tileshop.dto.common.CommonResponseDTO;
 import com.example.tileshop.dto.pagination.PaginationFullRequestDTO;
 import com.example.tileshop.dto.pagination.PaginationResponseDTO;
@@ -30,6 +31,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 
 @Slf4j
 @Service
@@ -217,7 +219,18 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
 
         String message = messageUtil.getMessage(SuccessMessage.UPDATE);
-        return new CommonResponseDTO(message, new UserResponseDTO(user));
+
+        CurrentUserLoginResponseDTO responseDTO = CurrentUserLoginResponseDTO.builder()
+                .userId(user.getId())
+                .username(user.getUsername())
+                .email(user.getEmail())
+                .phoneNumber(user.getPhoneNumber())
+                .fullName(user.getFullName())
+                .address(user.getAddress())
+                .gender(user.getGender())
+                .roleNames(Set.of(user.getRole().getCode()))
+                .build();
+        return new CommonResponseDTO(message, responseDTO);
     }
 
 }

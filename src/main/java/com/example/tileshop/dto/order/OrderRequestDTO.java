@@ -33,7 +33,7 @@ public class OrderRequestDTO {
     @NotNull(message = ErrorMessage.INVALID_SOME_THING_FIELD_IS_REQUIRED)
     private DeliveryMethod deliveryMethod;
 
-    @Size(min = 5, max = 255, message = ErrorMessage.INVALID_TEXT_LENGTH)
+    @Size(max = 255, message = ErrorMessage.INVALID_TEXT_LENGTH)
     @JsonDeserialize(using = TrimStringDeserializer.class)
     private String shippingAddress;
 

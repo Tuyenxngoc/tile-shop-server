@@ -1,5 +1,6 @@
 package com.example.tileshop.dto.order;
 
+import com.example.tileshop.constant.DeliveryMethod;
 import com.example.tileshop.constant.OrderStatus;
 import com.example.tileshop.constant.PaymentMethod;
 import com.example.tileshop.constant.PaymentStatus;
@@ -18,7 +19,7 @@ public class OrderForUserResponseDTO {
 
     private OrderStatus status;
 
-    private String deliveryMethod;
+    private DeliveryMethod deliveryMethod;
 
     private String shippingAddress;
 

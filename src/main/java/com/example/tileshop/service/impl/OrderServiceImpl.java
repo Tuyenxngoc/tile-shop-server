@@ -91,14 +91,19 @@ public class OrderServiceImpl implements OrderService {
         }
 
         Order order = new Order();
-        order.setNote(requestDTO.getNote());
-        order.setDeliveryMethod(requestDTO.getDeliveryMethod().getValue());
-        order.setShippingAddress(requestDTO.getShippingAddress());
+
+        order.setDeliveryMethod(requestDTO.getDeliveryMethod());
+        if (!DeliveryMethod.STORE_PICKUP.equals(order.getDeliveryMethod())) {
+            order.setShippingAddress(requestDTO.getShippingAddress());
+        }
+
         order.setPaymentMethod(requestDTO.getPaymentMethod());
         if (!PaymentMethod.COD.equals(order.getPaymentMethod())) {
             order.setPaymentStatus(PaymentStatus.PENDING);
         }
+
         order.setUser(user);
+        order.setNote(requestDTO.getNote());
         order.setStatus(OrderStatus.PENDING);
 
         double totalAmount = 0.0;

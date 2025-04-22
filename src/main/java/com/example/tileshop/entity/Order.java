@@ -1,5 +1,6 @@
 package com.example.tileshop.entity;
 
+import com.example.tileshop.constant.DeliveryMethod;
 import com.example.tileshop.constant.OrderStatus;
 import com.example.tileshop.constant.PaymentMethod;
 import com.example.tileshop.constant.PaymentStatus;
@@ -32,7 +33,7 @@ public class Order extends DateAuditing {
     @Enumerated(EnumType.STRING)
     private OrderStatus status;
 
-    private String deliveryMethod;
+    private DeliveryMethod deliveryMethod;
 
     private String shippingAddress;
 
