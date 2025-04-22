@@ -1,10 +1,13 @@
 package com.example.tileshop.controller;
 
+import com.example.tileshop.annotation.CurrentUser;
 import com.example.tileshop.annotation.RestApiV1;
 import com.example.tileshop.constant.UrlConstant;
 import com.example.tileshop.dto.pagination.PaginationFullRequestDTO;
 import com.example.tileshop.dto.user.CreateUserRequestDTO;
+import com.example.tileshop.dto.user.UpdateProfileRequestDTO;
 import com.example.tileshop.dto.user.UpdateUserRequestDTO;
+import com.example.tileshop.security.CustomUserDetails;
 import com.example.tileshop.service.UserService;
 import com.example.tileshop.util.VsResponseUtil;
 import io.swagger.v3.oas.annotations.Operation;
@@ -67,6 +70,13 @@ public class UserController {
     @PatchMapping(UrlConstant.User.TOGGLE_ACTIVE)
     public ResponseEntity<?> toggleActive(@PathVariable String id) {
         return VsResponseUtil.success(userService.toggleActive(id));
+    }
+
+    @Operation(summary = "API Update My Profile - For current logged in user")
+    @PreAuthorize("isAuthenticated()")
+    @PutMapping(UrlConstant.User.UPDATE_MY_PROFILE)
+    public ResponseEntity<?> updateMyProfile(@RequestBody @Valid UpdateProfileRequestDTO requestDTO, @CurrentUser CustomUserDetails userDetails) {
+        return VsResponseUtil.success(userService.updateCurrentUser(requestDTO, userDetails.getUserId()));
     }
 
 }

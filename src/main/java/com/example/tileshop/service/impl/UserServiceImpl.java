@@ -6,6 +6,7 @@ import com.example.tileshop.dto.pagination.PaginationFullRequestDTO;
 import com.example.tileshop.dto.pagination.PaginationResponseDTO;
 import com.example.tileshop.dto.pagination.PagingMeta;
 import com.example.tileshop.dto.user.CreateUserRequestDTO;
+import com.example.tileshop.dto.user.UpdateProfileRequestDTO;
 import com.example.tileshop.dto.user.UpdateUserRequestDTO;
 import com.example.tileshop.dto.user.UserResponseDTO;
 import com.example.tileshop.entity.Role;
@@ -196,6 +197,27 @@ public class UserServiceImpl implements UserService {
 
         String message = messageUtil.getMessage(SuccessMessage.UPDATE);
         return new CommonResponseDTO(message, user.getActiveFlag());
+    }
+
+    @Override
+    public CommonResponseDTO updateCurrentUser(UpdateProfileRequestDTO requestDTO, String userId) {
+        User user = getEntity(userId);
+
+        // Kiểm tra email trùng lặp
+        if (!requestDTO.getEmail().equals(user.getEmail()) && userRepository.existsByEmail(requestDTO.getEmail())) {
+            throw new ConflictException(ErrorMessage.Auth.ERR_DUPLICATE_EMAIL);
+        }
+
+        user.setFullName(requestDTO.getFullName());
+        user.setEmail(requestDTO.getEmail());
+        user.setPhoneNumber(requestDTO.getPhoneNumber());
+        user.setAddress(requestDTO.getAddress());
+        user.setGender(requestDTO.getGender() == null ? Gender.OTHER : requestDTO.getGender());
+
+        userRepository.save(user);
+
+        String message = messageUtil.getMessage(SuccessMessage.UPDATE);
+        return new CommonResponseDTO(message, new UserResponseDTO(user));
     }
 
 }

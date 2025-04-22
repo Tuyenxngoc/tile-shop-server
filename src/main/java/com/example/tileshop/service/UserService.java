@@ -4,6 +4,7 @@ import com.example.tileshop.dto.common.CommonResponseDTO;
 import com.example.tileshop.dto.pagination.PaginationFullRequestDTO;
 import com.example.tileshop.dto.pagination.PaginationResponseDTO;
 import com.example.tileshop.dto.user.CreateUserRequestDTO;
+import com.example.tileshop.dto.user.UpdateProfileRequestDTO;
 import com.example.tileshop.dto.user.UpdateUserRequestDTO;
 import com.example.tileshop.dto.user.UserResponseDTO;
 
@@ -21,4 +22,6 @@ public interface UserService {
     UserResponseDTO findById(String id);
 
     CommonResponseDTO toggleActive(String id);
+
+    CommonResponseDTO updateCurrentUser(UpdateProfileRequestDTO requestDTO, String userId);
 }
