@@ -1,10 +1,7 @@
 package com.example.tileshop.dto.order;
 
 import com.example.tileshop.config.TrimStringDeserializer;
-import com.example.tileshop.constant.CommonConstant;
-import com.example.tileshop.constant.DeliveryMethod;
-import com.example.tileshop.constant.ErrorMessage;
-import com.example.tileshop.constant.Gender;
+import com.example.tileshop.constant.*;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import jakarta.validation.constraints.*;
@@ -44,10 +41,8 @@ public class OrderRequestDTO {
     @JsonDeserialize(using = TrimStringDeserializer.class)
     private String note;
 
-    @NotBlank(message = ErrorMessage.INVALID_NOT_BLANK_FIELD)
-    @Size(max = 255, message = ErrorMessage.INVALID_TEXT_LENGTH)
-    @JsonDeserialize(using = TrimStringDeserializer.class)
-    private String paymentMethod;
+    @NotNull(message = ErrorMessage.INVALID_SOME_THING_FIELD_IS_REQUIRED)
+    private PaymentMethod paymentMethod;
 
     @NotNull(message = ErrorMessage.INVALID_SOME_THING_FIELD_IS_REQUIRED)
     private Boolean requestInvoice;

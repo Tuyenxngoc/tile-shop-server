@@ -19,14 +19,13 @@ public class PaymentController {
     VnPayService paymentService;
 
     @GetMapping("payment/vn-pay")
-    public ResponseEntity<?> pay(@RequestParam("amount") Long amount, @RequestParam(value = "bankCode", required = false) String bankCode, HttpServletRequest request) {
-        return VsResponseUtil.success(paymentService.createPaymentUrl(amount, bankCode, request));
+    public ResponseEntity<?> pay(@RequestParam("orderId") Long orderId, HttpServletRequest request) {
+        return VsResponseUtil.success(paymentService.createPaymentUrl(orderId, request));
     }
 
-    @GetMapping("payment/vnpay-return")
-    public ResponseEntity<?> payCallbackHandler(HttpServletRequest request) {
-        paymentService.handleVNPayReturn(request);
-        return ResponseEntity.ok().build();
+    @GetMapping("payment/vn-pay-return")
+    public ResponseEntity<?> payCallbackHandler(@RequestParam("vnp_SecureHash") String receivedHash, HttpServletRequest request) {
+        return VsResponseUtil.success(paymentService.handleVNPayReturn(receivedHash, request));
     }
 
 }

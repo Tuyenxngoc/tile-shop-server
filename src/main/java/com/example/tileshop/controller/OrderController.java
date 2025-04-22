@@ -24,7 +24,6 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Tag(name = "Order")
-@RequestMapping("/orders")
 public class OrderController {
 
     OrderService orderService;

@@ -115,6 +115,9 @@ public class ErrorMessage {
         public static final String ERR_NOT_FOUND_ID = "exception.order.not.found.id";
         public static final String ERR_MISSING_SHIPPING_ADDRESS = "exception.order.missing.shipping.address";
         public static final String ERR_MISSING_INVOICE_INFO = "exception.order.missing.invoice.info";
+        public static final String ERR_ALREADY_PAID = "exception.order.already.paid";
+        public static final String ERR_ORDER_CANCELLED = "exception.order.cancelled";
+        public static final String ERR_INVALID_OR_TAMPERED_DATA = "exception.order.invalid.or.tampered.data";
     }
 
     public static class OrderItem {

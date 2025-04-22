@@ -1,9 +1,8 @@
 package com.example.tileshop.service.impl;
 
-import com.example.tileshop.constant.ErrorMessage;
-import com.example.tileshop.constant.OrderStatus;
-import com.example.tileshop.constant.SuccessMessage;
+import com.example.tileshop.constant.*;
 import com.example.tileshop.dto.common.CommonResponseDTO;
+import com.example.tileshop.dto.order.OrderPaymentResponseDTO;
 import com.example.tileshop.dto.order.OrderRequestDTO;
 import com.example.tileshop.dto.order.OrderResponseDTO;
 import com.example.tileshop.dto.pagination.PaginationFullRequestDTO;
@@ -35,6 +34,7 @@ public class OrderServiceImpl implements OrderService {
     private final UserRepository userRepository;
 
     private final MessageUtil messageUtil;
+
     private final ProductRepository productRepository;
 
     @Override
@@ -78,6 +78,9 @@ public class OrderServiceImpl implements OrderService {
         order.setDeliveryMethod(requestDTO.getDeliveryMethod().getValue());
         order.setShippingAddress(requestDTO.getShippingAddress());
         order.setPaymentMethod(requestDTO.getPaymentMethod());
+        if (!PaymentMethod.COD.equals(order.getPaymentMethod())) {
+            order.setPaymentStatus(PaymentStatus.PENDING);
+        }
         order.setUser(user);
         order.setStatus(OrderStatus.PENDING);
 
@@ -111,7 +114,7 @@ public class OrderServiceImpl implements OrderService {
         cartItemRepository.deleteByCartUserId(userId);
 
         String message = messageUtil.getMessage(SuccessMessage.CREATE);
-        return new CommonResponseDTO(message);
+        return new CommonResponseDTO(message, new OrderPaymentResponseDTO(order));
     }
 
 }

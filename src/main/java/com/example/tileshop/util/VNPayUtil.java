@@ -7,11 +7,7 @@ import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
-import java.util.stream.Collectors;
+import java.util.*;
 
 @Slf4j
 public class VNPayUtil {
@@ -62,19 +58,6 @@ public class VNPayUtil {
         return sb.toString();
     }
 
-    public static String getPaymentURL(Map<String, String> paramsMap, boolean encodeKey) {
-        return paramsMap.entrySet().stream()
-                .filter(entry -> entry.getValue() != null && !entry.getValue().isEmpty())
-                .sorted(Map.Entry.comparingByKey())
-                .map(entry ->
-                        (encodeKey ? URLEncoder.encode(entry.getKey(),
-                                StandardCharsets.US_ASCII)
-                                : entry.getKey()) + "=" +
-                                URLEncoder.encode(entry.getValue()
-                                        , StandardCharsets.US_ASCII))
-                .collect(Collectors.joining("&"));
-    }
-
     public static Map<String, String> getParametersFromRequest(HttpServletRequest request) {
         Map<String, String> params = new HashMap<>();
 
@@ -89,4 +72,22 @@ public class VNPayUtil {
         return params;
     }
 
+    public static String buildHashData(Map<String, String> params) {
+        List<String> fieldNames = new ArrayList<>(params.keySet());
+        Collections.sort(fieldNames);
+        StringBuilder hashData = new StringBuilder();
+
+        for (int i = 0; i < fieldNames.size(); i++) {
+            String key = fieldNames.get(i);
+            String value = params.get(key);
+            if (value != null && !value.isEmpty()) {
+                hashData.append(key).append("=").append(URLEncoder.encode(value, StandardCharsets.US_ASCII));
+                if (i < fieldNames.size() - 1) {
+                    hashData.append("&");
+                }
+            }
+        }
+
+        return hashData.toString();
+    }
 }
