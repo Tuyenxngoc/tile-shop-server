@@ -21,6 +21,8 @@ public class DataInitializer implements CommandLineRunner {
 
     private final CategoryAttributeService categoryAttributeService;
 
+    private final NewsCategoryService newsCategoryService;
+
     @Override
     public void run(String... args) {
         roleService.init();
@@ -28,6 +30,7 @@ public class DataInitializer implements CommandLineRunner {
         attributeService.init();
         categoryService.init();
         categoryAttributeService.init();
+        newsCategoryService.init();
     }
 
 }

@@ -11,6 +11,19 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.jpa.domain.Specification;
 
 public class NewsSpecification {
+
+    public static Specification<News> excludeSpecificId(Long excludeId) {
+        return (root, query, builder) -> {
+            Predicate predicate = builder.conjunction();
+
+            if (excludeId != null) {
+                predicate = builder.notEqual(root.get(News_.id), excludeId);
+            }
+
+            return predicate;
+        };
+    }
+
     public static Specification<News> filterByField(String searchBy, String keyword) {
         return (root, query, builder) -> {
             Predicate predicate = builder.conjunction();
@@ -31,6 +44,14 @@ public class NewsSpecification {
                                 builder.lower(categoryJoin.get(NewsCategory_.name)),
                                 "%" + keyword.toLowerCase() + "%"
                         );
+                    }
+
+                    case "categoryId" -> {
+                        Join<News, NewsCategory> categoryJoin = root.join(News_.category);
+                        predicate = builder.and(predicate, builder.equal(
+                                categoryJoin.get(NewsCategory_.id),
+                                SpecificationsUtil.castToRequiredType(categoryJoin.get(NewsCategory_.id).getJavaType(), keyword)
+                        ));
                     }
                 }
             }

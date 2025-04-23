@@ -25,6 +25,7 @@ import com.example.tileshop.util.UploadFileUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -141,10 +142,13 @@ public class NewsServiceImpl implements NewsService {
     }
 
     @Override
-    public PaginationResponseDTO<NewsResponseDTO> findAll(PaginationFullRequestDTO requestDTO) {
+    public PaginationResponseDTO<NewsResponseDTO> findAll(Long excludeId, PaginationFullRequestDTO requestDTO) {
         Pageable pageable = PaginationUtil.buildPageable(requestDTO, SortByDataConstant.NEWS);
 
-        Page<News> page = newsRepository.findAll(NewsSpecification.filterByField(requestDTO.getSearchBy(), requestDTO.getKeyword()), pageable);
+        Specification<News> specification = NewsSpecification.filterByField(requestDTO.getSearchBy(), requestDTO.getKeyword())
+                .and(NewsSpecification.excludeSpecificId(excludeId));
+
+        Page<News> page = newsRepository.findAll(specification, pageable);
 
         List<NewsResponseDTO> items = page.getContent().stream()
                 .map(NewsResponseDTO::new)

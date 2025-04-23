@@ -14,7 +14,7 @@ public interface NewsService {
 
     CommonResponseDTO delete(Long id);
 
-    PaginationResponseDTO<NewsResponseDTO> findAll(PaginationFullRequestDTO requestDTO);
+    PaginationResponseDTO<NewsResponseDTO> findAll(Long excludeId, PaginationFullRequestDTO requestDTO);
 
     NewsResponseDTO findById(Long id);
 

@@ -58,8 +58,11 @@ public class NewsController {
 
     @Operation(summary = "API Get News")
     @GetMapping(UrlConstant.News.GET_ALL)
-    public ResponseEntity<?> getNews(@ParameterObject PaginationFullRequestDTO requestDTO) {
-        return VsResponseUtil.success(newsService.findAll(requestDTO));
+    public ResponseEntity<?> getNews(
+            @RequestParam(value = "excludeId", required = false) Long excludeId,
+            @ParameterObject PaginationFullRequestDTO requestDTO
+    ) {
+        return VsResponseUtil.success(newsService.findAll(excludeId, requestDTO));
     }
 
     @Operation(summary = "API Get News By Id")

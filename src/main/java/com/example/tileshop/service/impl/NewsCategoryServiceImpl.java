@@ -39,6 +39,31 @@ public class NewsCategoryServiceImpl implements NewsCategoryService {
     }
 
     @Override
+    public void init() {
+        if (newscategoryRepository.count() > 0) {
+            return;
+        }
+
+        List<String> categoryNames = List.of(
+                "Tư vấn thiết bị vệ sinh",
+                "Tư vấn thiết bị bếp",
+                "Khuyến mãi - Sự kiện",
+                "Cẩm nang thiết kế",
+                "Phong thủy",
+                "Hỏi đáp",
+                "Tuyển dụng"
+        );
+
+        for (String name : categoryNames) {
+            if (!newscategoryRepository.existsByName(name)) {
+                NewsCategory newsCategory = new NewsCategory();
+                newsCategory.setName(name);
+                newscategoryRepository.save(newsCategory);
+            }
+        }
+    }
+
+    @Override
     public CommonResponseDTO save(NewsCategoryRequestDTO requestDTO) {
         if (newscategoryRepository.existsByName(requestDTO.getName())) {
             throw new ConflictException(ErrorMessage.NewsCategory.ERR_NOT_FOUND_ID, requestDTO.getName());

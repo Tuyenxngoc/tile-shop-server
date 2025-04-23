@@ -1,13 +1,14 @@
 package com.example.tileshop.dto.news;
 
 import com.example.tileshop.dto.common.BaseEntityDTO;
+import com.example.tileshop.dto.common.DateAuditingDTO;
 import com.example.tileshop.entity.News;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class NewsResponseDTO {
+public class NewsResponseDTO extends DateAuditingDTO {
 
     private long id;
 
@@ -24,6 +25,8 @@ public class NewsResponseDTO {
     private BaseEntityDTO category;
 
     public NewsResponseDTO(News news) {
+        this.createdDate = news.getCreatedDate();
+        this.lastModifiedDate = news.getLastModifiedDate();
         this.id = news.getId();
         this.title = news.getTitle();
         this.slug = news.getSlug();
