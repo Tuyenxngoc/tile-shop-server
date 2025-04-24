@@ -125,12 +125,23 @@ public class ${entity}DTO {
 function getMapperContent(entity) {
     return `package com.example.tileshop.mapper;
 
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.factory.Mappers;
+import com.example.tileshop.entity.${entity};
+import com.example.tileshop.dto.${entity.toLowerCase()}.${entity}ResponseDTO;
 
-@Mapper(componentModel = "spring")
-public interface ${entity}Mapper {
+public class ${entity}Mapper {
+
+    public static ${entity}ResponseDTO toDTO(${entity} ${entity.toLowerCase()}) {
+        if (${entity.toLowerCase()} == null) {
+            return null;
+        }
+
+        ${entity}ResponseDTO dto = new ${entity}ResponseDTO();
+        // TODO: set fields từ ${entity} vào dto
+        // vd: dto.setId(${entity.toLowerCase()}.getId());
+
+        return dto;
+    }
+
 }`;
 }
 

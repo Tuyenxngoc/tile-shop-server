@@ -39,8 +39,6 @@ public class NewsServiceImpl implements NewsService {
 
     private final MessageUtil messageUtil;
 
-    private final NewsMapper newsMapper;
-
     private final UploadFileUtil uploadFileUtil;
 
     private final NewsCategoryRepository newsCategoryRepository;
@@ -76,7 +74,7 @@ public class NewsServiceImpl implements NewsService {
         String baseSlug = SlugUtil.toSlug(requestDTO.getTitle());
         String uniqueSlug = generateUniqueSlug(baseSlug);
 
-        News news = newsMapper.toNews(requestDTO);
+        News news = NewsMapper.toEntity(requestDTO);
         news.setSlug(uniqueSlug);
         news.setCategory(newsCategory);
         news.setImageUrl(newImageUrl);

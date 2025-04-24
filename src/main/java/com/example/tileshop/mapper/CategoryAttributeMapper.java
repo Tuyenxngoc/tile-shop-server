@@ -1,7 +1,5 @@
 package com.example.tileshop.mapper;
 
-import org.mapstruct.Mapper;
+public class CategoryAttributeMapper {
 
-@Mapper(componentModel = "spring")
-public interface CategoryAttributeMapper {
 }

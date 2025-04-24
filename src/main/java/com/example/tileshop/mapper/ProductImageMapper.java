@@ -1,7 +1,5 @@
 package com.example.tileshop.mapper;
 
-import org.mapstruct.Mapper;
+public class ProductImageMapper {
 
-@Mapper(componentModel = "spring")
-public interface ProductImageMapper {
 }

@@ -2,12 +2,14 @@ package com.example.tileshop.dto.auth;
 
 import com.example.tileshop.constant.Gender;
 import com.example.tileshop.constant.RoleConstant;
-import lombok.Builder;
-import lombok.Getter;
+import lombok.*;
 
 import java.util.Set;
 
 @Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
 public class CurrentUserLoginResponseDTO {
 

@@ -3,9 +3,15 @@ package com.example.tileshop.dto.user;
 import com.example.tileshop.constant.Gender;
 import com.example.tileshop.dto.common.BaseEntityDTO;
 import com.example.tileshop.entity.User;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class UserResponseDTO {
     private String id;
 

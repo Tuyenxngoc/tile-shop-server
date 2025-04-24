@@ -8,6 +8,7 @@ import com.example.tileshop.dto.order.OrderRequestDTO;
 import com.example.tileshop.dto.order.OrderResponseDTO;
 import com.example.tileshop.dto.pagination.PaginationFullRequestDTO;
 import com.example.tileshop.dto.pagination.PaginationResponseDTO;
+import com.example.tileshop.dto.pagination.PagingMeta;
 import com.example.tileshop.entity.*;
 import com.example.tileshop.exception.BadRequestException;
 import com.example.tileshop.exception.ConflictException;
@@ -16,7 +17,10 @@ import com.example.tileshop.repository.*;
 import com.example.tileshop.service.OrderService;
 import com.example.tileshop.specification.OrderSpecification;
 import com.example.tileshop.util.MessageUtil;
+import com.example.tileshop.util.PaginationUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -40,9 +44,28 @@ public class OrderServiceImpl implements OrderService {
 
     private final ProductRepository productRepository;
 
+    private Order getEntity(Long id) {
+        return orderRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException(ErrorMessage.Order.ERR_NOT_FOUND_ID, id));
+    }
+
     @Override
     public PaginationResponseDTO<OrderResponseDTO> findAll(PaginationFullRequestDTO requestDTO) {
-        return null;
+        Pageable pageable = PaginationUtil.buildPageable(requestDTO, SortByDataConstant.ORDER);
+
+        Page<Order> page = orderRepository.findAll(pageable);
+
+        List<OrderResponseDTO> items = page.getContent().stream()
+                .map(OrderResponseDTO::new)
+                .toList();
+
+        PagingMeta pagingMeta = PaginationUtil.buildPagingMeta(requestDTO, SortByDataConstant.ORDER, page);
+
+        PaginationResponseDTO<OrderResponseDTO> responseDTO = new PaginationResponseDTO<>();
+        responseDTO.setItems(items);
+        responseDTO.setMeta(pagingMeta);
+
+        return responseDTO;
     }
 
     @Override

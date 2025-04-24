@@ -5,13 +5,17 @@ import com.example.tileshop.constant.OrderStatus;
 import com.example.tileshop.constant.PaymentMethod;
 import com.example.tileshop.constant.PaymentStatus;
 import com.example.tileshop.entity.Order;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
 
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class OrderForUserResponseDTO {
     private long id;
 

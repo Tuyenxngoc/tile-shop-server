@@ -6,11 +6,15 @@ import com.example.tileshop.constant.ErrorMessage;
 import com.example.tileshop.constant.Gender;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import jakarta.validation.constraints.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class CreateUserRequestDTO {
     @NotBlank(message = ErrorMessage.INVALID_NOT_BLANK_FIELD)
     @Pattern(regexp = CommonConstant.REGEXP_USERNAME, message = ErrorMessage.INVALID_FORMAT_USERNAME)

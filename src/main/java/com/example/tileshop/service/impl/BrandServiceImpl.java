@@ -36,8 +36,6 @@ public class BrandServiceImpl implements BrandService {
 
     private final MessageUtil messageUtil;
 
-    private final BrandMapper brandMapper;
-
     private final UploadFileUtil uploadFileUtil;
 
     private Brand getEntity(Long id) {
@@ -53,7 +51,7 @@ public class BrandServiceImpl implements BrandService {
 
         String imageUrl = uploadFileUtil.uploadFile(image);
 
-        Brand brand = brandMapper.toBrand(requestDTO);
+        Brand brand = BrandMapper.toEntity(requestDTO);
         brand.setLogoUrl(imageUrl);
 
         brandRepository.save(brand);

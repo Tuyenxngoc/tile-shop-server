@@ -8,10 +8,14 @@ import com.example.tileshop.entity.Review;
 import com.example.tileshop.entity.ReviewImage;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.List;
 
 @Getter
+@Setter
+@NoArgsConstructor
 @AllArgsConstructor
 public class ReviewResponseDTO extends DateAuditingDTO {
     private long id;

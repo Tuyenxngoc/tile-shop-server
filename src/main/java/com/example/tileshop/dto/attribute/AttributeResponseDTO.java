@@ -1,9 +1,15 @@
 package com.example.tileshop.dto.attribute;
 
 import com.example.tileshop.entity.Attribute;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class AttributeResponseDTO {
 
     private long id;

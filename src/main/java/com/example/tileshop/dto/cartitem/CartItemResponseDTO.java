@@ -4,10 +4,12 @@ import com.example.tileshop.entity.CartItem;
 import com.example.tileshop.entity.Product;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
+@NoArgsConstructor
 @AllArgsConstructor
 public class CartItemResponseDTO {
 
