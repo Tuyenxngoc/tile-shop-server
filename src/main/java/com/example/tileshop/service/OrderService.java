@@ -7,7 +7,6 @@ import com.example.tileshop.dto.order.OrderRequestDTO;
 import com.example.tileshop.dto.order.OrderResponseDTO;
 import com.example.tileshop.dto.pagination.PaginationFullRequestDTO;
 import com.example.tileshop.dto.pagination.PaginationResponseDTO;
-import jakarta.validation.Valid;
 
 import java.util.List;
 
@@ -22,5 +21,5 @@ public interface OrderService {
 
     OrderResponseDTO userFindById(Long id, String userId);
 
-    CommonResponseDTO createOrder(@Valid OrderRequestDTO orderRequestDTO, String userId);
+    CommonResponseDTO createOrder(OrderRequestDTO orderRequestDTO, String userId);
 }

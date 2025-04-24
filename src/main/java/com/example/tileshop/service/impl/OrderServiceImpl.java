@@ -190,7 +190,7 @@ public class OrderServiceImpl implements OrderService {
             orderItem.setPriceAtTimeOfOrder(product.calculateFinalPrice());
 
             orderItems.add(orderItem);
-            totalAmount += orderItem.getPriceAtTimeOfOrder();
+            totalAmount += orderItem.getPriceAtTimeOfOrder() * orderItem.getQuantity();
         }
         order.setOrderItems(orderItems);
         order.setTotalAmount(totalAmount);
