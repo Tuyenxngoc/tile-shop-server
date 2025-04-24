@@ -48,7 +48,7 @@ public class OrderController {
     @Operation(summary = "API Update Order Status")
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping(UrlConstant.Order.Admin.UPDATE_STATUS)
-    public ResponseEntity<?> updateOrderStatus(@PathVariable Long id, @RequestParam String status) {
+    public ResponseEntity<?> updateOrderStatus(@PathVariable Long id, @RequestParam(name = "status") OrderStatus status) {
         return VsResponseUtil.success(orderService.updateStatus(id, status));
     }
 

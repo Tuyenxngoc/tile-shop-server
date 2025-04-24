@@ -2,9 +2,10 @@ package com.example.tileshop.constant;
 
 public enum OrderStatus {
     PENDING("Chờ xác nhận"),
-    PROCESSING("Đang xử lý"),
+    CONFIRMED("Đã xác nhận"),
     DELIVERING("Đang giao"),
     DELIVERED("Đã giao"),
+    RETURNED("Trả hàng"),
     CANCELLED("Đã hủy");
 
     private final String description;

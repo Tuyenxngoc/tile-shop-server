@@ -118,6 +118,8 @@ public class ErrorMessage {
         public static final String ERR_ALREADY_PAID = "exception.order.already.paid";
         public static final String ERR_ORDER_CANCELLED = "exception.order.cancelled";
         public static final String ERR_INVALID_OR_TAMPERED_DATA = "exception.order.invalid.or.tampered.data";
+        public static final String ERR_SAME_STATUS = "exception.order.same-status";
+        public static final String ERR_INVALID_STATUS_TRANSITION = "exception.order.invalid-status-transition";
     }
 
     public static class OrderItem {

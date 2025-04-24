@@ -5,14 +5,15 @@ import com.example.tileshop.entity.OrderItem;
 
 public class OrderItemMapper {
 
-    public static OrderItemResponseDTO toDTO(OrderItem orderitem) {
-        if (orderitem == null) {
+    public static OrderItemResponseDTO toDTO(OrderItem orderItem) {
+        if (orderItem == null) {
             return null;
         }
 
         OrderItemResponseDTO dto = new OrderItemResponseDTO();
-        // TODO: set fields từ OrderItem vào dto
-        // vd: dto.setId(orderitem.getId());
+        dto.setId(orderItem.getId());
+        dto.setQuantity(orderItem.getQuantity());
+        dto.setPriceAtTimeOfOrder(orderItem.getPriceAtTimeOfOrder());
 
         return dto;
     }

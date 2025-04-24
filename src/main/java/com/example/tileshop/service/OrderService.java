@@ -16,7 +16,7 @@ public interface OrderService {
 
     OrderResponseDTO findById(Long id);
 
-    CommonResponseDTO updateStatus(Long id, String status);
+    CommonResponseDTO updateStatus(Long id, OrderStatus status);
 
     List<OrderForUserResponseDTO> userFindAll(String userId, OrderStatus status, String keyword);
 

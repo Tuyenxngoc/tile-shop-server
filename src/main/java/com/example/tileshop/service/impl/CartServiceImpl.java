@@ -139,7 +139,7 @@ public class CartServiceImpl implements CartService {
         List<CartItem> items = cartItemRepository.findByCartId(cart.getId());
         cartItemRepository.deleteAll(items);
 
-        String message = messageUtil.getMessage(SuccessMessage.CartItem.CLEAR);
+        String message = messageUtil.getMessage(SuccessMessage.Cart.CLEAR);
         return new CommonResponseDTO(message);
     }
 

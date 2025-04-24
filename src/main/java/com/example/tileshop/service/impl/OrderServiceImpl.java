@@ -13,6 +13,7 @@ import com.example.tileshop.entity.*;
 import com.example.tileshop.exception.BadRequestException;
 import com.example.tileshop.exception.ConflictException;
 import com.example.tileshop.exception.NotFoundException;
+import com.example.tileshop.mapper.OrderMapper;
 import com.example.tileshop.repository.*;
 import com.example.tileshop.service.OrderService;
 import com.example.tileshop.specification.OrderSpecification;
@@ -25,8 +26,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -44,6 +44,20 @@ public class OrderServiceImpl implements OrderService {
 
     private final ProductRepository productRepository;
 
+    private static final Map<OrderStatus, Set<OrderStatus>> allowedTransitions = Map.of(
+            OrderStatus.PENDING, EnumSet.of(OrderStatus.CONFIRMED, OrderStatus.CANCELLED),
+            OrderStatus.CONFIRMED, EnumSet.of(OrderStatus.DELIVERING, OrderStatus.CANCELLED),
+            OrderStatus.DELIVERING, EnumSet.of(OrderStatus.DELIVERED, OrderStatus.RETURNED),
+            OrderStatus.DELIVERED, EnumSet.of(OrderStatus.RETURNED),
+            OrderStatus.CANCELLED, EnumSet.noneOf(OrderStatus.class),
+            OrderStatus.RETURNED, EnumSet.noneOf(OrderStatus.class)
+    );
+
+    public static boolean canTransition(OrderStatus currentStatus, OrderStatus newStatus) {
+        return allowedTransitions.getOrDefault(currentStatus, EnumSet.noneOf(OrderStatus.class))
+                .contains(newStatus);
+    }
+
     private Order getEntity(Long id) {
         return orderRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException(ErrorMessage.Order.ERR_NOT_FOUND_ID, id));
@@ -56,7 +70,7 @@ public class OrderServiceImpl implements OrderService {
         Page<Order> page = orderRepository.findAll(pageable);
 
         List<OrderResponseDTO> items = page.getContent().stream()
-                .map(OrderResponseDTO::new)
+                .map(OrderMapper::toDTO)
                 .toList();
 
         PagingMeta pagingMeta = PaginationUtil.buildPagingMeta(requestDTO, SortByDataConstant.ORDER, page);
@@ -70,12 +84,38 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public OrderResponseDTO findById(Long id) {
-        return null;
+        Order order = getEntity(id);
+
+        return OrderMapper.toDTO(order);
     }
 
     @Override
-    public CommonResponseDTO updateStatus(Long id, String status) {
-        return null;
+    @Transactional
+    public CommonResponseDTO updateStatus(Long id, OrderStatus newStatus) {
+        Order order = getEntity(id);
+        OrderStatus currentStatus = order.getStatus();
+
+        // Kiểm tra nếu trạng thái hiện tại bằng trạng thái mới
+        if (currentStatus == newStatus) {
+            throw new BadRequestException(ErrorMessage.Order.ERR_SAME_STATUS, newStatus.name());
+        }
+
+        // Kiểm tra tính hợp lệ của việc chuyển trạng thái
+        if (!canTransition(currentStatus, newStatus)) {
+            throw new BadRequestException(ErrorMessage.Order.ERR_INVALID_STATUS_TRANSITION, currentStatus.name(), newStatus.name());
+        }
+
+        order.setStatus(newStatus);
+
+        // Nếu trạng thái mới là DELIVERED thì set PaymentStatus thành PAID (nếu phương thức thanh toán không phải COD)
+        if (OrderStatus.DELIVERED.equals(newStatus) && !PaymentMethod.COD.equals(order.getPaymentMethod())) {
+            order.setPaymentStatus(PaymentStatus.PAID);
+        }
+
+        orderRepository.save(order);
+
+        String message = messageUtil.getMessage(SuccessMessage.Order.UPDATE_STATUS, newStatus.name());
+        return new CommonResponseDTO(message);
     }
 
     @Override

@@ -24,7 +24,6 @@ public class SuccessMessage {
         public static final String ADD = "success.cart-item.add";
         public static final String UPDATE = "success.cart-item.update";
         public static final String DELETE = "success.cart-item.delete";
-        public static final String CLEAR = "success.cart-item.clear";
     }
 
     public static class Category {
@@ -40,6 +39,7 @@ public class SuccessMessage {
     }
 
     public static class Order {
+        public static final String UPDATE_STATUS = "success.order.update-status";
     }
 
     public static class OrderItem {
