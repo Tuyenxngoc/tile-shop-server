@@ -1,6 +1,6 @@
 package com.example.tileshop.config;
 
-import com.example.tileshop.security.jwt.JwtAuthInterceptor;
+import com.example.tileshop.security.jwt.WebSocketJwtAuthInterceptor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
@@ -13,7 +13,7 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 @RequiredArgsConstructor
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
-    private final JwtAuthInterceptor jwtAuthInterceptor;
+    private final WebSocketJwtAuthInterceptor webSocketJwtAuthInterceptor;
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry config) {
@@ -25,7 +25,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/ws")
-                .addInterceptors(jwtAuthInterceptor)
+                .addInterceptors(webSocketJwtAuthInterceptor)
                 .setAllowedOrigins("http://localhost:3000")
                 .withSockJS();
     }

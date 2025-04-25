@@ -2,10 +2,10 @@ package com.example.tileshop.security.jwt;
 
 import com.example.tileshop.service.CustomUserDetailsService;
 import com.example.tileshop.service.JwtBlacklistService;
+import com.example.tileshop.util.JwtUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServerHttpResponse;
 import org.springframework.http.server.ServletServerHttpRequest;
@@ -21,7 +21,7 @@ import java.util.Map;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class JwtAuthInterceptor implements HandshakeInterceptor {
+public class WebSocketJwtAuthInterceptor implements HandshakeInterceptor {
 
     private final JwtTokenProvider tokenProvider;
 
@@ -37,10 +37,7 @@ public class JwtAuthInterceptor implements HandshakeInterceptor {
             if (request instanceof ServletServerHttpRequest) {
                 HttpServletRequest servletRequest = ((ServletServerHttpRequest) request).getServletRequest();
 
-                String authHeader = servletRequest.getHeader(HttpHeaders.AUTHORIZATION);
-                if (authHeader != null && authHeader.startsWith("Bearer ")) {
-                    jwt = authHeader.substring(7);
-                }
+                jwt = JwtUtil.extractTokenFromRequest(servletRequest);
 
                 if (jwt == null) {
                     jwt = servletRequest.getParameter("token");
