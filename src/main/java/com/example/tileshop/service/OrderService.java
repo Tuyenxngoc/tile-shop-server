@@ -2,6 +2,7 @@ package com.example.tileshop.service;
 
 import com.example.tileshop.constant.OrderStatus;
 import com.example.tileshop.dto.common.CommonResponseDTO;
+import com.example.tileshop.dto.filter.OrderFilterRequestDTO;
 import com.example.tileshop.dto.order.OrderForUserResponseDTO;
 import com.example.tileshop.dto.order.OrderRequestDTO;
 import com.example.tileshop.dto.order.OrderResponseDTO;
@@ -11,7 +12,7 @@ import com.example.tileshop.dto.pagination.PaginationResponseDTO;
 import java.util.List;
 
 public interface OrderService {
-    PaginationResponseDTO<OrderResponseDTO> findAll(PaginationFullRequestDTO requestDTO);
+    PaginationResponseDTO<OrderResponseDTO> findAll(OrderFilterRequestDTO filter, PaginationFullRequestDTO requestDTO);
 
     OrderResponseDTO findById(Long id);
 

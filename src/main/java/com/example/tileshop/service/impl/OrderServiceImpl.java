@@ -2,6 +2,7 @@ package com.example.tileshop.service.impl;
 
 import com.example.tileshop.constant.*;
 import com.example.tileshop.dto.common.CommonResponseDTO;
+import com.example.tileshop.dto.filter.OrderFilterRequestDTO;
 import com.example.tileshop.dto.order.OrderForUserResponseDTO;
 import com.example.tileshop.dto.order.OrderPaymentResponseDTO;
 import com.example.tileshop.dto.order.OrderRequestDTO;
@@ -64,10 +65,12 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public PaginationResponseDTO<OrderResponseDTO> findAll(PaginationFullRequestDTO requestDTO) {
+    public PaginationResponseDTO<OrderResponseDTO> findAll(OrderFilterRequestDTO filter, PaginationFullRequestDTO requestDTO) {
         Pageable pageable = PaginationUtil.buildPageable(requestDTO, SortByDataConstant.ORDER);
 
-        Page<Order> page = orderRepository.findAll(pageable);
+        Specification<Order> spec = OrderSpecification.filterByConditions(filter).and(OrderSpecification.filterByField(requestDTO.getSearchBy(), requestDTO.getKeyword()));
+
+        Page<Order> page = orderRepository.findAll(spec, pageable);
 
         List<OrderResponseDTO> items = page.getContent().stream()
                 .map(OrderMapper::toDTO)

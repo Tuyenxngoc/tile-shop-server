@@ -4,6 +4,7 @@ import com.example.tileshop.annotation.CurrentUser;
 import com.example.tileshop.annotation.RestApiV1;
 import com.example.tileshop.constant.OrderStatus;
 import com.example.tileshop.constant.UrlConstant;
+import com.example.tileshop.dto.filter.OrderFilterRequestDTO;
 import com.example.tileshop.dto.order.OrderRequestDTO;
 import com.example.tileshop.dto.pagination.PaginationFullRequestDTO;
 import com.example.tileshop.security.CustomUserDetails;
@@ -34,8 +35,8 @@ public class OrderController {
     @Operation(summary = "API Get All Orders")
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping(UrlConstant.Order.Admin.GET_ALL)
-    public ResponseEntity<?> getAllOrders(@ParameterObject PaginationFullRequestDTO requestDTO) {
-        return VsResponseUtil.success(orderService.findAll(requestDTO));
+    public ResponseEntity<?> getAllOrders(@ParameterObject OrderFilterRequestDTO filter, @ParameterObject PaginationFullRequestDTO requestDTO) {
+        return VsResponseUtil.success(orderService.findAll(filter, requestDTO));
     }
 
     @Operation(summary = "API Get Order By Id")
