@@ -1,6 +1,6 @@
 package com.example.tileshop.dto.orderitem;
 
-import com.example.tileshop.entity.Product;
+import com.example.tileshop.dto.product.ProductResponseDTO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,5 +17,5 @@ public class OrderItemResponseDTO {
 
     private double priceAtTimeOfOrder;
 
-    private Product product;
+    private ProductResponseDTO product;
 }
