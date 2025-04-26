@@ -33,10 +33,12 @@ public class Order extends DateAuditing {
     @Enumerated(EnumType.STRING)
     private OrderStatus status;
 
+    @Enumerated(EnumType.STRING)
     private DeliveryMethod deliveryMethod;
 
     private String shippingAddress;
 
+    @Enumerated(EnumType.STRING)
     private PaymentMethod paymentMethod;
 
     private String note;

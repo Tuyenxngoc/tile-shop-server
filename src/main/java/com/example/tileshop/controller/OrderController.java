@@ -53,6 +53,13 @@ public class OrderController {
         return VsResponseUtil.success(orderService.updateStatus(id, status));
     }
 
+    @Operation(summary = "API Count orders by status")
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping(UrlConstant.Order.Admin.COUNT_BY_STATUS)
+    public ResponseEntity<?> countOrdersByStatus() {
+        return VsResponseUtil.success(orderService.countOrdersByStatus());
+    }
+
     // -------------------- USER APIs --------------------
 
     @Operation(summary = "User - API Get All Orders")

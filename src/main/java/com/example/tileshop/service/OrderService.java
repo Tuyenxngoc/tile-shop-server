@@ -10,6 +10,7 @@ import com.example.tileshop.dto.pagination.PaginationFullRequestDTO;
 import com.example.tileshop.dto.pagination.PaginationResponseDTO;
 
 import java.util.List;
+import java.util.Map;
 
 public interface OrderService {
     PaginationResponseDTO<OrderResponseDTO> findAll(OrderFilterRequestDTO filter, PaginationFullRequestDTO requestDTO);
@@ -17,6 +18,8 @@ public interface OrderService {
     OrderResponseDTO findById(Long id);
 
     CommonResponseDTO updateStatus(Long id, OrderStatus status);
+
+    Map<String, Long> countOrdersByStatus();
 
     List<OrderForUserResponseDTO> userFindAll(String userId, OrderStatus status, String keyword);
 

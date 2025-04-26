@@ -118,7 +118,24 @@ public class OrderServiceImpl implements OrderService {
         orderRepository.save(order);
 
         String message = messageUtil.getMessage(SuccessMessage.Order.UPDATE_STATUS, newStatus.name());
-        return new CommonResponseDTO(message);
+        return new CommonResponseDTO(message, OrderMapper.toDTO(order));
+    }
+
+    @Override
+    public Map<String, Long> countOrdersByStatus() {
+        List<Object[]> resultList = orderRepository.countOrdersGroupByStatus();
+        long totalOrders = 0;
+        Map<String, Long> resultMap = new HashMap<>();
+        for (Object[] row : resultList) {
+            OrderStatus status = (OrderStatus) row[0];
+            Long count = (Long) row[1];
+            resultMap.put(status.name(), count);
+
+            totalOrders += count;
+        }
+        resultMap.put("ALL", totalOrders);
+
+        return resultMap;
     }
 
     @Override
