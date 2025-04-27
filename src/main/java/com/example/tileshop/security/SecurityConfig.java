@@ -82,6 +82,9 @@ public class SecurityConfig {
             //Slide
             "/api/v1/slides",
             "/api/v1/slides/*",
+
+            //Store info
+            "/api/v1/store-info",
     };
 
     private static final String[] POST_WHITELIST_URL = {
