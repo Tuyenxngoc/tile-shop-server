@@ -54,14 +54,12 @@ public class SlideController {
     }
 
     @Operation(summary = "API Get Slides")
-    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping(UrlConstant.Slide.GET_ALL)
     public ResponseEntity<?> getSlides() {
         return VsResponseUtil.success(slideService.findAll());
     }
 
-    @Operation(summary = "API Get Slide  By Id")
-    @PreAuthorize("hasRole('ADMIN')")
+    @Operation(summary = "API Get Slide By Id")
     @GetMapping(UrlConstant.Slide.GET_BY_ID)
     public ResponseEntity<?> getSlideById(@PathVariable String id) {
         return VsResponseUtil.success(slideService.findById(id));

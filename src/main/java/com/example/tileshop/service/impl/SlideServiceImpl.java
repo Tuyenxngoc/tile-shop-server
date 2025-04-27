@@ -85,7 +85,8 @@ public class SlideServiceImpl implements SlideService {
         slideCache.add(slide);
         writeSlidesToFile(slideCache);
 
-        return new CommonResponseDTO(messageUtil.getMessage(SuccessMessage.CREATE), slide);
+        String message = messageUtil.getMessage(SuccessMessage.CREATE);
+        return new CommonResponseDTO(message, slide);
     }
 
     @Override
@@ -114,7 +115,8 @@ public class SlideServiceImpl implements SlideService {
 
         writeSlidesToFile(slideCache);
 
-        return new CommonResponseDTO(messageUtil.getMessage(SuccessMessage.UPDATE), slide);
+        String message = messageUtil.getMessage(SuccessMessage.UPDATE);
+        return new CommonResponseDTO(message, slide);
     }
 
     @Override
