@@ -8,10 +8,10 @@ import com.example.tileshop.dto.pagination.PaginationFullRequestDTO;
 import com.example.tileshop.dto.pagination.PaginationResponseDTO;
 import com.example.tileshop.dto.pagination.PagingMeta;
 import com.example.tileshop.dto.product.*;
-import com.example.tileshop.dto.productattribute.ProductAttributeRequestDTO;
 import com.example.tileshop.entity.*;
 import com.example.tileshop.exception.BadRequestException;
 import com.example.tileshop.exception.NotFoundException;
+import com.example.tileshop.mapper.ProductMapper;
 import com.example.tileshop.repository.AttributeRepository;
 import com.example.tileshop.repository.BrandRepository;
 import com.example.tileshop.repository.CategoryRepository;
@@ -227,7 +227,7 @@ public class ProductServiceImpl implements ProductService {
         Page<Product> page = productRepository.findAll(pageable);
 
         List<ProductResponseDTO> items = page.getContent().stream()
-                .map(ProductResponseDTO::new)
+                .map(ProductMapper::toResponseDTO)
                 .toList();
 
         PagingMeta pagingMeta = PaginationUtil.buildPagingMeta(requestDTO, SortByDataConstant.PRODUCT, page);
@@ -242,27 +242,8 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ProductUpdateResponseDTO findById(Long id) {
         Product product = getEntity(id);
-        ProductUpdateResponseDTO responseDTO = new ProductUpdateResponseDTO();
-        responseDTO.setName(product.getName());
-        responseDTO.setDescription(product.getDescription());
-        responseDTO.setPrice(product.getPrice());
-        responseDTO.setDiscountPercentage(product.getDiscountPercentage());
-        responseDTO.setStockQuantity(product.getStockQuantity());
-        responseDTO.setCategoryId(product.getCategory().getId());
-        responseDTO.setBrandId(product.getBrand() == null ? null : product.getBrand().getId());
-        responseDTO.setAttributes(product.getAttributes().stream()
-                .map(attr -> {
-                            ProductAttributeRequestDTO a = new ProductAttributeRequestDTO();
-                            a.setAttributeId(attr.getAttribute().getId());
-                            a.setValue(attr.getValue());
-                            return a;
-                        }
-                )
-                .toList());
-        responseDTO.setImages(product.getImages().stream()
-                .map(ProductImage::getImageUrl)
-                .toList());
-        return responseDTO;
+
+        return ProductMapper.toUpdateResponseDTO(product);
     }
 
     @Override

@@ -23,7 +23,7 @@ public class ProductRequestDTO {
     private String name;
 
     @NotBlank(message = ErrorMessage.INVALID_NOT_BLANK_FIELD)
-    @Size(max = 255, message = ErrorMessage.INVALID_TEXT_LENGTH)
+    @Size(min = 3, max = 255, message = ErrorMessage.INVALID_TEXT_LENGTH)
     @JsonDeserialize(using = TrimStringDeserializer.class)
     private String slug;
 
@@ -38,7 +38,7 @@ public class ProductRequestDTO {
     @NotNull(message = ErrorMessage.INVALID_SOME_THING_FIELD_IS_REQUIRED)
     @Min(value = 0, message = ErrorMessage.INVALID_MINIMUM_ONE)
     @Max(value = 100, message = ErrorMessage.INVALID_MAXIMUM_ONE_HUNDRED)
-    private Double discountPercentage;
+    private Integer discountPercentage;
 
     @NotNull(message = ErrorMessage.INVALID_SOME_THING_FIELD_IS_REQUIRED)
     private Integer stockQuantity;

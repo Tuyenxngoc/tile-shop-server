@@ -7,7 +7,6 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class ProductForUserResponseDTO {
-
     private long id;
 
     private String name;
@@ -37,5 +36,4 @@ public class ProductForUserResponseDTO {
         this.averageRating = product.getAverageRating();
         this.imageUrl = product.getImages().getFirst().getImageUrl();
     }
-
 }

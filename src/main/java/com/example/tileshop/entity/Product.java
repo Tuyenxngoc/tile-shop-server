@@ -40,10 +40,13 @@ public class Product extends DateAuditing {
     @Column(columnDefinition = "LONGTEXT", nullable = false)
     private String description;
 
+    @Column(nullable = false)
     private double price;
 
-    private Double discountPercentage;
+    @Column(nullable = false)
+    private int discountPercentage = 0;
 
+    @Column(nullable = false)
     private int stockQuantity;
 
     @Column(nullable = false)
@@ -80,7 +83,7 @@ public class Product extends DateAuditing {
     private List<CartItem> cartItems = new ArrayList<>();
 
     public double calculateFinalPrice() {
-        if (discountPercentage != null && discountPercentage > 0) {
+        if (discountPercentage > 0) {
             double discountAmount = (price * discountPercentage) / 100;
             return price - discountAmount;
         }

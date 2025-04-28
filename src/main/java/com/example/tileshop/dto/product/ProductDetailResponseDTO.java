@@ -27,7 +27,7 @@ public class ProductDetailResponseDTO {
 
     private double price;
 
-    private Double discountPercentage;
+    private int discountPercentage;
 
     private double salePrice;
 

@@ -15,13 +15,15 @@ import java.util.List;
 public class ProductUpdateResponseDTO {
     private String name;
 
+    private String slug;
+
     private String description;
 
-    private Double price;
+    private double price;
 
-    private Double discountPercentage;
+    private int discountPercentage;
 
-    private Integer stockQuantity;
+    private int stockQuantity;
 
     private Long categoryId;
 

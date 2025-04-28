@@ -1,7 +1,6 @@
 package com.example.tileshop.mapper;
 
 import com.example.tileshop.dto.orderitem.OrderItemResponseDTO;
-import com.example.tileshop.dto.product.ProductResponseDTO;
 import com.example.tileshop.entity.OrderItem;
 
 public class OrderItemMapper {
@@ -15,7 +14,7 @@ public class OrderItemMapper {
         dto.setId(orderItem.getId());
         dto.setQuantity(orderItem.getQuantity());
         dto.setPriceAtTimeOfOrder(orderItem.getPriceAtTimeOfOrder());
-        dto.setProduct(new ProductResponseDTO(orderItem.getProduct()));
+        dto.setProduct(ProductMapper.toResponseDTO(orderItem.getProduct()));
 
         return dto;
     }
