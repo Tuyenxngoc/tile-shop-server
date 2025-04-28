@@ -5,7 +5,6 @@ import com.example.tileshop.dto.brand.BrandResponseDTO;
 import com.example.tileshop.entity.Brand;
 
 public class BrandMapper {
-
     public static BrandResponseDTO toDTO(Brand brand) {
         if (brand == null) {
             return null;

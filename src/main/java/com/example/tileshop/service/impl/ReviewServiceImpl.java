@@ -39,7 +39,6 @@ import java.util.*;
 @Service
 @RequiredArgsConstructor
 public class ReviewServiceImpl implements ReviewService {
-
     private final ReviewRepository reviewRepository;
 
     private final UploadFileUtil uploadFileUtil;
@@ -285,5 +284,4 @@ public class ReviewServiceImpl implements ReviewService {
         String message = messageUtil.getMessage(SuccessMessage.DELETE);
         return new CommonResponseDTO(message, true);
     }
-
 }

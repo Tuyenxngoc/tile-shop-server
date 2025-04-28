@@ -4,7 +4,6 @@ import com.example.tileshop.dto.user.UserResponseDTO;
 import com.example.tileshop.entity.User;
 
 public class UserMapper {
-
     public static UserResponseDTO toDTO(User user) {
         if (user == null) {
             return null;
@@ -16,5 +15,4 @@ public class UserMapper {
 
         return dto;
     }
-
 }

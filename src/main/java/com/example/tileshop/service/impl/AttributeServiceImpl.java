@@ -26,7 +26,6 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class AttributeServiceImpl implements AttributeService {
-
     private final AttributeRepository attributeRepository;
 
     private final MessageUtil messageUtil;
@@ -143,5 +142,4 @@ public class AttributeServiceImpl implements AttributeService {
                 .map(AttributeResponseDTO::new)
                 .toList();
     }
-
 }

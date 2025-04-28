@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class OrderSpecification {
-
     public static Specification<Order> hasUserId(String userId) {
         return (root, query, cb) -> cb.equal(root.get(Order_.USER).get(User_.ID), userId);
     }

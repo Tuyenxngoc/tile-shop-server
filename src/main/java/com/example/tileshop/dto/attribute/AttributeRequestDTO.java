@@ -24,5 +24,4 @@ public class AttributeRequestDTO {
 
     @JsonDeserialize(using = TrimStringDeserializer.class)
     private String defaultValue;
-
 }

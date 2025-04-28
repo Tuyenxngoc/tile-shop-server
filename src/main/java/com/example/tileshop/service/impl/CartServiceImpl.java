@@ -27,7 +27,6 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class CartServiceImpl implements CartService {
-
     @Value("${cart.max-items}")
     private int maxItems;
 
@@ -142,5 +141,4 @@ public class CartServiceImpl implements CartService {
         String message = messageUtil.getMessage(SuccessMessage.Cart.CLEAR);
         return new CommonResponseDTO(message);
     }
-
 }

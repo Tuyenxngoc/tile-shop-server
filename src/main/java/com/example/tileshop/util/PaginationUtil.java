@@ -14,7 +14,6 @@ import org.springframework.data.domain.Sort;
 import java.util.List;
 
 public class PaginationUtil {
-
     public static Pageable buildPageable(PaginationRequestDTO request) {
         return PageRequest.of(request.getPageNum(), request.getPageSize());
     }

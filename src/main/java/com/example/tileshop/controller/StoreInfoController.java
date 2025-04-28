@@ -24,7 +24,6 @@ import org.springframework.web.multipart.MultipartFile;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Tag(name = "Store")
 public class StoreInfoController {
-
     StoreInfoService storeInfoService;
 
     @Operation(summary = "API Get Store Info")
@@ -45,5 +44,4 @@ public class StoreInfoController {
     ) {
         return VsResponseUtil.success(storeInfoService.updateStore(requestDTO, logo, logoSmall, bannerImage, backgroundImage));
     }
-
 }

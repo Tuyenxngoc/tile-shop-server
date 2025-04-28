@@ -22,7 +22,6 @@ import lombok.*;
         }
 )
 public class News extends DateAuditing {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "news_id")
@@ -47,5 +46,4 @@ public class News extends DateAuditing {
     @JoinColumn(name = "category_id", foreignKey = @ForeignKey(name = "FK_NEWS_CATEGORY_ID"), nullable = false)
     @JsonIgnore
     private NewsCategory category;
-
 }

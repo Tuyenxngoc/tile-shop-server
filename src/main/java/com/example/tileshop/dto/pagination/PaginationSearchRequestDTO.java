@@ -10,7 +10,6 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PaginationSearchRequestDTO extends PaginationRequestDTO {
-
     @Parameter(description = "Keyword to search")
     private String keyword = CommonConstant.EMPTY_STRING;
 
@@ -24,5 +23,4 @@ public class PaginationSearchRequestDTO extends PaginationRequestDTO {
     public String getSearchBy() {
         return searchBy.trim();
     }
-
 }

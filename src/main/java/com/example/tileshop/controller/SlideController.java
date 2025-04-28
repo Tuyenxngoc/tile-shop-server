@@ -64,5 +64,4 @@ public class SlideController {
     public ResponseEntity<?> getSlideById(@PathVariable String id) {
         return VsResponseUtil.success(slideService.findById(id));
     }
-
 }

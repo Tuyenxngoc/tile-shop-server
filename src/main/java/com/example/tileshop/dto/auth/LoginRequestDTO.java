@@ -13,7 +13,6 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class LoginRequestDTO {
-
     @NotBlank(message = ErrorMessage.INVALID_NOT_BLANK_FIELD)
     @Size(max = 100, message = ErrorMessage.INVALID_TEXT_LENGTH)
     private String username;
@@ -21,5 +20,4 @@ public class LoginRequestDTO {
     @NotBlank(message = ErrorMessage.INVALID_NOT_BLANK_FIELD)
     @Size(max = 100, message = ErrorMessage.INVALID_TEXT_LENGTH)
     private String password;
-
 }

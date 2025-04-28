@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.*;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Tag(name = "Attribute")
 public class AttributeController {
-
     AttributeService attributeService;
 
     @Operation(summary = "API Create Attribute")
@@ -70,5 +69,4 @@ public class AttributeController {
     public ResponseEntity<?> getAttributesByCategoryId(@PathVariable Long categoryId) {
         return VsResponseUtil.success(attributeService.findByCategoryId(categoryId));
     }
-
 }

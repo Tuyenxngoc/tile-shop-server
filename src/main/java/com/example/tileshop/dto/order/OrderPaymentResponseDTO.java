@@ -18,5 +18,4 @@ public class OrderPaymentResponseDTO {
         this.orderId = order.getId();
         this.amount = order.getTotalAmount();
     }
-
 }

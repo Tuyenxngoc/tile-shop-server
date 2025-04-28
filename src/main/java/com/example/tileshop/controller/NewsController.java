@@ -25,7 +25,6 @@ import org.springframework.web.multipart.MultipartFile;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Tag(name = "News")
 public class NewsController {
-
     NewsService newsService;
 
     @Operation(summary = "API Create News")
@@ -76,5 +75,4 @@ public class NewsController {
     public ResponseEntity<?> getNewsBySlug(@PathVariable String slug) {
         return VsResponseUtil.success(newsService.findBySlug(slug));
     }
-
 }

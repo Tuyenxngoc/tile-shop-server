@@ -6,7 +6,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class NotFoundException extends RuntimeException {
-
     private Object[] params;
 
     public NotFoundException(String message) {
@@ -17,5 +16,4 @@ public class NotFoundException extends RuntimeException {
         super(message);
         this.params = params;
     }
-
 }

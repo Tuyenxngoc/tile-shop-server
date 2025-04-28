@@ -10,9 +10,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public abstract class UserDateAuditingDTO extends DateAuditingDTO {
-
     protected String createdBy;
 
     protected String lastModifiedBy;
-
 }

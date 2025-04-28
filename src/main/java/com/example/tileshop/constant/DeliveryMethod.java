@@ -13,5 +13,4 @@ public enum DeliveryMethod {
     public String getValue() {
         return value;
     }
-
 }

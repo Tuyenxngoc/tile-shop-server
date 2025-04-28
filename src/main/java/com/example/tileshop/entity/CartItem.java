@@ -13,7 +13,6 @@ import lombok.*;
 @Entity
 @Table(name = "cart_items")
 public class CartItem {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "cart_item_id")
@@ -30,5 +29,4 @@ public class CartItem {
     @JoinColumn(name = "product_id", foreignKey = @ForeignKey(name = "FK_CART_ITEM_PRODUCT_ID"), nullable = false)
     @JsonIgnore
     private Product product;
-
 }

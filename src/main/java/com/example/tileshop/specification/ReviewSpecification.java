@@ -10,7 +10,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.jpa.domain.Specification;
 
 public class ReviewSpecification {
-
     public static Specification<Review> filterByProductId(Long productId) {
         return (root, query, builder) -> {
             if (productId == null) {
@@ -38,7 +37,6 @@ public class ReviewSpecification {
 
             if (StringUtils.isNotBlank(keyword) && StringUtils.isNotBlank(searchBy)) {
                 switch (searchBy) {
-
                     case Review_.RATING -> predicate = builder.and(predicate, builder.equal(root.get(Review_.rating),
                             SpecificationsUtil.castToRequiredType(root.get(Review_.rating).getJavaType(), keyword)));
 
@@ -113,5 +111,4 @@ public class ReviewSpecification {
             return predicate;
         };
     }
-
 }

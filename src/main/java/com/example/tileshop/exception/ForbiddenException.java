@@ -6,7 +6,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class ForbiddenException extends RuntimeException {
-
     private Object[] params;
 
     public ForbiddenException(String message) {
@@ -17,5 +16,4 @@ public class ForbiddenException extends RuntimeException {
         super(message);
         this.params = params;
     }
-
 }

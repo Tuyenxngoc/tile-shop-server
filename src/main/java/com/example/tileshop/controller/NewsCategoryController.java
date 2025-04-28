@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.*;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Tag(name = "NewsCategory")
 public class NewsCategoryController {
-
     NewsCategoryService newsCategoryService;
 
     @Operation(summary = "API Create News Category")
@@ -61,5 +60,4 @@ public class NewsCategoryController {
     public ResponseEntity<?> getNewsCategoryById(@PathVariable Long id) {
         return VsResponseUtil.success(newsCategoryService.findById(id));
     }
-
 }

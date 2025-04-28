@@ -1,7 +1,6 @@
 package com.example.tileshop.constant;
 
 public class SuccessMessage {
-
     public static final String CREATE = "success.create";
     public static final String UPDATE = "success.update";
     public static final String DELETE = "success.delete";
@@ -67,5 +66,4 @@ public class SuccessMessage {
         public static final String FORGOT_PASSWORD = "success.user.send.password";
         public static final String REGISTER = "success.user.register";
     }
-
 }

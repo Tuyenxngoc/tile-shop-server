@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.*;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Tag(name = "Category")
 public class CategoryController {
-
     CategoryService categoryService;
 
     @Operation(summary = "API Create Category")

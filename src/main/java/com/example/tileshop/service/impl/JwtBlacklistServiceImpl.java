@@ -14,7 +14,6 @@ import java.util.concurrent.TimeUnit;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class JwtBlacklistServiceImpl implements JwtBlacklistService {
-
     RedisTemplate<String, Object> redisTemplate;
 
     JwtTokenProvider jwtTokenProvider;

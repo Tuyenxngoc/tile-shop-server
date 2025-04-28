@@ -19,7 +19,6 @@ import java.io.IOException;
 @Component
 @RequiredArgsConstructor
 public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint {
-
     private final MessageUtil messageUtil;
 
     @Override
@@ -29,5 +28,4 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.getOutputStream().write((new ObjectMapper().writeValueAsBytes(RestData.error(message))));
     }
-
 }

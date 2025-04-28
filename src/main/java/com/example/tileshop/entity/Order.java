@@ -22,7 +22,6 @@ import java.util.List;
 @Entity
 @Table(name = "orders")
 public class Order extends DateAuditing {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "order_id")
@@ -61,5 +60,4 @@ public class Order extends DateAuditing {
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonIgnore
     private List<OrderItem> orderItems = new ArrayList<>();
-
 }

@@ -12,7 +12,6 @@ import java.util.Set;
 @AllArgsConstructor
 @Builder
 public class CurrentUserLoginResponseDTO {
-
     private String userId;
 
     private String username;
@@ -28,5 +27,4 @@ public class CurrentUserLoginResponseDTO {
     private Gender gender;
 
     private Set<RoleConstant> roleNames;
-
 }

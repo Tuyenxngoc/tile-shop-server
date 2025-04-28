@@ -11,7 +11,6 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CommonResponseDTO {
-
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Boolean status;
 
@@ -29,5 +28,4 @@ public class CommonResponseDTO {
         this.message = message;
         this.data = data;
     }
-
 }

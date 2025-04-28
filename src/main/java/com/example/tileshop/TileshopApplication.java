@@ -13,7 +13,6 @@ import org.springframework.core.env.Environment;
 @SpringBootApplication
 @EnableConfigurationProperties({MailConfig.class, CloudinaryConfig.class, VnPayConfig.class})
 public class TileshopApplication {
-
     public static void main(String[] args) {
         Environment env = SpringApplication.run(TileshopApplication.class, args).getEnvironment();
         String appName = env.getProperty("spring.application.name");
@@ -26,5 +25,4 @@ public class TileshopApplication {
         log.info("   Url swagger-ui      : http://localhost:{}/swagger-ui.html", port);
         log.info("-------------------------START SUCCESS {} Application----------------------", appName);
     }
-
 }

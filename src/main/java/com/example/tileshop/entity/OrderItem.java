@@ -13,7 +13,6 @@ import lombok.*;
 @Entity
 @Table(name = "order_items")
 public class OrderItem {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "order_item_id")
@@ -32,5 +31,4 @@ public class OrderItem {
     @JoinColumn(name = "product_id", foreignKey = @ForeignKey(name = "FK_ORDER_ITEM_PRODUCT_ID"), nullable = false)
     @JsonIgnore
     private Product product;
-
 }

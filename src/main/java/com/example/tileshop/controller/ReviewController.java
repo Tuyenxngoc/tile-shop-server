@@ -31,7 +31,6 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Tag(name = "Review")
 public class ReviewController {
-
     ReviewService reviewService;
 
     @Operation(summary = "API Get reviews by product ID")
@@ -83,5 +82,4 @@ public class ReviewController {
     public ResponseEntity<?> deleteReview(@PathVariable Long id) {
         return VsResponseUtil.success(reviewService.deleteReview(id));
     }
-
 }

@@ -18,7 +18,6 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CategoryRequestDTO {
-
     @NotBlank(message = ErrorMessage.INVALID_NOT_BLANK_FIELD)
     @Size(min = 3, max = 100, message = ErrorMessage.INVALID_TEXT_LENGTH)
     @JsonDeserialize(using = TrimStringDeserializer.class)
@@ -27,5 +26,4 @@ public class CategoryRequestDTO {
     private Long parentId;
 
     private Set<@NotNull(message = ErrorMessage.INVALID_SOME_THING_FIELD_IS_REQUIRED) Long> attributeIds;
-
 }

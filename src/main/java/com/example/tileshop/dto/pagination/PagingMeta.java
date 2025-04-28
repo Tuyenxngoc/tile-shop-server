@@ -11,7 +11,6 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PagingMeta {
-
     private Long totalElements;
 
     private Integer totalPages;
@@ -31,5 +30,4 @@ public class PagingMeta {
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String searchBy;
-
 }

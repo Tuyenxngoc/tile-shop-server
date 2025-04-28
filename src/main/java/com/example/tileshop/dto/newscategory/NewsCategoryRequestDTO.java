@@ -15,10 +15,8 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class NewsCategoryRequestDTO {
-
     @NotBlank(message = ErrorMessage.INVALID_NOT_BLANK_FIELD)
     @Size(min = 3, max = 100, message = ErrorMessage.INVALID_TEXT_LENGTH)
     @JsonDeserialize(using = TrimStringDeserializer.class)
     private String name;
-
 }

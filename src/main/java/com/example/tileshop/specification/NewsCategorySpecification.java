@@ -14,7 +14,6 @@ public class NewsCategorySpecification {
 
             if (StringUtils.isNotBlank(keyword) && StringUtils.isNotBlank(searchBy)) {
                 switch (searchBy) {
-
                     case NewsCategory_.ID ->
                             predicate = builder.and(predicate, builder.equal(root.get(NewsCategory_.id),
                                     SpecificationsUtil.castToRequiredType(root.get(NewsCategory_.id).getJavaType(), keyword)));

@@ -9,7 +9,6 @@ import java.util.Map;
 @Getter
 @AllArgsConstructor
 public class ReviewSummaryResponseDTO {
-
     private double averageRating;
 
     private int totalReviews;
@@ -21,5 +20,4 @@ public class ReviewSummaryResponseDTO {
         private int count;
         private double percentage;
     }
-
 }

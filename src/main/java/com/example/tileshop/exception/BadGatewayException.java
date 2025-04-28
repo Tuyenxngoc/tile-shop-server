@@ -6,7 +6,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class BadGatewayException extends RuntimeException {
-
     private Object[] params;
 
     public BadGatewayException(String message) {
@@ -17,5 +16,4 @@ public class BadGatewayException extends RuntimeException {
         super(message);
         this.params = params;
     }
-
 }

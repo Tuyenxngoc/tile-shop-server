@@ -1,7 +1,6 @@
 package com.example.tileshop.constant;
 
 public class UrlConstant {
-
     public static final String ADMIN_URL = "/admin";
 
     public static class Auth {
@@ -213,5 +212,4 @@ public class UrlConstant {
         public static final String TOGGLE_ACTIVE = PRE_FIX + "/{id}/toggle-active";
         public static final String UPDATE_MY_PROFILE = PRE_FIX + "/me";
     }
-
 }

@@ -10,7 +10,6 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PaginationRequestDTO {
-
     @Parameter(description = "Page you want to retrieve (0..N)")
     private Integer pageNum = CommonConstant.PAGE_NUM_DEFAULT;
 
@@ -30,5 +29,4 @@ public class PaginationRequestDTO {
         }
         return pageSize;
     }
-
 }

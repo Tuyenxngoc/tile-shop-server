@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Tag(name = "Role")
 public class RoleController {
-
     RoleService roleService;
 
     @Operation(summary = "API get roles")
@@ -25,5 +24,4 @@ public class RoleController {
     public ResponseEntity<?> getRoles() {
         return VsResponseUtil.success(roleService.getRoles());
     }
-
 }

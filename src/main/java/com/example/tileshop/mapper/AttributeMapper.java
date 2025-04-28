@@ -4,7 +4,6 @@ import com.example.tileshop.dto.attribute.AttributeResponseDTO;
 import com.example.tileshop.entity.Attribute;
 
 public class AttributeMapper {
-
     public static AttributeResponseDTO toDTO(Attribute attribute) {
         if (attribute == null) {
             return null;
@@ -16,5 +15,4 @@ public class AttributeMapper {
 
         return dto;
     }
-
 }

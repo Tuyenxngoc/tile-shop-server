@@ -12,7 +12,6 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CartItemResponseDTO {
-
     private int quantity;
 
     private long productId;
@@ -37,5 +36,4 @@ public class CartItemResponseDTO {
         this.salePrice = product.calculateFinalPrice();
         this.imageUrl = product.getImages().getFirst().getImageUrl();
     }
-
 }

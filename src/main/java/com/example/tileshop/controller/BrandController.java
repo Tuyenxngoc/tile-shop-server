@@ -25,7 +25,6 @@ import org.springframework.web.multipart.MultipartFile;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Tag(name = "Brand")
 public class BrandController {
-
     BrandService brandService;
 
     // -------------------- ADMIN APIs --------------------
@@ -85,5 +84,4 @@ public class BrandController {
     public ResponseEntity<?> getBrandDetailsById(@PathVariable Long id) {
         return VsResponseUtil.success(brandService.userFindById(id));
     }
-
 }

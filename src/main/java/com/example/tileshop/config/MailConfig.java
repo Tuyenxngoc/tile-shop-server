@@ -17,7 +17,6 @@ import java.util.Properties;
 @PropertySource("classpath:application.properties")
 @ConfigurationProperties(prefix = "mail")
 public class MailConfig {
-
     public String username;
 
     public String password;

@@ -27,7 +27,6 @@ import org.springframework.web.bind.annotation.*;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Tag(name = "User")
 public class UserController {
-
     UserService userService;
 
     @Operation(summary = "API Create User")
@@ -78,5 +77,4 @@ public class UserController {
     public ResponseEntity<?> updateMyProfile(@RequestBody @Valid UpdateProfileRequestDTO requestDTO, @CurrentUser CustomUserDetails userDetails) {
         return VsResponseUtil.success(userService.updateCurrentUser(requestDTO, userDetails.getUserId()));
     }
-
 }

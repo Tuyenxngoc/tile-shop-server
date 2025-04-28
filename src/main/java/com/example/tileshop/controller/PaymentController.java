@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class PaymentController {
-
     VnPayService paymentService;
 
     @GetMapping("payment/vn-pay")
@@ -27,5 +26,4 @@ public class PaymentController {
     public ResponseEntity<?> payCallbackHandler(@RequestParam("vnp_SecureHash") String receivedHash, HttpServletRequest request) {
         return VsResponseUtil.success(paymentService.handleVNPayReturn(receivedHash, request));
     }
-
 }

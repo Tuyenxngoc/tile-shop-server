@@ -16,7 +16,6 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ForgotPasswordRequestDTO {
-
     @NotBlank(message = ErrorMessage.INVALID_NOT_BLANK_FIELD)
     @Pattern(regexp = CommonConstant.REGEXP_USERNAME, message = ErrorMessage.INVALID_FORMAT_USERNAME)
     private String username;
@@ -25,5 +24,4 @@ public class ForgotPasswordRequestDTO {
     @Email(message = ErrorMessage.INVALID_FORMAT_EMAIL)
     @Size(min = 5, max = 255, message = ErrorMessage.INVALID_TEXT_LENGTH)
     private String email;
-
 }

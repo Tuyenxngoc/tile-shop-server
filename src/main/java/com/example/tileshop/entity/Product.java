@@ -25,7 +25,6 @@ import java.util.List;
         }
 )
 public class Product extends DateAuditing {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "product_id")

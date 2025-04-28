@@ -18,7 +18,6 @@ import java.util.List;
 @Table(name = "brands",
         uniqueConstraints = @UniqueConstraint(name = "UN_BRAND_NAME", columnNames = "name"))
 public class Brand extends DateAuditing {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "brand_id")
@@ -35,5 +34,4 @@ public class Brand extends DateAuditing {
     @OneToMany(mappedBy = "brand", cascade = CascadeType.ALL)
     @JsonIgnore
     private List<Product> products = new ArrayList<>();
-
 }

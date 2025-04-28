@@ -3,7 +3,6 @@ package com.example.tileshop.util;
 import java.text.Normalizer;
 
 public class MaskingUtils {
-
     public static String maskEmail(String email) {
         if (email == null || !email.contains("@")) {
             return email;
@@ -34,5 +33,4 @@ public class MaskingUtils {
         slug = slug.replaceAll("-+", "-").replaceAll("^-|-$", "");
         return slug;
     }
-
 }

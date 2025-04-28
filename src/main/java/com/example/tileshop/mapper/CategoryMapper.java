@@ -4,7 +4,6 @@ import com.example.tileshop.dto.category.CategoryResponseDTO;
 import com.example.tileshop.entity.Category;
 
 public class CategoryMapper {
-
     public static CategoryResponseDTO toDTO(Category category) {
         if (category == null) {
             return null;
@@ -16,5 +15,4 @@ public class CategoryMapper {
 
         return dto;
     }
-
 }

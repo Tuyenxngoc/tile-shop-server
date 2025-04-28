@@ -4,7 +4,6 @@ import com.example.tileshop.dto.orderitem.OrderItemResponseDTO;
 import com.example.tileshop.entity.OrderItem;
 
 public class OrderItemMapper {
-
     public static OrderItemResponseDTO toDTO(OrderItem orderItem) {
         if (orderItem == null) {
             return null;
@@ -18,5 +17,4 @@ public class OrderItemMapper {
 
         return dto;
     }
-
 }

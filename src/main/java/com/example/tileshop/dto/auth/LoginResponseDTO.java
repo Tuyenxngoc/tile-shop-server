@@ -11,7 +11,6 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class LoginResponseDTO {
-
     private String tokenType = CommonConstant.TOKEN_TYPE;
 
     private String accessToken;

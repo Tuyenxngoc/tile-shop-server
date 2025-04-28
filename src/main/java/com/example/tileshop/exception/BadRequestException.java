@@ -6,7 +6,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class BadRequestException extends RuntimeException {
-
     private Object[] params;
 
     public BadRequestException(String message) {
@@ -17,5 +16,4 @@ public class BadRequestException extends RuntimeException {
         super(message);
         this.params = args;
     }
-
 }

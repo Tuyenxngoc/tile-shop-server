@@ -1,7 +1,6 @@
 package com.example.tileshop.constant;
 
 public enum SortByDataConstant implements SortByInterface {
-
     ATTRIBUTE {
         @Override
         public String getSortBy(String sortBy) {
@@ -30,7 +29,6 @@ public enum SortByDataConstant implements SortByInterface {
         @Override
         public String getSortBy(String sortBy) {
             return switch (sortBy) {
-
                 default -> "id";
             };
         }
@@ -40,7 +38,6 @@ public enum SortByDataConstant implements SortByInterface {
         @Override
         public String getSortBy(String sortBy) {
             return switch (sortBy) {
-
                 default -> "id";
             };
         }
@@ -60,7 +57,6 @@ public enum SortByDataConstant implements SortByInterface {
         @Override
         public String getSortBy(String sortBy) {
             return switch (sortBy) {
-
                 default -> "id";
             };
         }
@@ -70,7 +66,6 @@ public enum SortByDataConstant implements SortByInterface {
         @Override
         public String getSortBy(String sortBy) {
             return switch (sortBy) {
-
                 default -> "id";
             };
         }
@@ -106,7 +101,6 @@ public enum SortByDataConstant implements SortByInterface {
         @Override
         public String getSortBy(String sortBy) {
             return switch (sortBy) {
-
                 default -> "id";
             };
         }
@@ -116,7 +110,6 @@ public enum SortByDataConstant implements SortByInterface {
         @Override
         public String getSortBy(String sortBy) {
             return switch (sortBy) {
-
                 default -> "id";
             };
         }
@@ -126,7 +119,6 @@ public enum SortByDataConstant implements SortByInterface {
         @Override
         public String getSortBy(String sortBy) {
             return switch (sortBy) {
-
                 default -> "id";
             };
         }
@@ -136,7 +128,6 @@ public enum SortByDataConstant implements SortByInterface {
         @Override
         public String getSortBy(String sortBy) {
             return switch (sortBy) {
-
                 default -> "id";
             };
         }
@@ -159,7 +150,6 @@ public enum SortByDataConstant implements SortByInterface {
         @Override
         public String getSortBy(String sortBy) {
             return switch (sortBy) {
-
                 default -> "id";
             };
         }
@@ -175,5 +165,4 @@ public enum SortByDataConstant implements SortByInterface {
             };
         }
     },
-
 }

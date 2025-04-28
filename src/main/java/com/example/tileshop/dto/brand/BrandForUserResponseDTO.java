@@ -11,7 +11,6 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BrandForUserResponseDTO {
-
     private Long id;
 
     private String name;
@@ -26,5 +25,4 @@ public class BrandForUserResponseDTO {
         this.description = brand.getDescription();
         this.logoUrl = brand.getLogoUrl();
     }
-
 }

@@ -28,7 +28,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Tag(name = "Auth")
 public class AuthController {
-
     AuthService authService;
 
     @Operation(summary = "API Login")
@@ -79,5 +78,4 @@ public class AuthController {
     public ResponseEntity<?> getCurrentUser(@CurrentUser CustomUserDetails userDetails) {
         return VsResponseUtil.success(authService.getCurrentUser(userDetails.getUserId()));
     }
-
 }

@@ -38,7 +38,6 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class CategoryServiceImpl implements CategoryService {
-
     private final CategoryRepository categoryRepository;
 
     private final AttributeRepository attributeRepository;
@@ -288,5 +287,4 @@ public class CategoryServiceImpl implements CategoryService {
         }
         return tree;
     }
-
 }

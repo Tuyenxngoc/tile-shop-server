@@ -11,7 +11,6 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AttributeResponseDTO {
-
     private long id;
 
     private String name;

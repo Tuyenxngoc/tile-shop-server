@@ -20,7 +20,6 @@ import java.util.List;
         uniqueConstraints = @UniqueConstraint(name = "UK_CATEGORY_NAME", columnNames = "name")
 )
 public class Category extends DateAuditing {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "category_id")
@@ -45,5 +44,4 @@ public class Category extends DateAuditing {
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     @JsonIgnore
     private List<CategoryAttribute> categoryAttributes = new ArrayList<>();
-
 }

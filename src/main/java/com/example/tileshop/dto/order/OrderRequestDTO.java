@@ -15,7 +15,6 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class OrderRequestDTO {
-
     @NotNull(message = ErrorMessage.INVALID_SOME_THING_FIELD_IS_REQUIRED)
     private Gender gender;
 
@@ -83,5 +82,4 @@ public class OrderRequestDTO {
     private static boolean isNotBlank(String str) {
         return str != null && !str.trim().isEmpty();
     }
-
 }

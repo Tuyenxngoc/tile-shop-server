@@ -16,7 +16,6 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RegisterRequestDTO {
-
     @NotBlank(message = ErrorMessage.INVALID_NOT_BLANK_FIELD)
     @Pattern(regexp = CommonConstant.REGEXP_FULL_NAME, message = ErrorMessage.INVALID_FORMAT_NAME)
     @Size(min = 2, max = 100, message = ErrorMessage.INVALID_TEXT_LENGTH)
@@ -44,5 +43,4 @@ public class RegisterRequestDTO {
     @Email(message = ErrorMessage.INVALID_FORMAT_EMAIL)
     @Size(min = 5, max = 255, message = ErrorMessage.INVALID_TEXT_LENGTH)
     private String email;
-
 }

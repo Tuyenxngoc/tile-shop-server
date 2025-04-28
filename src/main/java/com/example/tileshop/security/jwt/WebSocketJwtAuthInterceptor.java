@@ -22,7 +22,6 @@ import java.util.Map;
 @Component
 @RequiredArgsConstructor
 public class WebSocketJwtAuthInterceptor implements HandshakeInterceptor {
-
     private final JwtTokenProvider tokenProvider;
 
     private final JwtBlacklistService tokenService;
@@ -62,7 +61,5 @@ public class WebSocketJwtAuthInterceptor implements HandshakeInterceptor {
 
     @Override
     public void afterHandshake(ServerHttpRequest request, ServerHttpResponse response, WebSocketHandler wsHandler, Exception exception) {
-
     }
-
 }

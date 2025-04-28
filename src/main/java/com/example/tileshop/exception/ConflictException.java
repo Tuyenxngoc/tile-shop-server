@@ -6,7 +6,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class ConflictException extends RuntimeException {
-
     private Object[] params;
 
     public ConflictException(String message) {
@@ -17,5 +16,4 @@ public class ConflictException extends RuntimeException {
         super(message);
         this.params = params;
     }
-
 }

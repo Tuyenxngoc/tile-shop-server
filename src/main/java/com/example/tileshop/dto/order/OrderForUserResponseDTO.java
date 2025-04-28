@@ -46,5 +46,4 @@ public class OrderForUserResponseDTO {
         this.paymentStatus = order.getPaymentStatus();
         this.paymentTime = order.getPaymentTime();
     }
-
 }

@@ -18,7 +18,6 @@ import java.util.List;
 @Entity
 @Table(name = "reviews")
 public class Review extends DateAuditing {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "review_id")
@@ -48,5 +47,4 @@ public class Review extends DateAuditing {
     @OneToMany(mappedBy = "review", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     @JsonIgnore
     private List<ReviewImage> images = new ArrayList<>();
-
 }

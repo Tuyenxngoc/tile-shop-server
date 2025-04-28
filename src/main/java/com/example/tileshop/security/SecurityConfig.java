@@ -35,7 +35,6 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @EnableMethodSecurity
 public class SecurityConfig {
-
     private static final String[] WHITE_LIST_URL = {
             //swagger
             "/favicon.ico",
@@ -87,9 +86,7 @@ public class SecurityConfig {
             "/api/v1/store-info",
     };
 
-    private static final String[] POST_WHITELIST_URL = {
-
-    };
+    private static final String[] POST_WHITELIST_URL = {};
 
     CustomUserDetailsService userDetailsService;
 

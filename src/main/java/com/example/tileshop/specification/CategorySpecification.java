@@ -14,7 +14,6 @@ public class CategorySpecification {
 
             if (StringUtils.isNotBlank(keyword) && StringUtils.isNotBlank(searchBy)) {
                 switch (searchBy) {
-
                     case Category_.ID -> predicate = builder.and(predicate, builder.equal(root.get(Category_.id),
                             SpecificationsUtil.castToRequiredType(root.get(Category_.id).getJavaType(), keyword)));
 

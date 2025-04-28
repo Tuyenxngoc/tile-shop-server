@@ -9,5 +9,4 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class ReviewImageServiceImpl implements ReviewImageService {
     private final ReviewImageRepository reviewimageRepository;
-
 }

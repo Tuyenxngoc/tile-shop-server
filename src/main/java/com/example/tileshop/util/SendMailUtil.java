@@ -20,7 +20,6 @@ import java.util.Objects;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class SendMailUtil {
-
     JavaMailSender mailSender;
 
     TemplateEngine templateEngine;
@@ -64,5 +63,4 @@ public class SendMailUtil {
         }
         mailSender.send(message);
     }
-
 }

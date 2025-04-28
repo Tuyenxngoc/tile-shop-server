@@ -4,7 +4,6 @@ import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
 public class TextLengthValidator implements ConstraintValidator<ValidTextLength, String> {
-
     private int min;
     private int max;
 

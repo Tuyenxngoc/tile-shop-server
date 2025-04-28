@@ -24,7 +24,6 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class StoreInfoServiceImpl implements StoreInfoService {
-
     private static final String filePath = "data/store-info.json";
 
     private final UploadFileUtil uploadFileUtil;

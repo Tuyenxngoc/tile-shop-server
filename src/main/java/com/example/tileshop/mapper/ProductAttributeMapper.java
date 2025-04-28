@@ -4,7 +4,6 @@ import com.example.tileshop.dto.productattribute.ProductAttributeResponseDTO;
 import com.example.tileshop.entity.ProductAttribute;
 
 public class ProductAttributeMapper {
-
     public static ProductAttributeResponseDTO toDTO(ProductAttribute productattribute) {
         if (productattribute == null) {
             return null;
@@ -16,5 +15,4 @@ public class ProductAttributeMapper {
 
         return dto;
     }
-
 }

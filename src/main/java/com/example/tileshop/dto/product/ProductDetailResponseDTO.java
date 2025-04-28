@@ -82,5 +82,4 @@ public class ProductDetailResponseDTO {
         Collections.reverse(breadcrumb);
         return breadcrumb;
     }
-
 }

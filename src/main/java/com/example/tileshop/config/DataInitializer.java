@@ -10,7 +10,6 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class DataInitializer implements CommandLineRunner {
-
     private final RoleService roleService;
 
     private final UserService userService;
@@ -32,5 +31,4 @@ public class DataInitializer implements CommandLineRunner {
         categoryAttributeService.init();
         newsCategoryService.init();
     }
-
 }

@@ -42,7 +42,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class GlobalExceptionHandle {
-
     MessageSource messageSource;
 
     private String getMessage(String code, Object[] args) {
@@ -213,5 +212,4 @@ public class GlobalExceptionHandle {
         String errorMessage = getMessage(ErrorMessage.ERR_ILLEGAL_ARGUMENT, null);
         return VsResponseUtil.error(HttpStatus.BAD_REQUEST, errorMessage);
     }
-
 }

@@ -7,7 +7,6 @@ import com.example.tileshop.entity.Product;
 import com.example.tileshop.entity.ProductImage;
 
 public class ProductMapper {
-
     public static ProductResponseDTO toResponseDTO(Product product) {
         if (product == null) {
             return null;
@@ -60,5 +59,4 @@ public class ProductMapper {
 
         return dto;
     }
-
 }

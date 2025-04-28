@@ -37,7 +37,6 @@ import java.util.Set;
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
-
     private final UserRepository userRepository;
 
     private final RoleRepository roleRepository;
@@ -232,5 +231,4 @@ public class UserServiceImpl implements UserService {
                 .build();
         return new CommonResponseDTO(message, responseDTO);
     }
-
 }

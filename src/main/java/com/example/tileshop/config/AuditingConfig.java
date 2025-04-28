@@ -14,7 +14,6 @@ import java.util.Optional;
 @Configuration
 @EnableJpaAuditing
 public class AuditingConfig {
-
     @Bean
     public AuditorAware<String> auditorProvider() {
         return () -> {
@@ -29,5 +28,4 @@ public class AuditingConfig {
             return Optional.empty();
         };
     }
-
 }

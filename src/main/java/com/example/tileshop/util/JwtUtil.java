@@ -5,7 +5,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.util.StringUtils;
 
 public class JwtUtil {
-
     public static String extractTokenFromRequest(HttpServletRequest request) {
         String bearerToken = request.getHeader(HttpHeaders.AUTHORIZATION);
         if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
@@ -17,5 +16,4 @@ public class JwtUtil {
     public static String extractRefreshTokenFromRequest(HttpServletRequest request) {
         return request.getHeader("X-Refresh-Token");
     }
-
 }

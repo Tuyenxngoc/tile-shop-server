@@ -11,7 +11,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.jpa.domain.Specification;
 
 public class NewsSpecification {
-
     public static Specification<News> excludeSpecificId(Long excludeId) {
         return (root, query, builder) -> {
             Predicate predicate = builder.conjunction();

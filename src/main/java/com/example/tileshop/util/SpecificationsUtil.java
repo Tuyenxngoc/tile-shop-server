@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SpecificationsUtil {
-
     public static Object castToRequiredType(Class<?> fieldType, String value) {
         try {
             if (fieldType.equals(Double.class) || fieldType.equals(double.class)) {

@@ -8,7 +8,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.jpa.domain.Specification;
 
 public class UserSpecification {
-
     public static Specification<User> filterByField(String searchBy, String keyword) {
         return (root, query, builder) -> {
             Predicate predicate = builder.conjunction();

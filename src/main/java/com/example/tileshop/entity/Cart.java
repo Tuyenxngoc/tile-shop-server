@@ -18,7 +18,6 @@ import java.util.List;
         uniqueConstraints = @UniqueConstraint(name = "UK_CART_USER_ID", columnNames = "user_id")
 )
 public class Cart {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "cart_id")
@@ -32,5 +31,4 @@ public class Cart {
     @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonIgnore
     private List<CartItem> cartItems = new ArrayList<>();
-
 }

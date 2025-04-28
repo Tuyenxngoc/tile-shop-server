@@ -9,5 +9,4 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class ProductImageServiceImpl implements ProductImageService {
     private final ProductImageRepository productimageRepository;
-
 }

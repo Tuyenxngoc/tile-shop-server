@@ -19,5 +19,4 @@ public class ProductAttributeResponseDTO {
         this.name = productAttribute.getAttribute().getName();
         this.value = productAttribute.getValue();
     }
-
 }

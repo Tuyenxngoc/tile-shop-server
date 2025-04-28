@@ -3,7 +3,6 @@ package com.example.tileshop.util;
 import java.security.SecureRandom;
 
 public class RandomPasswordUtil {
-
     private static final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()-_=+";
     private static final SecureRandom RANDOM = new SecureRandom();
 
@@ -20,5 +19,4 @@ public class RandomPasswordUtil {
 
         return password.toString();
     }
-
 }

@@ -27,7 +27,6 @@ import org.springframework.web.bind.annotation.*;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Tag(name = "Order")
 public class OrderController {
-
     OrderService orderService;
 
     // -------------------- ADMIN APIs --------------------
@@ -83,5 +82,4 @@ public class OrderController {
     public ResponseEntity<?> userCreateOrder(@Valid @RequestBody OrderRequestDTO orderRequestDTO, @CurrentUser CustomUserDetails userDetails) {
         return VsResponseUtil.success(HttpStatus.CREATED, orderService.createOrder(orderRequestDTO, userDetails.getUserId()));
     }
-
 }

@@ -12,7 +12,6 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RestData<T> {
-
     private RestStatus status;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)

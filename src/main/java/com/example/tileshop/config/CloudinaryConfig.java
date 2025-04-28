@@ -17,7 +17,6 @@ import java.util.Map;
 @PropertySource("classpath:application.properties")
 @ConfigurationProperties(prefix = "cloudinary")
 public class CloudinaryConfig {
-
     private String cloudName;
 
     private String apiKey;
@@ -32,5 +31,4 @@ public class CloudinaryConfig {
         config.put("api_secret", apiSecret);
         return new Cloudinary(config);
     }
-
 }

@@ -5,7 +5,6 @@ import com.example.tileshop.dto.user.UserResponseDTO;
 import com.example.tileshop.entity.Order;
 
 public class OrderMapper {
-
     public static OrderResponseDTO toDTO(Order order) {
         if (order == null) {
             return null;
@@ -32,5 +31,4 @@ public class OrderMapper {
 
         return dto;
     }
-
 }

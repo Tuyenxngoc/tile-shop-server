@@ -12,7 +12,6 @@ import java.util.Collection;
 @Builder
 @AllArgsConstructor
 public class CustomUserDetails implements UserDetails {
-
     @Getter
     private final String userId;
 
@@ -45,5 +44,4 @@ public class CustomUserDetails implements UserDetails {
     public boolean isEnabled() {
         return enabled;
     }
-
 }

@@ -30,5 +30,4 @@ public class CategoryResponseDTO {
                 .map(Attribute::getId)
                 .toList();
     }
-
 }

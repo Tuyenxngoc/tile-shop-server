@@ -15,7 +15,6 @@ import java.util.Map;
 @Log4j2
 @Component
 public class JwtTokenProvider {
-
     private static final String CLAIM_TYPE = "type";
     private static final String TYPE_ACCESS = "access";
     private static final String TYPE_REFRESH = "refresh";
@@ -105,5 +104,4 @@ public class JwtTokenProvider {
         long remainingTime = expirationTime - System.currentTimeMillis();
         return Math.max(remainingTime, 0);
     }
-
 }

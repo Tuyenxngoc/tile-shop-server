@@ -17,7 +17,6 @@ import java.util.List;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class RoleServiceImpl implements RoleService {
-
     RoleRepository roleRepository;
 
     @Override
@@ -49,5 +48,4 @@ public class RoleServiceImpl implements RoleService {
     public List<Role> getRoles() {
         return roleRepository.findAll();
     }
-
 }

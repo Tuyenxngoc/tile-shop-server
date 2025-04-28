@@ -10,7 +10,6 @@ import java.lang.annotation.*;
 @Target({ElementType.FIELD, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ValidTextLength {
-
     String message() default "invalid.text.length";
 
     int min() default 0;
@@ -20,5 +19,4 @@ public @interface ValidTextLength {
     Class<?>[] groups() default {};
 
     Class<? extends Payload>[] payload() default {};
-
 }

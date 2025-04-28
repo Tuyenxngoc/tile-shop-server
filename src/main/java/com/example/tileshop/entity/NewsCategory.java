@@ -18,7 +18,6 @@ import java.util.List;
 @Table(name = "news_categories",
         uniqueConstraints = @UniqueConstraint(name = "UK_NEWS_CATEGORY_NAME", columnNames = "name"))
 public class NewsCategory extends DateAuditing {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "category_id")
@@ -30,5 +29,4 @@ public class NewsCategory extends DateAuditing {
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonIgnore
     private List<News> news = new ArrayList<>();
-
 }

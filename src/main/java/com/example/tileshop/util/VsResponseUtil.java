@@ -7,7 +7,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
 
 public class VsResponseUtil {
-
     public static ResponseEntity<RestData<?>> success(Object data) {
         return success(HttpStatus.OK, data);
     }

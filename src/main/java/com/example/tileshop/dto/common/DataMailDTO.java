@@ -12,7 +12,6 @@ import java.util.Map;
 @NoArgsConstructor
 @AllArgsConstructor
 public class DataMailDTO {
-
     private String to;
 
     private String subject;
@@ -20,5 +19,4 @@ public class DataMailDTO {
     private String content;
 
     private Map<String, Object> properties;
-
 }

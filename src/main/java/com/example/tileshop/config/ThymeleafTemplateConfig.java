@@ -10,7 +10,6 @@ import java.nio.charset.StandardCharsets;
 
 @Configuration
 public class ThymeleafTemplateConfig {
-
     @Bean
     SpringTemplateEngine springTemplateEngine() {
         SpringTemplateEngine springTemplateEngine = new SpringTemplateEngine();
@@ -27,5 +26,4 @@ public class ThymeleafTemplateConfig {
         emailTemplateResolver.setCacheable(false);
         return emailTemplateResolver;
     }
-
 }

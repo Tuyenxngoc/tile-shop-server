@@ -20,5 +20,4 @@ public class Slide implements Comparable<Slide> {
     public int compareTo(Slide other) {
         return this.index.compareTo(other.index);
     }
-
 }

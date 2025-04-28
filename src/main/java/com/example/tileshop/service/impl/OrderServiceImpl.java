@@ -32,7 +32,6 @@ import java.util.*;
 @Service
 @RequiredArgsConstructor
 public class OrderServiceImpl implements OrderService {
-
     private final OrderRepository orderRepository;
 
     private final CartItemRepository cartItemRepository;
@@ -221,5 +220,4 @@ public class OrderServiceImpl implements OrderService {
         String message = messageUtil.getMessage(SuccessMessage.CREATE);
         return new CommonResponseDTO(message, new OrderPaymentResponseDTO(order));
     }
-
 }

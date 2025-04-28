@@ -13,7 +13,6 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class NewsResponseDTO extends DateAuditingDTO {
-
     private long id;
 
     private String title;
@@ -39,5 +38,4 @@ public class NewsResponseDTO extends DateAuditingDTO {
         this.imageUrl = news.getImageUrl();
         this.category = new BaseEntityDTO(news.getCategory().getId(), news.getCategory().getName());
     }
-
 }

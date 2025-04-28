@@ -27,7 +27,6 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 public class SlideServiceImpl implements SlideService {
-
     private static final TypeReference<List<Slide>> SLIDES_LIST_RESPONSE_TYPE =
             new TypeReference<>() {
             };
@@ -152,5 +151,4 @@ public class SlideServiceImpl implements SlideService {
                 .findFirst()
                 .orElseThrow(() -> new NotFoundException(ErrorMessage.Slide.ERR_NOT_FOUND_ID, id));
     }
-
 }

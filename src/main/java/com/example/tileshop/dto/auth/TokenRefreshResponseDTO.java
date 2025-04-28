@@ -11,7 +11,6 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TokenRefreshResponseDTO {
-
     private String tokenType = CommonConstant.TOKEN_TYPE;
 
     private String accessToken;
@@ -22,5 +21,4 @@ public class TokenRefreshResponseDTO {
         this.accessToken = accessToken;
         this.refreshToken = refreshToken;
     }
-
 }

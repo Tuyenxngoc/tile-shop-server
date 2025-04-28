@@ -11,7 +11,6 @@ import org.springframework.context.annotation.Configuration;
 @Aspect
 @Configuration
 public class RepositoryAspect {
-
     @Value("${application.repository.query-limit-warning-ms}")
     private int executionLimitMs;
 

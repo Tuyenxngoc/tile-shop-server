@@ -19,7 +19,6 @@ import java.util.List;
 @Table(name = "roles",
         uniqueConstraints = @UniqueConstraint(name = "UN_ROLE_CODE", columnNames = "code"))
 public class Role extends DateAuditing {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "role_id")
@@ -35,5 +34,4 @@ public class Role extends DateAuditing {
     @OneToMany(mappedBy = "role", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonIgnore
     private List<User> user = new ArrayList<>();
-
 }

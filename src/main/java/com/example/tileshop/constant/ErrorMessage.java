@@ -1,7 +1,6 @@
 package com.example.tileshop.constant;
 
 public class ErrorMessage {
-
     public static final String ERR_EXCEPTION_GENERAL = "exception.general";
     public static final String ERR_UNAUTHORIZED = "exception.unauthorized";
     public static final String ERR_FORBIDDEN = "exception.forbidden";
@@ -168,5 +167,4 @@ public class ErrorMessage {
         public static final String ERR_DELETE_HAS_ORDERS = "exception.user.delete.has.orders";
         public static final String ERR_DELETE_HAS_REVIEWS = "exception.user.delete.has.reviews";
     }
-
 }

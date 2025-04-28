@@ -15,7 +15,6 @@ import java.util.Map;
 @Component
 @RequiredArgsConstructor
 public class UploadFileUtil {
-
     private final Cloudinary cloudinary;
 
     private static String getResourceType(MultipartFile file) {
@@ -88,5 +87,4 @@ public class UploadFileUtil {
         String contentType = file.getContentType();
         return contentType == null || !contentType.startsWith("image/");
     }
-
 }

@@ -15,7 +15,6 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ChangePasswordRequestDTO {
-
     @NotBlank(message = ErrorMessage.INVALID_NOT_BLANK_FIELD)
     @Size(max = 100, message = ErrorMessage.INVALID_TEXT_LENGTH)
     private String oldPassword;
@@ -28,5 +27,4 @@ public class ChangePasswordRequestDTO {
     @NotBlank(message = ErrorMessage.INVALID_NOT_BLANK_FIELD)
     @Size(max = 100, message = ErrorMessage.INVALID_TEXT_LENGTH)
     private String repeatPassword;
-
 }

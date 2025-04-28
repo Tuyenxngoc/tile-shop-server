@@ -14,7 +14,6 @@ import java.util.concurrent.TimeUnit;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class EmailRateLimiterServiceImpl implements EmailRateLimiterService {
-
     RedisTemplate<String, String> redisTemplate;
 
     private String createKey(String email) {
@@ -39,5 +38,4 @@ public class EmailRateLimiterServiceImpl implements EmailRateLimiterService {
         String key = createKey(email);
         return Boolean.TRUE.equals(redisTemplate.hasKey(key));
     }
-
 }

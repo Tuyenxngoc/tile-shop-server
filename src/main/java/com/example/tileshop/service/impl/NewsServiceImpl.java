@@ -33,7 +33,6 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class NewsServiceImpl implements NewsService {
-
     private final NewsRepository newsRepository;
 
     private final MessageUtil messageUtil;
@@ -160,5 +159,4 @@ public class NewsServiceImpl implements NewsService {
 
         return new NewsResponseDTO(news);
     }
-
 }

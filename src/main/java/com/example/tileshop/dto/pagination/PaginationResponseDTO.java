@@ -12,7 +12,6 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 public class PaginationResponseDTO<T> {
-
     private PagingMeta meta;
 
     private List<T> items;
@@ -30,5 +29,4 @@ public class PaginationResponseDTO<T> {
     public List<T> getItems() {
         return items == null ? null : new ArrayList<>(items);
     }
-
 }

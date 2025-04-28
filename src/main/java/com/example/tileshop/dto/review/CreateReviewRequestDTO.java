@@ -17,7 +17,6 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CreateReviewRequestDTO {
-
     @NotNull(message = ErrorMessage.INVALID_SOME_THING_FIELD_IS_REQUIRED)
     @Min(value = 1, message = ErrorMessage.INVALID_MINIMUM_ONE)
     @Max(value = 5, message = ErrorMessage.INVALID_MAXIMUM_FIVE)
@@ -29,5 +28,4 @@ public class CreateReviewRequestDTO {
 
     @NotNull(message = ErrorMessage.INVALID_SOME_THING_FIELD_IS_REQUIRED)
     private Long productId;
-
 }

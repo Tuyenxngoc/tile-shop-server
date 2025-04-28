@@ -13,7 +13,6 @@ import lombok.*;
 @Entity
 @Table(name = "category_attributes")
 public class CategoryAttribute {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "category_attribute_id")
@@ -28,5 +27,4 @@ public class CategoryAttribute {
     @JoinColumn(name = "attribute_id", foreignKey = @ForeignKey(name = "FK_CATEGORY_ATTRIBUTE_ATTRIBUTE_ID"), nullable = false)
     @JsonIgnore
     private Attribute attribute;
-
 }

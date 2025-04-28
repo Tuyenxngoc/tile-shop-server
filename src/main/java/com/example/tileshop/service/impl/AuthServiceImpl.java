@@ -55,7 +55,6 @@ import java.util.concurrent.TimeUnit;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class AuthServiceImpl implements AuthService {
-
     AuthenticationManager authenticationManager;
 
     JwtTokenProvider jwtTokenProvider;
@@ -274,5 +273,4 @@ public class AuthServiceImpl implements AuthService {
         String message = messageUtil.getMessage(SuccessMessage.User.REGISTER);
         return new CommonResponseDTO(message, user);
     }
-
 }

@@ -8,7 +8,6 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class UnauthorizedException extends RuntimeException {
-
     private Object[] params;
 
     public UnauthorizedException(String message) {
@@ -19,5 +18,4 @@ public class UnauthorizedException extends RuntimeException {
         super(message);
         this.params = params;
     }
-
 }

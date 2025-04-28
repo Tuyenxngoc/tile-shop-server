@@ -23,7 +23,6 @@ import java.util.List;
                 @UniqueConstraint(name = "UN_USER_EMAIL", columnNames = "email")
         })
 public class User extends ActiveAuditing {
-
     @Id
     @UuidGenerator
     @Column(name = "user_id", columnDefinition = "CHAR(36)")

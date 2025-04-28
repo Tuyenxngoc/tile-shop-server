@@ -13,7 +13,6 @@ import lombok.*;
 @Entity
 @Table(name = "review_images")
 public class ReviewImage {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "review_image_id")
@@ -26,5 +25,4 @@ public class ReviewImage {
     @JoinColumn(name = "review_id", foreignKey = @ForeignKey(name = "FK_REVIEW_IMAGE_REVIEW_ID"), nullable = false)
     @JsonIgnore
     private Review review;
-
 }

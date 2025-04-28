@@ -14,7 +14,6 @@ public class BrandSpecification {
 
             if (StringUtils.isNotBlank(keyword) && StringUtils.isNotBlank(searchBy)) {
                 switch (searchBy) {
-
                     case Brand_.ID -> predicate = builder.and(predicate, builder.equal(root.get(Brand_.id),
                             SpecificationsUtil.castToRequiredType(root.get(Brand_.id).getJavaType(), keyword)));
 

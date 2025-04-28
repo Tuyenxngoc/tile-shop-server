@@ -4,7 +4,6 @@ import com.example.tileshop.dto.newscategory.NewsCategoryResponseDTO;
 import com.example.tileshop.entity.NewsCategory;
 
 public class NewsCategoryMapper {
-
     public static NewsCategoryResponseDTO toDTO(NewsCategory newscategory) {
         if (newscategory == null) {
             return null;
@@ -16,5 +15,4 @@ public class NewsCategoryMapper {
 
         return dto;
     }
-
 }
