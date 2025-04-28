@@ -25,6 +25,7 @@ public class NewsMapper {
 
         News news = new News();
         news.setTitle(dto.getTitle());
+        news.setSlug(dto.getSlug());
         news.setDescription(dto.getDescription());
         news.setContent(dto.getContent());
 

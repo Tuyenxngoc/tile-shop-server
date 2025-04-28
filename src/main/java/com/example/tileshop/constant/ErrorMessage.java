@@ -103,6 +103,7 @@ public class ErrorMessage {
     public static class News {
         public static final String ERR_NOT_FOUND_ID = "exception.news.not.found.id";
         public static final String ERR_NOT_FOUND_SLUG = "exception.news.not.found.slug";
+        public static final String ERR_DUPLICATE_SLUG = "exception.news.duplicate.slug";
     }
 
     public static class NewsCategory {
@@ -130,6 +131,9 @@ public class ErrorMessage {
         public static final String ERR_NOT_FOUND_ID = "exception.product.not.found.id";
         public static final String ERR_NOT_FOUND_SLUG = "exception.product.not.found.slug";
         public static final String ERR_OUT_OF_STOCK = "exception.product.out-of-stock";
+        public static final String ERR_DUPLICATE_SLUG = "exception.product.duplicate.slug";
+        public static final String ERR_EXIST_ORDER_ITEMS = "exception.product.exist.order-items";
+        public static final String ERR_EXIST_CART_ITEMS = "exception.product.exist.cart-items";
     }
 
     public static class ProductAttribute {

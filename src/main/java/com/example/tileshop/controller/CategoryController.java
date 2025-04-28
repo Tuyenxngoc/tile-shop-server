@@ -68,6 +68,6 @@ public class CategoryController {
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping(UrlConstant.Category.GET_TREE)
     public ResponseEntity<?> getCategoriesTree() {
-        return VsResponseUtil.success(HttpStatus.OK, categoryService.getCategoriesTree());
+        return VsResponseUtil.success(categoryService.getCategoriesTree());
     }
 }

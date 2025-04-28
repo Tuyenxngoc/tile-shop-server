@@ -23,6 +23,11 @@ public class NewsRequestDTO {
     private String title;
 
     @NotBlank(message = ErrorMessage.INVALID_NOT_BLANK_FIELD)
+    @Size(min = 3, max = 500, message = ErrorMessage.INVALID_TEXT_LENGTH)
+    @JsonDeserialize(using = TrimStringDeserializer.class)
+    private String slug;
+
+    @NotBlank(message = ErrorMessage.INVALID_NOT_BLANK_FIELD)
     @Size(min = 3, max = 1500, message = ErrorMessage.INVALID_TEXT_LENGTH)
     @JsonDeserialize(using = TrimStringDeserializer.class)
     private String description;

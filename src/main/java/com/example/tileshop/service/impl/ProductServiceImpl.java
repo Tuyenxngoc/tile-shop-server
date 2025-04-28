@@ -19,7 +19,6 @@ import com.example.tileshop.repository.ProductRepository;
 import com.example.tileshop.service.ProductService;
 import com.example.tileshop.util.MessageUtil;
 import com.example.tileshop.util.PaginationUtil;
-import com.example.tileshop.util.SlugUtil;
 import com.example.tileshop.util.UploadFileUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -50,36 +49,37 @@ public class ProductServiceImpl implements ProductService {
                 .orElseThrow(() -> new NotFoundException(ErrorMessage.Product.ERR_NOT_FOUND_ID, id));
     }
 
-    private String generateUniqueSlug(String baseSlug) {
-        String slug = baseSlug;
-        int counter = 1;
-
-        while (productRepository.existsBySlug(slug)) {
-            slug = baseSlug + "-" + counter;
-            counter++;
-        }
-
-        return slug;
-    }
-
     @Override
     public CommonResponseDTO save(ProductRequestDTO requestDTO, List<MultipartFile> images) {
         if (images.stream().anyMatch(uploadFileUtil::isImageInvalid)) {
             throw new BadRequestException(ErrorMessage.INVALID_FILE_TYPE);
         }
 
+        if (productRepository.existsBySlug(requestDTO.getSlug())) {
+            throw new BadRequestException(ErrorMessage.Product.ERR_DUPLICATE_SLUG, requestDTO.getSlug());
+        }
+
+        // Khởi tạo product
+        Product product = new Product();
+        product.setName(requestDTO.getName());
+        product.setSlug(requestDTO.getSlug());
+        product.setDescription(requestDTO.getDescription());
+        product.setPrice(requestDTO.getPrice());
+        product.setDiscountPercentage(requestDTO.getDiscountPercentage());
+        product.setStockQuantity(requestDTO.getStockQuantity());
+        product.setAverageRating(5.0);
+
         Category category = categoryRepository.findById(requestDTO.getCategoryId())
                 .orElseThrow(() -> new NotFoundException(ErrorMessage.Category.ERR_NOT_FOUND_ID,
                         requestDTO.getCategoryId()));
+        product.setCategory(category);
 
-        Brand brand = null;
         if (requestDTO.getBrandId() != null) {
-            brand = brandRepository.findById(requestDTO.getBrandId())
+            Brand brand = brandRepository.findById(requestDTO.getBrandId())
                     .orElseThrow(
                             () -> new NotFoundException(ErrorMessage.Brand.ERR_NOT_FOUND_ID, requestDTO.getBrandId()));
+            product.setBrand(brand);
         }
-
-        Product product = new Product();
 
         List<ProductAttribute> productAttributes = Optional.ofNullable(requestDTO.getAttributes())
                 .orElse(Collections.emptyList())
@@ -97,6 +97,7 @@ public class ProductServiceImpl implements ProductService {
                     return productAttribute;
                 })
                 .toList();
+        product.setAttributes(productAttributes);
 
         List<ProductImage> productImages = images.stream()
                 .map(image -> {
@@ -107,21 +108,7 @@ public class ProductServiceImpl implements ProductService {
                     return productImage;
                 })
                 .toList();
-
-        product.setName(requestDTO.getName());
-        product.setDescription(requestDTO.getDescription());
-        product.setPrice(requestDTO.getPrice());
-        product.setDiscountPercentage(requestDTO.getDiscountPercentage());
-        product.setStockQuantity(requestDTO.getStockQuantity());
-        product.setAverageRating(5.0);
-        product.setCategory(category);
-        product.setBrand(brand);
-        product.setAttributes(productAttributes);
         product.setImages(productImages);
-
-        String baseSlug = SlugUtil.toSlug(requestDTO.getName());
-        String uniqueSlug = generateUniqueSlug(baseSlug);
-        product.setSlug(uniqueSlug);
 
         productRepository.save(product);
 
@@ -132,14 +119,26 @@ public class ProductServiceImpl implements ProductService {
     @Override
     @Transactional
     public CommonResponseDTO update(Long id, ProductRequestDTO requestDTO, List<MultipartFile> images, Set<String> existingImageUrls) {
-        Product product = getEntity(id);
-
         // Validate images
         if (images != null && images.stream().anyMatch(uploadFileUtil::isImageInvalid)) {
             throw new BadRequestException(ErrorMessage.INVALID_FILE_TYPE);
         }
 
-        // Update Category if changed
+        Product product = getEntity(id);
+
+        // Validate slug
+        if (!requestDTO.getSlug().equals(product.getSlug()) && productRepository.existsBySlug(requestDTO.getSlug())) {
+            throw new BadRequestException(ErrorMessage.Product.ERR_DUPLICATE_SLUG, requestDTO.getSlug());
+        }
+
+        product.setName(requestDTO.getName());
+        product.setSlug(requestDTO.getSlug());
+        product.setDescription(requestDTO.getDescription());
+        product.setPrice(requestDTO.getPrice());
+        product.setDiscountPercentage(requestDTO.getDiscountPercentage());
+        product.setStockQuantity(requestDTO.getStockQuantity());
+
+        // Update Category
         if (!requestDTO.getCategoryId().equals(product.getCategory().getId())) {
             Category category = categoryRepository.findById(requestDTO.getCategoryId())
                     .orElseThrow(() -> new NotFoundException(ErrorMessage.Category.ERR_NOT_FOUND_ID,
@@ -147,7 +146,7 @@ public class ProductServiceImpl implements ProductService {
             product.setCategory(category);
         }
 
-        // Update Brand if changed
+        // Update Brand
         if (requestDTO.getBrandId() != null) {
             Long newBrandId = requestDTO.getBrandId();
             Long currentBrandId = (product.getBrand() != null) ? product.getBrand().getId() : null;
@@ -158,19 +157,6 @@ public class ProductServiceImpl implements ProductService {
                 product.setBrand(brand);
             }
         }
-
-        // Update Slug if name changed
-        if (!requestDTO.getName().equals(product.getName())) {
-            String baseSlug = SlugUtil.toSlug(requestDTO.getName());
-            String uniqueSlug = generateUniqueSlug(baseSlug);
-            product.setSlug(uniqueSlug);
-        }
-
-        product.setName(requestDTO.getName());
-        product.setDescription(requestDTO.getDescription());
-        product.setPrice(requestDTO.getPrice());
-        product.setDiscountPercentage(requestDTO.getDiscountPercentage());
-        product.setStockQuantity(requestDTO.getStockQuantity());
 
         // Update attributes
         List<ProductAttribute> updatedAttributes = Optional.ofNullable(requestDTO.getAttributes())
@@ -224,7 +210,12 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public CommonResponseDTO delete(Long id) {
         Product product = getEntity(id);
-        //todo
+        if (!product.getOrderItems().isEmpty()) {
+            throw new BadRequestException(ErrorMessage.Product.ERR_EXIST_ORDER_ITEMS);
+        }
+        if (!product.getCartItems().isEmpty()) {
+            throw new BadRequestException(ErrorMessage.Product.ERR_EXIST_CART_ITEMS);
+        }
         String message = messageUtil.getMessage(SuccessMessage.DELETE);
         return new CommonResponseDTO(message, null);
     }

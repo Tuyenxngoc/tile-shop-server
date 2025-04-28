@@ -20,7 +20,6 @@ import com.example.tileshop.service.NewsService;
 import com.example.tileshop.specification.NewsSpecification;
 import com.example.tileshop.util.MessageUtil;
 import com.example.tileshop.util.PaginationUtil;
-import com.example.tileshop.util.SlugUtil;
 import com.example.tileshop.util.UploadFileUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -48,22 +47,13 @@ public class NewsServiceImpl implements NewsService {
                 .orElseThrow(() -> new NotFoundException(ErrorMessage.News.ERR_NOT_FOUND_ID, id));
     }
 
-    private String generateUniqueSlug(String baseSlug) {
-        String slug = baseSlug;
-        int counter = 1;
-
-        while (newsRepository.existsBySlug(slug)) {
-            slug = baseSlug + "-" + counter;
-            counter++;
-        }
-
-        return slug;
-    }
-
     @Override
     public CommonResponseDTO save(NewsRequestDTO requestDTO, MultipartFile image) {
         if (uploadFileUtil.isImageInvalid(image)) {
             throw new BadRequestException(ErrorMessage.INVALID_FILE_TYPE);
+        }
+        if (newsRepository.existsBySlug(requestDTO.getSlug())) {
+            throw new BadRequestException(ErrorMessage.News.ERR_DUPLICATE_SLUG, requestDTO.getSlug());
         }
 
         NewsCategory newsCategory = newsCategoryRepository.findById(requestDTO.getCategoryId())
@@ -71,11 +61,7 @@ public class NewsServiceImpl implements NewsService {
 
         String newImageUrl = uploadFileUtil.uploadFile(image);
 
-        String baseSlug = SlugUtil.toSlug(requestDTO.getTitle());
-        String uniqueSlug = generateUniqueSlug(baseSlug);
-
         News news = NewsMapper.toEntity(requestDTO);
-        news.setSlug(uniqueSlug);
         news.setCategory(newsCategory);
         news.setImageUrl(newImageUrl);
 
@@ -89,13 +75,11 @@ public class NewsServiceImpl implements NewsService {
     public CommonResponseDTO update(Long id, NewsRequestDTO requestDTO, MultipartFile image) {
         News news = getEntity(id);
 
-        if (!news.getTitle().equals(requestDTO.getTitle())) {
-            String baseSlug = SlugUtil.toSlug(requestDTO.getTitle());
-            String uniqueSlug = generateUniqueSlug(baseSlug);
-            news.setSlug(uniqueSlug);
+        if (!requestDTO.getSlug().equals(news.getSlug()) && newsRepository.existsBySlug(requestDTO.getSlug())) {
+            throw new BadRequestException(ErrorMessage.News.ERR_DUPLICATE_SLUG, requestDTO.getSlug());
         }
 
-        if (!news.getCategory().getId().equals(requestDTO.getCategoryId())) {
+        if (!requestDTO.getCategoryId().equals(news.getCategory().getId())) {
             NewsCategory newsCategory = newsCategoryRepository.findById(requestDTO.getCategoryId())
                     .orElseThrow(() -> new NotFoundException(ErrorMessage.NewsCategory.ERR_NOT_FOUND_ID, requestDTO.getCategoryId()));
             news.setCategory(newsCategory);
@@ -116,6 +100,7 @@ public class NewsServiceImpl implements NewsService {
         }
 
         news.setTitle(requestDTO.getTitle());
+        news.setSlug(requestDTO.getSlug());
         news.setDescription(requestDTO.getDescription());
         news.setContent(requestDTO.getContent());
 
