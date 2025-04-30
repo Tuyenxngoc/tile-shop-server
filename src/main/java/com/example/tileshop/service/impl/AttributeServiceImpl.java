@@ -106,7 +106,7 @@ public class AttributeServiceImpl implements AttributeService {
         attributeRepository.delete(attribute);
 
         String message = messageUtil.getMessage(SuccessMessage.DELETE);
-        return new CommonResponseDTO(message, null);
+        return new CommonResponseDTO(message);
     }
 
     @Override

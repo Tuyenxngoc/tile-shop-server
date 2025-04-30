@@ -120,7 +120,7 @@ public class NewsServiceImpl implements NewsService {
         newsRepository.delete(news);
 
         String message = messageUtil.getMessage(SuccessMessage.DELETE);
-        return new CommonResponseDTO(message, id);
+        return new CommonResponseDTO(message);
     }
 
     @Override

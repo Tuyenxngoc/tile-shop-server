@@ -217,7 +217,7 @@ public class ProductServiceImpl implements ProductService {
             throw new BadRequestException(ErrorMessage.Product.ERR_EXIST_CART_ITEMS);
         }
         String message = messageUtil.getMessage(SuccessMessage.DELETE);
-        return new CommonResponseDTO(message, null);
+        return new CommonResponseDTO(message);
     }
 
     @Override

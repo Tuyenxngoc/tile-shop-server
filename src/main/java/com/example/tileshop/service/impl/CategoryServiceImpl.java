@@ -237,7 +237,7 @@ public class CategoryServiceImpl implements CategoryService {
         categoryRepository.delete(category);
 
         String message = messageUtil.getMessage(SuccessMessage.DELETE);
-        return new CommonResponseDTO(message, id);
+        return new CommonResponseDTO(message);
     }
 
     @Override

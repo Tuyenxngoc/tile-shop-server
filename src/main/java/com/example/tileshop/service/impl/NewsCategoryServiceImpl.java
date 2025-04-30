@@ -105,7 +105,7 @@ public class NewsCategoryServiceImpl implements NewsCategoryService {
         newscategoryRepository.delete(newsCategory);
 
         String message = messageUtil.getMessage(SuccessMessage.DELETE);
-        return new CommonResponseDTO(message, id);
+        return new CommonResponseDTO(message);
     }
 
     @Override

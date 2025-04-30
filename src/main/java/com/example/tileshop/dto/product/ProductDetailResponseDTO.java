@@ -7,6 +7,7 @@ import com.example.tileshop.entity.Category;
 import com.example.tileshop.entity.Product;
 import com.example.tileshop.entity.ProductAttribute;
 import com.example.tileshop.entity.ProductImage;
+import com.example.tileshop.mapper.BrandMapper;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -57,7 +58,7 @@ public class ProductDetailResponseDTO {
         this.categoryPath = buildBreadcrumb(product.getCategory());
 
         if (product.getBrand() != null) {
-            this.brand = new BrandResponseDTO(product.getBrand());
+            this.brand = BrandMapper.toDTO(product.getBrand());
         }
 
         this.images = product.getImages().stream()
