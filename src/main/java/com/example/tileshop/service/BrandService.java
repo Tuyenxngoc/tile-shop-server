@@ -1,6 +1,5 @@
 package com.example.tileshop.service;
 
-import com.example.tileshop.dto.brand.BrandForUserResponseDTO;
 import com.example.tileshop.dto.brand.BrandRequestDTO;
 import com.example.tileshop.dto.brand.BrandResponseDTO;
 import com.example.tileshop.dto.common.CommonResponseDTO;
@@ -18,8 +17,4 @@ public interface BrandService {
     PaginationResponseDTO<BrandResponseDTO> findAll(PaginationFullRequestDTO requestDTO);
 
     BrandResponseDTO findById(Long id);
-
-    PaginationResponseDTO<BrandForUserResponseDTO> userFindAll(PaginationFullRequestDTO requestDTO);
-
-    BrandForUserResponseDTO userFindById(Long id);
 }

@@ -11,8 +11,10 @@ public class BrandMapper {
         }
 
         BrandResponseDTO dto = new BrandResponseDTO();
-        // TODO: set fields từ Brand vào dto
-        // vd: dto.setId(brand.getId());
+        dto.setId(brand.getId());
+        dto.setName(brand.getName());
+        dto.setDescription(brand.getDescription());
+        dto.setLogoUrl(brand.getLogoUrl());
 
         return dto;
     }

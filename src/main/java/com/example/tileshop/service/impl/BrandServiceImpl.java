@@ -3,7 +3,6 @@ package com.example.tileshop.service.impl;
 import com.example.tileshop.constant.ErrorMessage;
 import com.example.tileshop.constant.SortByDataConstant;
 import com.example.tileshop.constant.SuccessMessage;
-import com.example.tileshop.dto.brand.BrandForUserResponseDTO;
 import com.example.tileshop.dto.brand.BrandRequestDTO;
 import com.example.tileshop.dto.brand.BrandResponseDTO;
 import com.example.tileshop.dto.common.CommonResponseDTO;
@@ -56,14 +55,15 @@ public class BrandServiceImpl implements BrandService {
 
         brandRepository.save(brand);
 
-        return new CommonResponseDTO(messageUtil.getMessage(SuccessMessage.CREATE), brand);
+        String message = messageUtil.getMessage(SuccessMessage.CREATE);
+        return new CommonResponseDTO(message, BrandMapper.toDTO(brand));
     }
 
     @Override
     public CommonResponseDTO update(Long id, BrandRequestDTO requestDTO, MultipartFile image) {
         Brand brand = getEntity(id);
 
-        if (!brand.getName().equals(requestDTO.getName())) {
+        if (!requestDTO.getName().equals(brand.getName())) {
             if (brandRepository.existsByName(requestDTO.getName())) {
                 throw new ConflictException(ErrorMessage.Brand.ERR_DUPLICATE_NAME, requestDTO.getName());
             }
@@ -88,7 +88,8 @@ public class BrandServiceImpl implements BrandService {
 
         brandRepository.save(brand);
 
-        return new CommonResponseDTO(messageUtil.getMessage(SuccessMessage.UPDATE), brand);
+        String message = messageUtil.getMessage(SuccessMessage.UPDATE);
+        return new CommonResponseDTO(message, BrandMapper.toDTO(brand));
     }
 
     @Override
@@ -105,7 +106,8 @@ public class BrandServiceImpl implements BrandService {
 
         brandRepository.delete(brand);
 
-        return new CommonResponseDTO(messageUtil.getMessage(SuccessMessage.DELETE), id);
+        String message = messageUtil.getMessage(SuccessMessage.DELETE);
+        return new CommonResponseDTO(message);
     }
 
     @Override
@@ -115,7 +117,7 @@ public class BrandServiceImpl implements BrandService {
         Page<Brand> page = brandRepository.findAll(BrandSpecification.filterByField(requestDTO.getSearchBy(), requestDTO.getKeyword()), pageable);
 
         List<BrandResponseDTO> items = page.getContent().stream()
-                .map(BrandResponseDTO::new)
+                .map(BrandMapper::toDTO)
                 .toList();
 
         PagingMeta pagingMeta = PaginationUtil.buildPagingMeta(requestDTO, SortByDataConstant.BRAND, page);
@@ -131,32 +133,6 @@ public class BrandServiceImpl implements BrandService {
     public BrandResponseDTO findById(Long id) {
         Brand brand = getEntity(id);
 
-        return new BrandResponseDTO(brand);
-    }
-
-    @Override
-    public PaginationResponseDTO<BrandForUserResponseDTO> userFindAll(PaginationFullRequestDTO requestDTO) {
-        Pageable pageable = PaginationUtil.buildPageable(requestDTO, SortByDataConstant.BRAND);
-
-        Page<Brand> page = brandRepository.findAll(BrandSpecification.filterByField(requestDTO.getSearchBy(), requestDTO.getKeyword()), pageable);
-
-        List<BrandForUserResponseDTO> items = page.getContent().stream()
-                .map(BrandForUserResponseDTO::new)
-                .toList();
-
-        PagingMeta pagingMeta = PaginationUtil.buildPagingMeta(requestDTO, SortByDataConstant.BRAND, page);
-
-        PaginationResponseDTO<BrandForUserResponseDTO> responseDTO = new PaginationResponseDTO<>();
-        responseDTO.setItems(items);
-        responseDTO.setMeta(pagingMeta);
-
-        return responseDTO;
-    }
-
-    @Override
-    public BrandForUserResponseDTO userFindById(Long id) {
-        Brand brand = getEntity(id);
-
-        return new BrandForUserResponseDTO(brand);
+        return BrandMapper.toDTO(brand);
     }
 }

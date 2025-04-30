@@ -15,7 +15,10 @@ import com.example.tileshop.exception.BadRequestException;
 import com.example.tileshop.exception.ConflictException;
 import com.example.tileshop.exception.NotFoundException;
 import com.example.tileshop.mapper.OrderMapper;
-import com.example.tileshop.repository.*;
+import com.example.tileshop.repository.CartItemRepository;
+import com.example.tileshop.repository.OrderRepository;
+import com.example.tileshop.repository.ProductRepository;
+import com.example.tileshop.repository.UserRepository;
 import com.example.tileshop.service.OrderService;
 import com.example.tileshop.specification.OrderSpecification;
 import com.example.tileshop.util.MessageUtil;
@@ -35,8 +38,6 @@ public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
 
     private final CartItemRepository cartItemRepository;
-
-    private final OrderItemRepository orderItemRepository;
 
     private final UserRepository userRepository;
 
