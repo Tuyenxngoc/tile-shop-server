@@ -38,13 +38,6 @@ public class OrderController {
         return VsResponseUtil.success(orderService.findAll(filter, requestDTO));
     }
 
-    @Operation(summary = "API Get Order By Id")
-    @PreAuthorize("hasRole('ADMIN')")
-    @GetMapping(UrlConstant.Order.Admin.GET_BY_ID)
-    public ResponseEntity<?> getOrderById(@PathVariable Long id) {
-        return VsResponseUtil.success(orderService.findById(id));
-    }
-
     @Operation(summary = "API Update Order Status")
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping(UrlConstant.Order.Admin.UPDATE_STATUS)
@@ -71,15 +64,15 @@ public class OrderController {
         return VsResponseUtil.success(orderService.userFindAll(userDetails.getUserId(), status, keyword));
     }
 
-    @Operation(summary = "User - API Get Order By Id")
+    @Operation(summary = "API Get Order By Id")
     @GetMapping(UrlConstant.Order.User.GET_BY_ID)
     public ResponseEntity<?> getUserOrderById(@PathVariable Long id, @CurrentUser CustomUserDetails userDetails) {
-        return VsResponseUtil.success(orderService.userFindById(id, userDetails.getUserId()));
+        return VsResponseUtil.success(orderService.userFindById(id, userDetails));
     }
 
-    @Operation(summary = "User - API Create Order")
+    @Operation(summary = "API Create Order")
     @PostMapping(UrlConstant.Order.User.CREATE)
-    public ResponseEntity<?> userCreateOrder(@Valid @RequestBody OrderRequestDTO orderRequestDTO, @CurrentUser CustomUserDetails userDetails) {
-        return VsResponseUtil.success(HttpStatus.CREATED, orderService.createOrder(orderRequestDTO, userDetails.getUserId()));
+    public ResponseEntity<?> createOrder(@Valid @RequestBody OrderRequestDTO orderRequestDTO, @CurrentUser CustomUserDetails userDetails) {
+        return VsResponseUtil.success(HttpStatus.CREATED, orderService.create(orderRequestDTO, userDetails.getUserId()));
     }
 }

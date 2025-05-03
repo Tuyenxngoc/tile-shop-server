@@ -3,6 +3,7 @@ package com.example.tileshop.controller;
 import com.example.tileshop.annotation.RestApiV1;
 import com.example.tileshop.constant.UrlConstant;
 import com.example.tileshop.dto.pagination.PaginationFullRequestDTO;
+import com.example.tileshop.dto.pagination.PaginationSortRequestDTO;
 import com.example.tileshop.dto.product.ProductRequestDTO;
 import com.example.tileshop.service.ProductService;
 import com.example.tileshop.util.VsResponseUtil;
@@ -30,11 +31,9 @@ import java.util.Set;
 public class ProductController {
     ProductService productService;
 
-    // -------------------- ADMIN APIs --------------------
-
     @Operation(summary = "API Create Product")
     @PreAuthorize("hasRole('ADMIN')")
-    @PostMapping(value = UrlConstant.Product.Admin.CREATE, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = UrlConstant.Product.CREATE, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> createProduct(
             @RequestPart("product") @Valid ProductRequestDTO requestDTO,
             @RequestPart(value = "images") List<MultipartFile> images
@@ -44,7 +43,7 @@ public class ProductController {
 
     @Operation(summary = "API Update Product")
     @PreAuthorize("hasRole('ADMIN')")
-    @PutMapping(value = UrlConstant.Product.Admin.UPDATE, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PutMapping(value = UrlConstant.Product.UPDATE, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> updateProduct(
             @PathVariable Long id,
             @RequestPart("product") @Valid ProductRequestDTO requestDTO,
@@ -56,42 +55,35 @@ public class ProductController {
 
     @Operation(summary = "API Delete Product")
     @PreAuthorize("hasRole('ADMIN')")
-    @DeleteMapping(UrlConstant.Product.Admin.DELETE)
+    @DeleteMapping(UrlConstant.Product.DELETE)
     public ResponseEntity<?> deleteProduct(@PathVariable Long id) {
         return VsResponseUtil.success(productService.delete(id));
     }
 
     @Operation(summary = "API Get Products")
-    @PreAuthorize("hasRole('ADMIN')")
-    @GetMapping(UrlConstant.Product.Admin.GET_ALL)
+    @GetMapping(UrlConstant.Product.GET_ALL)
     public ResponseEntity<?> getProducts(@ParameterObject PaginationFullRequestDTO requestDTO) {
         return VsResponseUtil.success(productService.findAll(requestDTO));
     }
 
     @Operation(summary = "API Get Product By Id")
-    @PreAuthorize("hasRole('ADMIN')")
-    @GetMapping(UrlConstant.Product.Admin.GET_BY_ID)
+    @GetMapping(UrlConstant.Product.GET_BY_ID)
     public ResponseEntity<?> getProductById(@PathVariable Long id) {
         return VsResponseUtil.success(productService.findById(id));
     }
 
-    // -------------------- USER APIs --------------------
-
-    @Operation(summary = "User - API Get Products")
-    @GetMapping(UrlConstant.Product.User.GET_ALL)
-    public ResponseEntity<?> getAllProductsForUser(@ParameterObject PaginationFullRequestDTO requestDTO) {
-        return VsResponseUtil.success(productService.userFindAll(requestDTO));
+    @Operation(summary = "API Get Product By Slug")
+    @GetMapping(UrlConstant.Product.GET_BY_SLUG)
+    public ResponseEntity<?> getProductBySlug(@PathVariable String slug) {
+        return VsResponseUtil.success(productService.findBySlug(slug));
     }
 
-    @Operation(summary = "User - API Get Product By Id")
-    @GetMapping(UrlConstant.Product.User.GET_BY_ID)
-    public ResponseEntity<?> getProductDetailsById(@PathVariable Long id) {
-        return VsResponseUtil.success(productService.userFindById(id));
-    }
-
-    @Operation(summary = "User - API Get Product By Slug")
-    @GetMapping(UrlConstant.Product.User.GET_BY_SLUG)
-    public ResponseEntity<?> getProductDetailsBySlug(@PathVariable String slug) {
-        return VsResponseUtil.success(productService.userFindBySlug(slug));
+    @Operation(summary = "API Search Products")
+    @GetMapping(UrlConstant.Product.SEARCH)
+    public ResponseEntity<?> searchProducts(
+            @RequestParam String keyword,
+            @ParameterObject PaginationSortRequestDTO requestDTO
+    ) {
+        return VsResponseUtil.success(productService.searchProducts(keyword, requestDTO));
     }
 }

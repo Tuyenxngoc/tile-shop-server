@@ -3,11 +3,11 @@ package com.example.tileshop.service;
 import com.example.tileshop.constant.OrderStatus;
 import com.example.tileshop.dto.common.CommonResponseDTO;
 import com.example.tileshop.dto.filter.OrderFilterRequestDTO;
-import com.example.tileshop.dto.order.OrderForUserResponseDTO;
 import com.example.tileshop.dto.order.OrderRequestDTO;
 import com.example.tileshop.dto.order.OrderResponseDTO;
 import com.example.tileshop.dto.pagination.PaginationFullRequestDTO;
 import com.example.tileshop.dto.pagination.PaginationResponseDTO;
+import com.example.tileshop.security.CustomUserDetails;
 
 import java.util.List;
 import java.util.Map;
@@ -21,9 +21,9 @@ public interface OrderService {
 
     Map<String, Long> countOrdersByStatus();
 
-    List<OrderForUserResponseDTO> userFindAll(String userId, OrderStatus status, String keyword);
+    List<OrderResponseDTO> userFindAll(String userId, OrderStatus status, String keyword);
 
-    OrderResponseDTO userFindById(Long id, String userId);
+    OrderResponseDTO userFindById(Long id, CustomUserDetails userDetails);
 
-    CommonResponseDTO createOrder(OrderRequestDTO orderRequestDTO, String userId);
+    CommonResponseDTO create(OrderRequestDTO orderRequestDTO, String userId);
 }

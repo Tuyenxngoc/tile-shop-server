@@ -3,7 +3,6 @@ package com.example.tileshop.service.impl;
 import com.example.tileshop.constant.*;
 import com.example.tileshop.dto.common.CommonResponseDTO;
 import com.example.tileshop.dto.filter.OrderFilterRequestDTO;
-import com.example.tileshop.dto.order.OrderForUserResponseDTO;
 import com.example.tileshop.dto.order.OrderPaymentResponseDTO;
 import com.example.tileshop.dto.order.OrderRequestDTO;
 import com.example.tileshop.dto.order.OrderResponseDTO;
@@ -19,6 +18,7 @@ import com.example.tileshop.repository.CartItemRepository;
 import com.example.tileshop.repository.OrderRepository;
 import com.example.tileshop.repository.ProductRepository;
 import com.example.tileshop.repository.UserRepository;
+import com.example.tileshop.security.CustomUserDetails;
 import com.example.tileshop.service.OrderService;
 import com.example.tileshop.specification.OrderSpecification;
 import com.example.tileshop.util.MessageUtil;
@@ -139,7 +139,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<OrderForUserResponseDTO> userFindAll(String userId, OrderStatus status, String keyword) {
+    public List<OrderResponseDTO> userFindAll(String userId, OrderStatus status, String keyword) {
         Specification<Order> spec = Specification.where(OrderSpecification.hasUserId(userId));
 
         if (status != null) {
@@ -153,18 +153,26 @@ public class OrderServiceImpl implements OrderService {
         List<Order> orders = orderRepository.findAll(spec);
 
         return orders.stream()
-                .map(OrderForUserResponseDTO::new)
+                .map(OrderMapper::toDTO)
                 .toList();
     }
 
     @Override
-    public OrderResponseDTO userFindById(Long id, String userId) {
-        return null;
+    public OrderResponseDTO userFindById(Long id, CustomUserDetails userDetails) {
+        boolean isAdmin = userDetails.getAuthorities().stream()
+                .anyMatch(auth -> auth.getAuthority().equals(RoleConstant.ROLE_ADMIN.name()));
+        if (isAdmin) {
+            return OrderMapper.toDTO(getEntity(id));
+        } else {
+            Order order = orderRepository.findByIdAndUserId(id, userDetails.getUserId())
+                    .orElseThrow(() -> new NotFoundException(ErrorMessage.Order.ERR_NOT_FOUND_ID, id));
+            return OrderMapper.toDTO(order);
+        }
     }
 
     @Override
     @Transactional
-    public CommonResponseDTO createOrder(OrderRequestDTO requestDTO, String userId) {
+    public CommonResponseDTO create(OrderRequestDTO requestDTO, String userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException(messageUtil.getMessage(ErrorMessage.User.ERR_NOT_FOUND_ID, userId)));
 

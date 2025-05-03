@@ -66,5 +66,4 @@ public class BrandController {
     public ResponseEntity<?> getBrandById(@PathVariable Long id) {
         return VsResponseUtil.success(brandService.findById(id));
     }
-
 }

@@ -43,7 +43,7 @@ public class CartController {
     @PutMapping(UrlConstant.Cart.UPDATE_ITEM)
     public ResponseEntity<?> updateCartItem(
             @PathVariable Long productId,
-            @RequestParam("quantity") int quantity,
+            @RequestParam("quantity") Integer quantity,
             @CurrentUser CustomUserDetails userDetails
     ) {
         return VsResponseUtil.success(cartService.updateCartItem(productId, quantity, userDetails.getUserId()));

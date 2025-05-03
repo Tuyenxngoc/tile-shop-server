@@ -3,7 +3,11 @@ package com.example.tileshop.service;
 import com.example.tileshop.dto.common.CommonResponseDTO;
 import com.example.tileshop.dto.pagination.PaginationFullRequestDTO;
 import com.example.tileshop.dto.pagination.PaginationResponseDTO;
-import com.example.tileshop.dto.product.*;
+import com.example.tileshop.dto.pagination.PaginationSortRequestDTO;
+import com.example.tileshop.dto.product.ProductDetailResponseDTO;
+import com.example.tileshop.dto.product.ProductRequestDTO;
+import com.example.tileshop.dto.product.ProductResponseDTO;
+import com.example.tileshop.dto.product.ProductUpdateResponseDTO;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -20,9 +24,7 @@ public interface ProductService {
 
     ProductUpdateResponseDTO findById(Long id);
 
-    PaginationResponseDTO<ProductForUserResponseDTO> userFindAll(PaginationFullRequestDTO requestDTO);
+    ProductDetailResponseDTO findBySlug(String slug);
 
-    ProductDetailResponseDTO userFindById(Long id);
-
-    ProductDetailResponseDTO userFindBySlug(String slug);
+    PaginationResponseDTO<ProductResponseDTO> searchProducts(String keyword, PaginationSortRequestDTO requestDTO);
 }
