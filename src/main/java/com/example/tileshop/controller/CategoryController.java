@@ -50,21 +50,18 @@ public class CategoryController {
     }
 
     @Operation(summary = "API Get Categories")
-    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping(UrlConstant.Category.GET_ALL)
     public ResponseEntity<?> getCategories(@ParameterObject PaginationFullRequestDTO requestDTO) {
         return VsResponseUtil.success(categoryService.findAll(requestDTO));
     }
 
     @Operation(summary = "API Get Category By Id")
-    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping(UrlConstant.Category.GET_BY_ID)
     public ResponseEntity<?> getCategoryById(@PathVariable Long id) {
         return VsResponseUtil.success(categoryService.findById(id));
     }
 
     @Operation(summary = "API Get Categories Tree")
-    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping(UrlConstant.Category.GET_TREE)
     public ResponseEntity<?> getCategoriesTree() {
         return VsResponseUtil.success(categoryService.getCategoriesTree());

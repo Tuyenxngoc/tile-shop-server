@@ -74,6 +74,7 @@ public class SecurityConfig {
 
             //Category
             "/api/v1/categories",
+            "/api/v1/categories/*",
 
             //Review
             "/api/v1/reviews/product/*",
