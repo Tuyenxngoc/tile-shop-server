@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.*;
 @RestApiV1
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-@Tag(name = "NewsCategory")
+@Tag(name = "News Category")
 public class NewsCategoryController {
     NewsCategoryService newsCategoryService;
 

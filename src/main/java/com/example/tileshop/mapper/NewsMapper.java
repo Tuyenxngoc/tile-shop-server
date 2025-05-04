@@ -1,5 +1,6 @@
 package com.example.tileshop.mapper;
 
+import com.example.tileshop.dto.common.BaseEntityDTO;
 import com.example.tileshop.dto.news.NewsRequestDTO;
 import com.example.tileshop.dto.news.NewsResponseDTO;
 import com.example.tileshop.entity.News;
@@ -11,8 +12,15 @@ public class NewsMapper {
         }
 
         NewsResponseDTO dto = new NewsResponseDTO();
-        // TODO: set fields từ News vào dto
-        // vd: dto.setId(news.getId());
+        dto.setCreatedDate(news.getCreatedDate());
+        dto.setLastModifiedDate(news.getLastModifiedDate());
+        dto.setId(news.getId());
+        dto.setTitle(news.getTitle());
+        dto.setSlug(news.getSlug());
+        dto.setDescription(news.getDescription());
+        dto.setContent(news.getContent());
+        dto.setImageUrl(news.getImageUrl());
+        dto.setCategory(new BaseEntityDTO(news.getCategory().getId(), news.getCategory().getName()));
 
         return dto;
     }

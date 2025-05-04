@@ -133,7 +133,7 @@ public class NewsServiceImpl implements NewsService {
         Page<News> page = newsRepository.findAll(specification, pageable);
 
         List<NewsResponseDTO> items = page.getContent().stream()
-                .map(NewsResponseDTO::new)
+                .map(NewsMapper::toDTO)
                 .toList();
 
         PagingMeta pagingMeta = PaginationUtil.buildPagingMeta(requestDTO, SortByDataConstant.NEWS, page);
@@ -149,7 +149,7 @@ public class NewsServiceImpl implements NewsService {
     public NewsResponseDTO findById(Long id) {
         News news = getEntity(id);
 
-        return new NewsResponseDTO(news);
+        return NewsMapper.toDTO(news);
     }
 
     @Override
@@ -157,6 +157,6 @@ public class NewsServiceImpl implements NewsService {
         News news = newsRepository.findBySlug(slug)
                 .orElseThrow(() -> new NotFoundException(ErrorMessage.News.ERR_NOT_FOUND_SLUG, slug));
 
-        return new NewsResponseDTO(news);
+        return NewsMapper.toDTO(news);
     }
 }

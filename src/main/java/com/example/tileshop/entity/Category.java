@@ -17,7 +17,10 @@ import java.util.List;
 @Entity
 @Table(
         name = "categories",
-        uniqueConstraints = @UniqueConstraint(name = "UK_CATEGORY_NAME", columnNames = "name")
+        uniqueConstraints = {
+                @UniqueConstraint(name = "UK_CATEGORY_NAME", columnNames = "name"),
+                @UniqueConstraint(name = "UK_CATEGORY_SLUG", columnNames = "slug")
+        }
 )
 public class Category extends DateAuditing {
     @Id
@@ -25,8 +28,14 @@ public class Category extends DateAuditing {
     @Column(name = "category_id")
     private Long id;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String name;
+
+    @Column(nullable = false)
+    private String slug;
+
+    @Column(name = "image_url", length = 512)
+    private String imageUrl;
 
     @ManyToOne
     @JoinColumn(name = "parent_id", foreignKey = @ForeignKey(name = "FK_CATEGORY_PARENT_ID"))

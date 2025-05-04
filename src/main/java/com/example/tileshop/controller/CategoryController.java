@@ -14,9 +14,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestApiV1
 @RequiredArgsConstructor
@@ -27,19 +29,23 @@ public class CategoryController {
 
     @Operation(summary = "API Create Category")
     @PreAuthorize("hasRole('ADMIN')")
-    @PostMapping(UrlConstant.Category.CREATE)
-    public ResponseEntity<?> createCategory(@Valid @RequestBody CategoryRequestDTO requestDTO) {
-        return VsResponseUtil.success(HttpStatus.CREATED, categoryService.save(requestDTO));
+    @PostMapping(value = UrlConstant.Category.CREATE, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> createCategory(
+            @RequestPart("category") @Valid CategoryRequestDTO requestDTO,
+            @RequestPart(value = "image", required = false) MultipartFile image
+    ) {
+        return VsResponseUtil.success(HttpStatus.CREATED, categoryService.save(requestDTO, image));
     }
 
     @Operation(summary = "API Update Category")
     @PreAuthorize("hasRole('ADMIN')")
-    @PutMapping(UrlConstant.Category.UPDATE)
+    @PutMapping(value = UrlConstant.Category.UPDATE, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> updateCategory(
             @PathVariable Long id,
-            @Valid @RequestBody CategoryRequestDTO requestDTO
+            @RequestPart("category") @Valid CategoryRequestDTO requestDTO,
+            @RequestPart(value = "image", required = false) MultipartFile image
     ) {
-        return VsResponseUtil.success(categoryService.update(id, requestDTO));
+        return VsResponseUtil.success(categoryService.update(id, requestDTO, image));
     }
 
     @Operation(summary = "API Delete Category")

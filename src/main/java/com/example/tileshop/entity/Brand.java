@@ -23,12 +23,15 @@ public class Brand extends DateAuditing {
     @Column(name = "brand_id")
     private Long id;
 
-    @Column(nullable = false, length = 100)
+    @Column(nullable = false)
     private String name;
+
+    @Column(nullable = false)
+    private String slug;
 
     private String description;
 
-    @Column(name = "logo_url")
+    @Column(name = "logo_url", length = 512)
     private String logoUrl;
 
     @OneToMany(mappedBy = "brand", cascade = CascadeType.ALL)

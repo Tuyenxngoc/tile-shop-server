@@ -27,19 +27,19 @@ public class News extends DateAuditing {
     @Column(name = "news_id")
     private Long id;
 
-    @Column(nullable = false, length = 500)
+    @Column(nullable = false)
     private String title;
 
-    @Column(nullable = false, length = 500)
+    @Column(nullable = false)
     private String slug;
 
-    @Column(nullable = false, length = 1500)
+    @Column(nullable = false, length = 500)
     private String description;
 
     @Column(columnDefinition = "LONGTEXT", nullable = false)
     private String content;
 
-    @Column(name = "image_url")
+    @Column(name = "image_url", length = 512)
     private String imageUrl;
 
     @ManyToOne

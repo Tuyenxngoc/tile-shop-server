@@ -3,6 +3,7 @@ package com.example.tileshop.controller;
 import com.example.tileshop.annotation.RestApiV1;
 import com.example.tileshop.service.VnPayService;
 import com.example.tileshop.util.VsResponseUtil;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 @RestApiV1
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@Tag(name = "Payment")
 public class PaymentController {
     VnPayService paymentService;
 

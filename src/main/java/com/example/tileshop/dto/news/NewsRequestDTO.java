@@ -17,17 +17,17 @@ import lombok.Setter;
 @AllArgsConstructor
 public class NewsRequestDTO {
     @NotBlank(message = ErrorMessage.INVALID_NOT_BLANK_FIELD)
-    @Size(min = 3, max = 500, message = ErrorMessage.INVALID_TEXT_LENGTH)
+    @Size(min = 3, max = 255, message = ErrorMessage.INVALID_TEXT_LENGTH)
     @JsonDeserialize(using = TrimStringDeserializer.class)
     private String title;
 
     @NotBlank(message = ErrorMessage.INVALID_NOT_BLANK_FIELD)
-    @Size(min = 3, max = 500, message = ErrorMessage.INVALID_TEXT_LENGTH)
+    @Size(max = 255, message = ErrorMessage.INVALID_TEXT_LENGTH)
     @JsonDeserialize(using = TrimStringDeserializer.class)
     private String slug;
 
     @NotBlank(message = ErrorMessage.INVALID_NOT_BLANK_FIELD)
-    @Size(min = 3, max = 1500, message = ErrorMessage.INVALID_TEXT_LENGTH)
+    @Size(max = 500, message = ErrorMessage.INVALID_TEXT_LENGTH)
     @JsonDeserialize(using = TrimStringDeserializer.class)
     private String description;
 

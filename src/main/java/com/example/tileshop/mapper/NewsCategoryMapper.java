@@ -10,8 +10,11 @@ public class NewsCategoryMapper {
         }
 
         NewsCategoryResponseDTO dto = new NewsCategoryResponseDTO();
-        // TODO: set fields từ NewsCategory vào dto
-        // vd: dto.setId(newscategory.getId());
+        dto.setCreatedDate(newscategory.getCreatedDate());
+        dto.setLastModifiedDate(newscategory.getLastModifiedDate());
+        dto.setId(newscategory.getId());
+        dto.setName(newscategory.getName());
+        dto.setSlug(newscategory.getSlug());
 
         return dto;
     }

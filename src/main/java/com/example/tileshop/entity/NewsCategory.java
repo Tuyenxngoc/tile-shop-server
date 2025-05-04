@@ -23,8 +23,11 @@ public class NewsCategory extends DateAuditing {
     @Column(name = "category_id")
     private Long id;
 
-    @Column(nullable = false, unique = true, length = 100)
+    @Column(nullable = false)
     private String name;
+
+    @Column(nullable = false)
+    private String slug;
 
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonIgnore

@@ -14,9 +14,11 @@ public class DataInitializer implements CommandLineRunner {
 
     private final UserService userService;
 
-    private final AttributeService attributeService;
+    private final BrandService brandService;
 
     private final CategoryService categoryService;
+
+    private final AttributeService attributeService;
 
     private final CategoryAttributeService categoryAttributeService;
 
@@ -26,6 +28,7 @@ public class DataInitializer implements CommandLineRunner {
     public void run(String... args) {
         roleService.init();
         userService.init();
+        brandService.init();
         attributeService.init();
         categoryService.init();
         categoryAttributeService.init();

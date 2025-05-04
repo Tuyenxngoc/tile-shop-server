@@ -27,6 +27,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -43,15 +44,53 @@ public class BrandServiceImpl implements BrandService {
     }
 
     @Override
-    public CommonResponseDTO save(BrandRequestDTO requestDTO, MultipartFile image) {
-        if (uploadFileUtil.isImageInvalid(image)) {
-            throw new BadRequestException(ErrorMessage.INVALID_FILE_TYPE);
+    public void init() {
+        if (brandRepository.count() > 0) {
+            return;
         }
 
-        String imageUrl = uploadFileUtil.uploadFile(image);
+        Map<String, String> brandNameSlugMap = Map.of(
+                "Morris", "bon-cau-morris",
+                "Innoci", "bon-cau-innoci",
+                "Grohe", "bon-cau-grohe",
+                "American Standard", "bon-cau-american-standard",
+                "Demuhler", "bon-cau-demuhler",
+                "Inax", "bon-cau-inax",
+                "Toto", "bon-cau-toto"
+        );
+
+        for (Map.Entry<String, String> entry : brandNameSlugMap.entrySet()) {
+            String name = entry.getKey();
+            String slug = entry.getValue();
+
+            if (!brandRepository.existsByName(name)) {
+                Brand brand = new Brand();
+                brand.setName(name);
+                brand.setSlug(slug);
+                brandRepository.save(brand);
+            }
+        }
+    }
+
+    @Override
+    public CommonResponseDTO save(BrandRequestDTO requestDTO, MultipartFile image) {
+        if (brandRepository.existsByName(requestDTO.getName())) {
+            throw new ConflictException(ErrorMessage.Brand.ERR_DUPLICATE_NAME, requestDTO.getName());
+        }
+
+        if (brandRepository.existsBySlug(requestDTO.getSlug())) {
+            throw new ConflictException(ErrorMessage.Brand.ERR_DUPLICATE_SLUG, requestDTO.getSlug());
+        }
 
         Brand brand = BrandMapper.toEntity(requestDTO);
-        brand.setLogoUrl(imageUrl);
+
+        if (image != null && !image.isEmpty()) {
+            if (uploadFileUtil.isImageInvalid(image)) {
+                throw new BadRequestException(ErrorMessage.INVALID_FILE_TYPE);
+            }
+            String imageUrl = uploadFileUtil.uploadFile(image);
+            brand.setLogoUrl(imageUrl);
+        }
 
         brandRepository.save(brand);
 
@@ -66,6 +105,13 @@ public class BrandServiceImpl implements BrandService {
         if (!requestDTO.getName().equals(brand.getName())) {
             if (brandRepository.existsByName(requestDTO.getName())) {
                 throw new ConflictException(ErrorMessage.Brand.ERR_DUPLICATE_NAME, requestDTO.getName());
+            }
+            brand.setName(requestDTO.getName());
+        }
+
+        if (!requestDTO.getSlug().equals(brand.getSlug())) {
+            if (brandRepository.existsBySlug(requestDTO.getSlug())) {
+                throw new ConflictException(ErrorMessage.Brand.ERR_DUPLICATE_SLUG, requestDTO.getSlug());
             }
             brand.setName(requestDTO.getName());
         }

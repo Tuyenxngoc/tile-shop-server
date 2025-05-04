@@ -11,9 +11,13 @@ import lombok.*;
 public class Slide implements Comparable<Slide> {
     @EqualsAndHashCode.Include
     private String id;
+
     private Long index;
+
     private String link;
+
     private String description;
+
     private String imageUrl;
 
     @Override

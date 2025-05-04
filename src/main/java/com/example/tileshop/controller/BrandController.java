@@ -32,7 +32,7 @@ public class BrandController {
     @PostMapping(value = UrlConstant.Brand.CREATE, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> createBrand(
             @RequestPart("brand") @Valid BrandRequestDTO requestDTO,
-            @RequestPart(value = "image") MultipartFile image
+            @RequestPart(value = "image", required = false) MultipartFile image
     ) {
         return VsResponseUtil.success(HttpStatus.CREATED, brandService.save(requestDTO, image));
     }

@@ -73,6 +73,7 @@ public class ErrorMessage {
     public static class Brand {
         public static final String ERR_NOT_FOUND_ID = "exception.brand.not.found.id";
         public static final String ERR_DUPLICATE_NAME = "exception.brand.duplicate.name";
+        public static final String ERR_DUPLICATE_SLUG = "exception.brand.duplicate.slug";
         public static final String ERR_DELETE_HAS_PRODUCTS = "exception.brand.delete.has.products";
     }
 
@@ -90,6 +91,7 @@ public class ErrorMessage {
     public static class Category {
         public static final String ERR_NOT_FOUND_ID = "exception.category.not.found.id";
         public static final String ERR_DUPLICATE_NAME = "exception.category.duplicate.name";
+        public static final String ERR_DUPLICATE_SLUG = "exception.category.duplicate.slug";
         public static final String ERR_SELF_PARENT = "exception.category.self.parent";
         public static final String ERR_CHILD_AS_PARENT = "exception.category.child.as.parent";
         public static final String ERR_HAS_CHILDREN = "exception.category.has.children";
@@ -108,6 +110,7 @@ public class ErrorMessage {
     public static class NewsCategory {
         public static final String ERR_NOT_FOUND_ID = "exception.news.category.not.found.id";
         public static final String ERR_DUPLICATE_NAME = "exception.news.category.duplicate.name";
+        public static final String ERR_DUPLICATE_SLUG = "exception.news.category.duplicate.slug";
         public static final String ERR_HAS_NEWS = "exception.news.category.has.news";
     }
 

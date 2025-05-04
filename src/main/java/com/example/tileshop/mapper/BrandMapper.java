@@ -11,8 +11,11 @@ public class BrandMapper {
         }
 
         BrandResponseDTO dto = new BrandResponseDTO();
+        dto.setCreatedDate(brand.getCreatedDate());
+        dto.setLastModifiedDate(brand.getLastModifiedDate());
         dto.setId(brand.getId());
         dto.setName(brand.getName());
+        dto.setSlug(brand.getSlug());
         dto.setDescription(brand.getDescription());
         dto.setLogoUrl(brand.getLogoUrl());
 
@@ -26,6 +29,7 @@ public class BrandMapper {
 
         Brand brand = new Brand();
         brand.setName(dto.getName());
+        brand.setSlug(dto.getSlug());
         brand.setDescription(dto.getDescription());
 
         return brand;

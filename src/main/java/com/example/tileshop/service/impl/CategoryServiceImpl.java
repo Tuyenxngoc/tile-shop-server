@@ -23,16 +23,15 @@ import com.example.tileshop.service.CategoryService;
 import com.example.tileshop.specification.CategorySpecification;
 import com.example.tileshop.util.MessageUtil;
 import com.example.tileshop.util.PaginationUtil;
+import com.example.tileshop.util.UploadFileUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -46,6 +45,8 @@ public class CategoryServiceImpl implements CategoryService {
 
     private final MessageUtil messageUtil;
 
+    private final UploadFileUtil uploadFileUtil;
+
     private Category getEntity(Long id) {
         return categoryRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException(ErrorMessage.Category.ERR_NOT_FOUND_ID, id));
@@ -57,51 +58,67 @@ public class CategoryServiceImpl implements CategoryService {
             return;
         }
 
-        List<String> c1 = List.of(
-                "Thiết Bị Vệ Sinh",
-                "Gạch Ốp Lát"
+        Map<String, String> parentCategoryMap = Map.of(
+                "Thiết Bị Vệ Sinh", "thiet-bi-ve-sinh",
+                "Gạch Ốp Lát", "gach-op-lat"
         );
 
-        List<String> c2_00 = List.of(
-                "Bồn Tắm",
-                "Phòng Xông Hơi",
-                "Bồn Cầu",
-                "Bồn Tiểu Nam",
-                "Lavabo",
-                "Sen Tắm",
-                "Vòi Lavabo",
-                "Combo Thiết Bị Vệ Sinh",
-                "Phụ Kiện Phòng Tắm",
-                "Điều Hoà Phòng Tắm"
+        Map<String, Map<String, String>> childCategoryMap = Map.of(
+                "Thiết Bị Vệ Sinh", Map.of(
+                        "Bồn Tắm", "bon-tam",
+                        "Phòng Xông Hơi", "phong-xong-hoi",
+                        "Bồn Cầu", "bon-cau",
+                        "Bồn Tiểu Nam", "bon-tieu-nam",
+                        "Lavabo", "lavabo",
+                        "Sen Tắm", "sen-tam",
+                        "Vòi Lavabo", "voi-lavabo",
+                        "Combo Thiết Bị Vệ Sinh", "combo-thiet-bi-ve-sinh",
+                        "Phụ Kiện Phòng Tắm", "phu-kien-phong-tam",
+                        "Điều Hoà Phòng Tắm", "dieu-hoa-phong-tam"
+                ),
+                "Gạch Ốp Lát", Map.of(
+                        "Gạch Lát Nền", "gach-lat-nen",
+                        "Gạch Ốp Tường", "gach-op-tuong"
+                )
         );
 
-        List<String> c2_01 = List.of(
-                "Gạch Lát Nền",
-                "Gạch Ốp Tường"
+        Map<String, Map<String, String>> subChildCategoryMap = Map.of(
+                "Phụ Kiện Phòng Tắm", Map.of(
+                        "Giá Khăn", "gia-khan",
+                        "Lô giấy", "lo-giay",
+                        "Thoát Sàn", "thoat-san",
+                        "Vòi xịt vệ sinh", "voi-xit-ve-sinh",
+                        "Giá treo đựng đồ", "gia-treo-dung-do",
+                        "Máy sấy tay", "may-say-tay",
+                        "Bộ phụ kiện", "bo-phu-kien"
+                )
         );
 
-        for (int i = 0; i < c1.size(); i++) {
-            String categoryName = c1.get(i);
-            Category category = new Category();
-            category.setName(categoryName);
-            category.setParent(null);
-            categoryRepository.save(category);
+        for (String parentName : parentCategoryMap.keySet()) {
+            Category parentCategory = new Category();
+            parentCategory.setName(parentName);
+            parentCategory.setSlug(parentCategoryMap.get(parentName));
+            parentCategory.setParent(null);
+            categoryRepository.save(parentCategory);
 
-            switch (i) {
-                case 0 -> {
-                    for (String subCategoryName : c2_00) {
-                        Category subCategory = new Category();
-                        subCategory.setName(subCategoryName);
-                        subCategory.setParent(category);
-                        categoryRepository.save(subCategory);
-                    }
-                }
-                case 1 -> {
-                    for (String subCategoryName : c2_01) {
-                        Category subCategory = new Category();
-                        subCategory.setName(subCategoryName);
-                        subCategory.setParent(category);
-                        categoryRepository.save(subCategory);
+            Map<String, String> subCategories = childCategoryMap.get(parentName);
+            if (subCategories != null) {
+                for (String childName : subCategories.keySet()) {
+                    Category childCategory = new Category();
+                    childCategory.setName(childName);
+                    childCategory.setSlug(subCategories.get(childName));
+                    childCategory.setParent(parentCategory);
+                    categoryRepository.save(childCategory);
+
+                    Map<String, String> subSubCategories = subChildCategoryMap.get(childName);
+                    if (subSubCategories != null) {
+                        for (String subChildName : subSubCategories.keySet()) {
+                            Category subChildCategory = new Category();
+                            subChildCategory.setName(subChildName);
+                            subChildCategory.setSlug(subSubCategories.get(subChildName));
+                            subChildCategory.setParent(childCategory);
+                            categoryRepository.save(subChildCategory);
+                        }
                     }
                 }
             }
@@ -109,39 +126,48 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public CommonResponseDTO save(CategoryRequestDTO requestDTO) {
+    public CommonResponseDTO save(CategoryRequestDTO requestDTO, MultipartFile image) {
         if (categoryRepository.existsByName(requestDTO.getName())) {
             throw new ConflictException(ErrorMessage.Category.ERR_DUPLICATE_NAME, requestDTO.getName());
         }
 
-        Category parentCategory = null;
-        if (requestDTO.getParentId() != null) {
-            parentCategory = getEntity(requestDTO.getParentId());
-        }
-
-        List<Attribute> attributes = null;
-        if (requestDTO.getAttributeIds() != null) {
-            attributes = attributeRepository.findAllById(requestDTO.getAttributeIds());
+        if (categoryRepository.existsBySlug(requestDTO.getSlug())) {
+            throw new ConflictException(ErrorMessage.Category.ERR_DUPLICATE_SLUG, requestDTO.getSlug());
         }
 
         Category category = new Category();
         category.setName(requestDTO.getName());
-        category.setParent(parentCategory);
+        category.setSlug(requestDTO.getSlug());
+
+        if (requestDTO.getParentId() != null) {
+            Category parentCategory = getEntity(requestDTO.getParentId());
+
+            category.setParent(parentCategory);
+        }
+
+        if (requestDTO.getAttributeIds() != null) {
+            List<Attribute> attributes = attributeRepository.findAllById(requestDTO.getAttributeIds());
+            List<CategoryAttribute> categoryAttributes = attributes.stream()
+                    .map(attribute -> {
+                        CategoryAttribute categoryAttribute = new CategoryAttribute();
+                        categoryAttribute.setCategory(category);
+                        categoryAttribute.setAttribute(attribute);
+                        return categoryAttribute;
+                    })
+                    .toList();
+
+            category.setCategoryAttributes(categoryAttributes);
+        }
+
+        if (image != null && !image.isEmpty()) {
+            if (uploadFileUtil.isImageInvalid(image)) {
+                throw new BadRequestException(ErrorMessage.INVALID_FILE_TYPE);
+            }
+            String imageUrl = uploadFileUtil.uploadFile(image);
+            category.setImageUrl(imageUrl);
+        }
 
         categoryRepository.save(category);
-
-        if (attributes != null) {
-            List<CategoryAttribute> categoryAttributes = new ArrayList<>();
-            for (Attribute attribute : attributes) {
-                CategoryAttribute categoryAttribute = new CategoryAttribute();
-                categoryAttribute.setCategory(category);
-                categoryAttribute.setAttribute(attribute);
-
-                categoryAttributes.add(categoryAttribute);
-            }
-
-            categoryAttributeRepository.saveAll(categoryAttributes);
-        }
 
         String message = messageUtil.getMessage(SuccessMessage.CREATE);
         return new CommonResponseDTO(message, category);
@@ -149,14 +175,21 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     @Transactional
-    public CommonResponseDTO update(Long id, CategoryRequestDTO requestDTO) {
+    public CommonResponseDTO update(Long id, CategoryRequestDTO requestDTO, MultipartFile image) {
         Category category = getEntity(id);
 
-        if (!category.getName().equals(requestDTO.getName())) {
+        if (!requestDTO.getName().equals(category.getName())) {
             if (categoryRepository.existsByName(requestDTO.getName())) {
                 throw new ConflictException(ErrorMessage.Category.ERR_DUPLICATE_NAME, requestDTO.getName());
             }
             category.setName(requestDTO.getName());
+        }
+
+        if (!requestDTO.getSlug().equals(category.getSlug())) {
+            if (categoryRepository.existsBySlug(requestDTO.getSlug())) {
+                throw new ConflictException(ErrorMessage.Category.ERR_DUPLICATE_SLUG, requestDTO.getSlug());
+            }
+            category.setSlug(requestDTO.getSlug());
         }
 
         if (requestDTO.getParentId() != null) {
@@ -172,6 +205,20 @@ public class CategoryServiceImpl implements CategoryService {
             category.setParent(newParent);
         } else {
             category.setParent(null);
+        }
+
+        if (image != null && !image.isEmpty()) {
+            if (uploadFileUtil.isImageInvalid(image)) {
+                throw new BadRequestException(ErrorMessage.INVALID_FILE_TYPE);
+            }
+            String oldImageUrl = category.getImageUrl();
+
+            String newImageUrl = uploadFileUtil.uploadFile(image);
+            category.setImageUrl(newImageUrl);
+
+            if (oldImageUrl != null) {
+                uploadFileUtil.destroyFileWithUrl(oldImageUrl);
+            }
         }
 
         // Lấy danh sách thuộc tính hiện tại

@@ -8,4 +8,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface NewsCategoryRepository extends JpaRepository<NewsCategory, Long>, JpaSpecificationExecutor<NewsCategory> {
     boolean existsByName(String name);
+
+    boolean existsBySlug(String slug);
 }

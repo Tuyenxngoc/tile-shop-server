@@ -16,9 +16,14 @@ import lombok.Setter;
 @AllArgsConstructor
 public class BrandRequestDTO {
     @NotBlank(message = ErrorMessage.INVALID_NOT_BLANK_FIELD)
-    @Size(min = 3, max = 100, message = ErrorMessage.INVALID_TEXT_LENGTH)
+    @Size(max = 255, message = ErrorMessage.INVALID_TEXT_LENGTH)
     @JsonDeserialize(using = TrimStringDeserializer.class)
     private String name;
+
+    @NotBlank(message = ErrorMessage.INVALID_NOT_BLANK_FIELD)
+    @Size(max = 255, message = ErrorMessage.INVALID_TEXT_LENGTH)
+    @JsonDeserialize(using = TrimStringDeserializer.class)
+    private String slug;
 
     @Size(max = 255, message = ErrorMessage.INVALID_TEXT_LENGTH)
     @JsonDeserialize(using = TrimStringDeserializer.class)

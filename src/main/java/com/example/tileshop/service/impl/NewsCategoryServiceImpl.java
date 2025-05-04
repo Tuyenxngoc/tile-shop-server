@@ -13,6 +13,7 @@ import com.example.tileshop.entity.NewsCategory;
 import com.example.tileshop.exception.BadRequestException;
 import com.example.tileshop.exception.ConflictException;
 import com.example.tileshop.exception.NotFoundException;
+import com.example.tileshop.mapper.NewsCategoryMapper;
 import com.example.tileshop.repository.NewsCategoryRepository;
 import com.example.tileshop.service.NewsCategoryService;
 import com.example.tileshop.specification.NewsCategorySpecification;
@@ -24,6 +25,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -43,20 +45,24 @@ public class NewsCategoryServiceImpl implements NewsCategoryService {
             return;
         }
 
-        List<String> categoryNames = List.of(
-                "Tư vấn thiết bị vệ sinh",
-                "Tư vấn thiết bị bếp",
-                "Khuyến mãi - Sự kiện",
-                "Cẩm nang thiết kế",
-                "Phong thủy",
-                "Hỏi đáp",
-                "Tuyển dụng"
+        Map<String, String> categorySlugMap = Map.of(
+                "Tư vấn thiết bị vệ sinh", "tu-van-thiet-bi-ve-sinh",
+                "Tư vấn thiết bị bếp", "tu-van-thiet-bi-bep",
+                "Khuyến mãi - Sự kiện", "khuyen-mai-su-kien",
+                "Cẩm nang thiết kế", "cam-nang-thiet-ke",
+                "Phong thủy", "phong-thuy",
+                "Hỏi đáp", "hoi-dap",
+                "Tuyển dụng", "tuyen-dung"
         );
 
-        for (String name : categoryNames) {
+        for (Map.Entry<String, String> entry : categorySlugMap.entrySet()) {
+            String name = entry.getKey();
+            String slug = entry.getValue();
+
             if (!newscategoryRepository.existsByName(name)) {
                 NewsCategory newsCategory = new NewsCategory();
                 newsCategory.setName(name);
+                newsCategory.setSlug(slug);
                 newscategoryRepository.save(newsCategory);
             }
         }
@@ -65,7 +71,11 @@ public class NewsCategoryServiceImpl implements NewsCategoryService {
     @Override
     public CommonResponseDTO save(NewsCategoryRequestDTO requestDTO) {
         if (newscategoryRepository.existsByName(requestDTO.getName())) {
-            throw new ConflictException(ErrorMessage.NewsCategory.ERR_NOT_FOUND_ID, requestDTO.getName());
+            throw new ConflictException(ErrorMessage.NewsCategory.ERR_DUPLICATE_NAME, requestDTO.getName());
+        }
+
+        if (newscategoryRepository.existsBySlug(requestDTO.getSlug())) {
+            throw new ConflictException(ErrorMessage.NewsCategory.ERR_DUPLICATE_SLUG, requestDTO.getSlug());
         }
 
         NewsCategory newsCategory = new NewsCategory();
@@ -81,11 +91,18 @@ public class NewsCategoryServiceImpl implements NewsCategoryService {
     public CommonResponseDTO update(Long id, NewsCategoryRequestDTO requestDTO) {
         NewsCategory newsCategory = getEntity(id);
 
-        if (!newsCategory.getName().equals(requestDTO.getName())) {
+        if (!requestDTO.getName().equals(newsCategory.getName())) {
             if (newscategoryRepository.existsByName(requestDTO.getName())) {
                 throw new ConflictException(ErrorMessage.NewsCategory.ERR_DUPLICATE_NAME, requestDTO.getName());
             }
             newsCategory.setName(requestDTO.getName());
+        }
+
+        if (!requestDTO.getSlug().equals(newsCategory.getSlug())) {
+            if (newscategoryRepository.existsBySlug(requestDTO.getSlug())) {
+                throw new ConflictException(ErrorMessage.NewsCategory.ERR_DUPLICATE_SLUG, requestDTO.getSlug());
+            }
+            newsCategory.setSlug(requestDTO.getSlug());
         }
 
         newscategoryRepository.save(newsCategory);
@@ -115,7 +132,7 @@ public class NewsCategoryServiceImpl implements NewsCategoryService {
         Page<NewsCategory> page = newscategoryRepository.findAll(NewsCategorySpecification.filterByField(requestDTO.getSearchBy(), requestDTO.getKeyword()), pageable);
 
         List<NewsCategoryResponseDTO> items = page.getContent().stream()
-                .map(NewsCategoryResponseDTO::new)
+                .map(NewsCategoryMapper::toDTO)
                 .toList();
 
         PagingMeta pagingMeta = PaginationUtil.buildPagingMeta(requestDTO, SortByDataConstant.NEWS_CATEGORY, page);
@@ -131,6 +148,6 @@ public class NewsCategoryServiceImpl implements NewsCategoryService {
     public NewsCategoryResponseDTO findById(Long id) {
         NewsCategory category = getEntity(id);
 
-        return new NewsCategoryResponseDTO(category);
+        return NewsCategoryMapper.toDTO(category);
     }
 }

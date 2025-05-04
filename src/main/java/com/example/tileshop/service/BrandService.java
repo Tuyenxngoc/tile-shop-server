@@ -8,6 +8,8 @@ import com.example.tileshop.dto.pagination.PaginationResponseDTO;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface BrandService {
+    void init();
+
     CommonResponseDTO save(BrandRequestDTO requestDTO, MultipartFile image);
 
     CommonResponseDTO update(Long id, BrandRequestDTO requestDTO, MultipartFile image);
