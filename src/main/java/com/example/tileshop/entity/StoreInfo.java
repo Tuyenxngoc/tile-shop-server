@@ -35,4 +35,6 @@ public class StoreInfo {
     private String bannerImage;
 
     private String backgroundImage;
+
+    private String backgroundColor;
 }

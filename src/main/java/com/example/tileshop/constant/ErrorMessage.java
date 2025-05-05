@@ -39,6 +39,7 @@ public class ErrorMessage {
     public static final String INVALID_MAXIMUM_SHORT = "invalid.maximum-short";
     public static final String INVALID_TEXT_LENGTH = "invalid.text.length";
     public static final String INVALID_KEYWORD_LENGTH = "invalid.keyword.length";
+    public static final String INVALID_COLOR_CODE = "invalid.color.code";
 
     //Date
     public static final String INVALID_DATE = "invalid.date-format";
