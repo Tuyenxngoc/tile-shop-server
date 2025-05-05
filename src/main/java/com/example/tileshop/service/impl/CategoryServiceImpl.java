@@ -281,6 +281,10 @@ public class CategoryServiceImpl implements CategoryService {
             throw new BadRequestException(ErrorMessage.Category.ERR_HAS_CHILDREN);
         }
 
+        if (!category.getProducts().isEmpty()) {
+            throw new BadRequestException(ErrorMessage.Category.ERR_HAS_PRODUCTS);
+        }
+
         categoryRepository.delete(category);
 
         String message = messageUtil.getMessage(SuccessMessage.DELETE);

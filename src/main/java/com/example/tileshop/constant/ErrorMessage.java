@@ -78,9 +78,7 @@ public class ErrorMessage {
     }
 
     public static class Cart {
-        public static final String ERR_NOT_FOUND_ID = "exception.cart.not.found.id";
         public static final String ERR_MAX_ITEMS = "exception.cart.max-items";
-        public static final String ERR_NOT_FOUND_ITEM_IN_CART = "exception.cart.item.not.found";
         public static final String ERR_EMPTY_CART = "exception.cart.empty";
     }
 
@@ -95,10 +93,10 @@ public class ErrorMessage {
         public static final String ERR_SELF_PARENT = "exception.category.self.parent";
         public static final String ERR_CHILD_AS_PARENT = "exception.category.child.as.parent";
         public static final String ERR_HAS_CHILDREN = "exception.category.has.children";
+        public static final String ERR_HAS_PRODUCTS = "exception.category.has.products";
     }
 
     public static class CategoryAttribute {
-        public static final String ERR_NOT_FOUND_ID = "exception.category.attribute.not.found.id";
     }
 
     public static class News {
@@ -126,7 +124,6 @@ public class ErrorMessage {
     }
 
     public static class OrderItem {
-        public static final String ERR_NOT_FOUND_ID = "exception.order-item.not.found.id";
     }
 
     public static class Product {
@@ -139,11 +136,9 @@ public class ErrorMessage {
     }
 
     public static class ProductAttribute {
-        public static final String ERR_NOT_FOUND_ID = "exception.product-attribute.not.found.id";
     }
 
     public static class ProductImage {
-        public static final String ERR_NOT_FOUND_ID = "exception.product-image.not.found.id";
     }
 
     public static class Review {

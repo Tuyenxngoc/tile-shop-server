@@ -80,6 +80,7 @@ public class NewsCategoryServiceImpl implements NewsCategoryService {
 
         NewsCategory newsCategory = new NewsCategory();
         newsCategory.setName(requestDTO.getName());
+        newsCategory.setSlug(requestDTO.getSlug());
 
         newscategoryRepository.save(newsCategory);
 

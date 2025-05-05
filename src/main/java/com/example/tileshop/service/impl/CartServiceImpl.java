@@ -101,7 +101,7 @@ public class CartServiceImpl implements CartService {
         Cart cart = getOrCreateCart(userId);
 
         CartItem cartItem = cartItemRepository.findByCartIdAndProductId(cart.getId(), productId)
-                .orElseThrow(() -> new NotFoundException(ErrorMessage.Cart.ERR_NOT_FOUND_ITEM_IN_CART, productId));
+                .orElseThrow(() -> new NotFoundException(ErrorMessage.CartItem.ERR_NOT_FOUND_ID, productId));
 
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new NotFoundException(ErrorMessage.Product.ERR_NOT_FOUND_ID, productId));
@@ -122,7 +122,7 @@ public class CartServiceImpl implements CartService {
         Cart cart = getOrCreateCart(userId);
 
         CartItem cartItem = cartItemRepository.findByCartIdAndProductId(cart.getId(), productId)
-                .orElseThrow(() -> new NotFoundException(ErrorMessage.Cart.ERR_NOT_FOUND_ITEM_IN_CART, productId));
+                .orElseThrow(() -> new NotFoundException(ErrorMessage.CartItem.ERR_NOT_FOUND_ID, productId));
 
         cartItemRepository.delete(cartItem);
 
