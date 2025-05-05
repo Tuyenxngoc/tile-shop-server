@@ -13,6 +13,8 @@ import java.util.List;
 @AllArgsConstructor
 public class CategoryTreeResponseDTO {
     private long id;
+
     private String name;
+
     private List<CategoryTreeResponseDTO> subCategories;
 }

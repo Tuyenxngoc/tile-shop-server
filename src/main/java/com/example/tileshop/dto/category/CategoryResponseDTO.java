@@ -1,9 +1,7 @@
 package com.example.tileshop.dto.category;
 
 import com.example.tileshop.dto.common.BaseEntityDTO;
-import com.example.tileshop.entity.Attribute;
-import com.example.tileshop.entity.Category;
-import com.example.tileshop.entity.CategoryAttribute;
+import com.example.tileshop.dto.common.DateAuditingDTO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,19 +13,16 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CategoryResponseDTO {
+public class CategoryResponseDTO extends DateAuditingDTO {
     private long id;
-    private String name;
-    private BaseEntityDTO parent;
-    private List<Long> attributeIds;
 
-    public CategoryResponseDTO(Category category) {
-        this.id = category.getId();
-        this.name = category.getName();
-        this.parent = category.getParent() != null ? new BaseEntityDTO(category.getParent().getId(), category.getParent().getName()) : null;
-        this.attributeIds = category.getCategoryAttributes().stream()
-                .map(CategoryAttribute::getAttribute)
-                .map(Attribute::getId)
-                .toList();
-    }
+    private String name;
+
+    private String slug;
+
+    private String imageUrl;
+
+    private BaseEntityDTO parent;
+
+    private List<Long> attributeIds;
 }

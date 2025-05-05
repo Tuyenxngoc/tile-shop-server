@@ -1,7 +1,11 @@
 package com.example.tileshop.mapper;
 
 import com.example.tileshop.dto.category.CategoryResponseDTO;
+import com.example.tileshop.dto.category.CategoryTreeResponseDTO;
+import com.example.tileshop.dto.common.BaseEntityDTO;
+import com.example.tileshop.entity.Attribute;
 import com.example.tileshop.entity.Category;
+import com.example.tileshop.entity.CategoryAttribute;
 
 public class CategoryMapper {
     public static CategoryResponseDTO toDTO(Category category) {
@@ -10,8 +14,31 @@ public class CategoryMapper {
         }
 
         CategoryResponseDTO dto = new CategoryResponseDTO();
-        // TODO: set fields từ Category vào dto
-        // vd: dto.setId(category.getId());
+        dto.setCreatedDate(category.getCreatedDate());
+        dto.setLastModifiedDate(category.getLastModifiedDate());
+        dto.setId(category.getId());
+        dto.setName(category.getName());
+        dto.setSlug(category.getSlug());
+        dto.setImageUrl(category.getImageUrl());
+        dto.setParent(category.getParent() != null
+                ? new BaseEntityDTO(category.getParent().getId(), category.getParent().getName())
+                : null);
+        dto.setAttributeIds(category.getCategoryAttributes().stream()
+                .map(CategoryAttribute::getAttribute)
+                .map(Attribute::getId)
+                .toList());
+
+        return dto;
+    }
+
+    public static CategoryTreeResponseDTO toCategoryTreeDTO(Category category) {
+        if (category == null) {
+            return null;
+        }
+
+        CategoryTreeResponseDTO dto = new CategoryTreeResponseDTO();
+        dto.setId(category.getId());
+        dto.setName(category.getName());
 
         return dto;
     }

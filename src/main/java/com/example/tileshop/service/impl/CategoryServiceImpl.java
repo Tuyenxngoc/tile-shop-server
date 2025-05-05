@@ -16,6 +16,7 @@ import com.example.tileshop.entity.CategoryAttribute;
 import com.example.tileshop.exception.BadRequestException;
 import com.example.tileshop.exception.ConflictException;
 import com.example.tileshop.exception.NotFoundException;
+import com.example.tileshop.mapper.CategoryMapper;
 import com.example.tileshop.repository.AttributeRepository;
 import com.example.tileshop.repository.CategoryAttributeRepository;
 import com.example.tileshop.repository.CategoryRepository;
@@ -298,7 +299,7 @@ public class CategoryServiceImpl implements CategoryService {
         Page<Category> page = categoryRepository.findAll(CategorySpecification.filterByField(requestDTO.getSearchBy(), requestDTO.getKeyword()), pageable);
 
         List<CategoryResponseDTO> items = page.getContent().stream()
-                .map(CategoryResponseDTO::new)
+                .map(CategoryMapper::toDTO)
                 .toList();
 
         PagingMeta pagingMeta = PaginationUtil.buildPagingMeta(requestDTO, SortByDataConstant.CATEGORY, page);
@@ -314,7 +315,7 @@ public class CategoryServiceImpl implements CategoryService {
     public CategoryResponseDTO findById(Long id) {
         Category category = getEntity(id);
 
-        return new CategoryResponseDTO(category);
+        return CategoryMapper.toDTO(category);
     }
 
     @Override
@@ -328,12 +329,9 @@ public class CategoryServiceImpl implements CategoryService {
         List<CategoryTreeResponseDTO> tree = new ArrayList<>();
         for (Category category : categories) {
             if ((parent == null && category.getParent() == null) || (parent != null && category.getParent() != null && category.getParent().getId().equals(parent.getId()))) {
-                CategoryTreeResponseDTO categoryTreeDTO = new CategoryTreeResponseDTO(
-                        category.getId(),
-                        category.getName(),
-                        buildCategoryTree(categories, category)
-                );
-                tree.add(categoryTreeDTO);
+                CategoryTreeResponseDTO dto = CategoryMapper.toCategoryTreeDTO(category);
+                dto.setSubCategories(buildCategoryTree(categories, category));
+                tree.add(dto);
             }
         }
         return tree;
