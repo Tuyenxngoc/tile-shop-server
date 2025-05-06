@@ -19,21 +19,21 @@ import lombok.Setter;
 @AllArgsConstructor
 public class StoreInfoRequestDTO {
     @NotBlank(message = ErrorMessage.INVALID_NOT_BLANK_FIELD)
-    @Size(min = 3, max = 255, message = ErrorMessage.INVALID_TEXT_LENGTH)
+    @Size(max = 255, message = ErrorMessage.INVALID_TEXT_LENGTH)
     @JsonDeserialize(using = TrimStringDeserializer.class)
     private String name;
 
     @NotBlank(message = ErrorMessage.INVALID_NOT_BLANK_FIELD)
-    @Size(min = 3, max = 255, message = ErrorMessage.INVALID_TEXT_LENGTH)
+    @Size(max = 255, message = ErrorMessage.INVALID_TEXT_LENGTH)
     @JsonDeserialize(using = TrimStringDeserializer.class)
     private String address;
 
     @NotBlank(message = ErrorMessage.INVALID_NOT_BLANK_FIELD)
-    @Size(min = 3, max = 255, message = ErrorMessage.INVALID_TEXT_LENGTH)
+    @Size(max = 20, message = ErrorMessage.INVALID_TEXT_LENGTH)
     @JsonDeserialize(using = TrimStringDeserializer.class)
     private String phone;
 
-    @Size(max = 255, message = ErrorMessage.INVALID_TEXT_LENGTH)
+    @Size(max = 20, message = ErrorMessage.INVALID_TEXT_LENGTH)
     @JsonDeserialize(using = TrimStringDeserializer.class)
     private String phoneSupport;
 
@@ -67,7 +67,6 @@ public class StoreInfoRequestDTO {
     private String bannerLink;
 
     @NotBlank(message = ErrorMessage.INVALID_NOT_BLANK_FIELD)
-    @Size(max = 255, message = ErrorMessage.INVALID_TEXT_LENGTH)
     @Pattern(regexp = CommonConstant.REGEXP_COLOR, message = ErrorMessage.INVALID_COLOR_CODE)
     @JsonDeserialize(using = TrimStringDeserializer.class)
     private String backgroundColor;

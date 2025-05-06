@@ -134,6 +134,7 @@ public class StoreInfoServiceImpl implements StoreInfoService {
             storeInfoCache.setYoutubeUrl(requestDTO.getYoutubeUrl());
             storeInfoCache.setZaloUrl(requestDTO.getZaloUrl());
             storeInfoCache.setBannerLink(requestDTO.getBannerLink());
+            storeInfoCache.setBackgroundColor(requestDTO.getBackgroundColor());
 
             writeStoreInfoToFile(storeInfoCache);
 
