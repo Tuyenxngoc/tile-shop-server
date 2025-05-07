@@ -16,5 +16,7 @@ public class CategoryTreeResponseDTO {
 
     private String name;
 
+    private String slug;
+
     private List<CategoryTreeResponseDTO> subCategories;
 }

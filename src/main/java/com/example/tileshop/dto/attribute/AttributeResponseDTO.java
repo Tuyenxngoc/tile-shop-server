@@ -1,5 +1,6 @@
 package com.example.tileshop.dto.attribute;
 
+import com.example.tileshop.dto.common.DateAuditingDTO;
 import com.example.tileshop.entity.Attribute;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -10,7 +11,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class AttributeResponseDTO {
+public class AttributeResponseDTO extends DateAuditingDTO {
     private long id;
 
     private String name;
@@ -20,6 +21,8 @@ public class AttributeResponseDTO {
     private String defaultValue;
 
     public AttributeResponseDTO(Attribute attribute) {
+        this.createdDate = attribute.getCreatedDate();
+        this.lastModifiedDate = attribute.getLastModifiedDate();
         this.id = attribute.getId();
         this.name = attribute.getName();
         this.isRequired = attribute.isRequired();

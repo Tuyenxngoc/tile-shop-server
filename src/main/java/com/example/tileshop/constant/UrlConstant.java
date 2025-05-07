@@ -15,6 +15,12 @@ public class UrlConstant {
         public static final String GET_CURRENT_USER = PRE_FIX + "/current";
     }
 
+    public static class Stat {
+        private static final String PRE_FIX = "/statistics";
+
+        public static final String GET_DASHBOARD_STATS = PRE_FIX + "/dashboard";
+    }
+
     public static class Attribute {
         private static final String PRE_FIX = "/attributes";
 

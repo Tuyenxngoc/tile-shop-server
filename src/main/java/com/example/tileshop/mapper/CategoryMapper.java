@@ -39,6 +39,7 @@ public class CategoryMapper {
         CategoryTreeResponseDTO dto = new CategoryTreeResponseDTO();
         dto.setId(category.getId());
         dto.setName(category.getName());
+        dto.setSlug(category.getSlug());
 
         return dto;
     }
