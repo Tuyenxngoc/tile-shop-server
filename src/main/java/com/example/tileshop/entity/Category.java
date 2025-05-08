@@ -17,6 +17,9 @@ import java.util.List;
 @Entity
 @Table(
         name = "categories",
+        indexes = {
+                @Index(name = "IDX_CATEGORY_PARENT_ID", columnList = "parent_id")
+        },
         uniqueConstraints = {
                 @UniqueConstraint(name = "UK_CATEGORY_NAME", columnNames = "name"),
                 @UniqueConstraint(name = "UK_CATEGORY_SLUG", columnNames = "slug")
@@ -33,6 +36,9 @@ public class Category extends DateAuditing {
 
     @Column(nullable = false)
     private String slug;
+
+    @Column(columnDefinition = "LONGTEXT")
+    private String description;
 
     @Column(name = "image_url", length = 512)
     private String imageUrl;

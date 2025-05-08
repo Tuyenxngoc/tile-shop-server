@@ -29,6 +29,7 @@ public class Brand extends DateAuditing {
     @Column(nullable = false)
     private String slug;
 
+    @Column(columnDefinition = "LONGTEXT")
     private String description;
 
     @Column(name = "logo_url", length = 512)

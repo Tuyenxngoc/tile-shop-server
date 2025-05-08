@@ -139,6 +139,7 @@ public class CategoryServiceImpl implements CategoryService {
         Category category = new Category();
         category.setName(requestDTO.getName());
         category.setSlug(requestDTO.getSlug());
+        category.setDescription(requestDTO.getDescription());
 
         if (requestDTO.getParentId() != null) {
             Category parentCategory = getEntity(requestDTO.getParentId());
@@ -192,6 +193,8 @@ public class CategoryServiceImpl implements CategoryService {
             }
             category.setSlug(requestDTO.getSlug());
         }
+
+        category.setDescription(requestDTO.getDescription());
 
         if (requestDTO.getParentId() != null) {
             if (requestDTO.getParentId().equals(id)) {

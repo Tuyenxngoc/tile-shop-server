@@ -19,6 +19,7 @@ public class CategoryMapper {
         dto.setId(category.getId());
         dto.setName(category.getName());
         dto.setSlug(category.getSlug());
+        dto.setDescription(category.getDescription());
         dto.setImageUrl(category.getImageUrl());
         dto.setParent(category.getParent() != null
                 ? new BaseEntityDTO(category.getParent().getId(), category.getParent().getName())

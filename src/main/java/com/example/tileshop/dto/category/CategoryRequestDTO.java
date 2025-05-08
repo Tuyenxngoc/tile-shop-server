@@ -28,6 +28,9 @@ public class CategoryRequestDTO {
     @JsonDeserialize(using = TrimStringDeserializer.class)
     private String slug;
 
+    @JsonDeserialize(using = TrimStringDeserializer.class)
+    private String description;
+
     private Long parentId;
 
     private Set<@NotNull(message = ErrorMessage.INVALID_SOME_THING_FIELD_IS_REQUIRED) Long> attributeIds;
