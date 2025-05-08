@@ -24,5 +24,7 @@ public class NewsResponseDTO extends DateAuditingDTO {
 
     private String imageUrl;
 
+    private long viewCount;
+
     private BaseEntityDTO category;
 }

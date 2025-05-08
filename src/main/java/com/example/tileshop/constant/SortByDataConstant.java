@@ -66,6 +66,12 @@ public enum SortByDataConstant implements SortByInterface {
         @Override
         public String getSortBy(String sortBy) {
             return switch (sortBy) {
+                case "title" -> "title";
+                case "slug" -> "slug";
+                case "viewCount" -> "view_count";
+                case "createdDate" -> "createdDate";
+                case "lastModifiedDate" -> "lastModifiedDate";
+                case "category" -> "category_id";
                 default -> "id";
             };
         }

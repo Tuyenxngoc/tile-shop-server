@@ -149,6 +149,9 @@ public class NewsServiceImpl implements NewsService {
     public NewsResponseDTO findById(Long id) {
         News news = getEntity(id);
 
+        news.setViewCount(news.getViewCount() + 1);
+        newsRepository.save(news);
+
         return NewsMapper.toDTO(news);
     }
 
@@ -156,6 +159,9 @@ public class NewsServiceImpl implements NewsService {
     public NewsResponseDTO findBySlug(String slug) {
         News news = newsRepository.findBySlug(slug)
                 .orElseThrow(() -> new NotFoundException(ErrorMessage.News.ERR_NOT_FOUND_SLUG, slug));
+
+        news.setViewCount(news.getViewCount() + 1);
+        newsRepository.save(news);
 
         return NewsMapper.toDTO(news);
     }

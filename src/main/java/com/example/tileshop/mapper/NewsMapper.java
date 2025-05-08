@@ -20,6 +20,7 @@ public class NewsMapper {
         dto.setDescription(news.getDescription());
         dto.setContent(news.getContent());
         dto.setImageUrl(news.getImageUrl());
+        dto.setViewCount(news.getViewCount());
         dto.setCategory(new BaseEntityDTO(news.getCategory().getId(), news.getCategory().getName()));
 
         return dto;

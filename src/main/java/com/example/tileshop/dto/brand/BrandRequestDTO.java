@@ -25,7 +25,6 @@ public class BrandRequestDTO {
     @JsonDeserialize(using = TrimStringDeserializer.class)
     private String slug;
 
-    @Size(max = 255, message = ErrorMessage.INVALID_TEXT_LENGTH)
     @JsonDeserialize(using = TrimStringDeserializer.class)
     private String description;
 }
