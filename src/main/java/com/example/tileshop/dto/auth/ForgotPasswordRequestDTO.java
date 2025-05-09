@@ -22,6 +22,5 @@ public class ForgotPasswordRequestDTO {
 
     @NotBlank(message = ErrorMessage.INVALID_NOT_BLANK_FIELD)
     @Email(message = ErrorMessage.INVALID_FORMAT_EMAIL)
-    @Size(min = 5, max = 255, message = ErrorMessage.INVALID_TEXT_LENGTH)
     private String email;
 }

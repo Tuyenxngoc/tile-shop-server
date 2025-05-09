@@ -33,7 +33,7 @@ public class News extends DateAuditing {
     @Column(nullable = false)
     private String slug;
 
-    @Column(nullable = false, length = 500)
+    @Column(nullable = false, length = 512)
     private String description;
 
     @Column(columnDefinition = "LONGTEXT", nullable = false)

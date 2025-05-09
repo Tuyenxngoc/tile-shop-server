@@ -33,7 +33,7 @@ public class Product extends DateAuditing {
     @Column(nullable = false)
     private String name;
 
-    @Column(nullable = false, length = 500)
+    @Column(nullable = false)
     private String slug;
 
     @Column(columnDefinition = "LONGTEXT", nullable = false)

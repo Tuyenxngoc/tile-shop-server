@@ -25,7 +25,7 @@ public class Review extends DateAuditing {
 
     private int rating;
 
-    @Column(name = "comment", length = 500)
+    @Column(name = "comment", length = 512)
     private String comment;
 
     @Enumerated(EnumType.STRING)
