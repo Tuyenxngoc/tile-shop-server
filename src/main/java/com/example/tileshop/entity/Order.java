@@ -1,9 +1,6 @@
 package com.example.tileshop.entity;
 
-import com.example.tileshop.constant.DeliveryMethod;
-import com.example.tileshop.constant.OrderStatus;
-import com.example.tileshop.constant.PaymentMethod;
-import com.example.tileshop.constant.PaymentStatus;
+import com.example.tileshop.constant.*;
 import com.example.tileshop.entity.common.DateAuditing;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
@@ -27,6 +24,7 @@ public class Order extends DateAuditing {
     @Column(name = "order_id")
     private Long id;
 
+    @Column(nullable = false)
     private double totalAmount;
 
     @Enumerated(EnumType.STRING)
@@ -35,12 +33,29 @@ public class Order extends DateAuditing {
     @Enumerated(EnumType.STRING)
     private DeliveryMethod deliveryMethod;
 
+    @Column(name = "recipient_name", nullable = false, length = 100)
+    private String recipientName;
+
+    @Enumerated(EnumType.STRING)
+    private Gender recipientGender;
+
+    @Column(name = "recipient_email", length = 100)
+    private String recipientEmail;
+
+    @Column(name = "recipient_phone", nullable = false, length = 20)
+    private String recipientPhone;
+
+    @Column(name = "shipping_address", nullable = false)
     private String shippingAddress;
 
     @Enumerated(EnumType.STRING)
     private PaymentMethod paymentMethod;
 
+    @Column(length = 512)
     private String note;
+
+    @Column(length = 512)
+    private String cancelReason;
 
     // Dữ liệu dành cho thanh toán online
     private String transactionId;
