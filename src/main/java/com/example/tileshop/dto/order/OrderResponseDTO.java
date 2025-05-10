@@ -1,9 +1,6 @@
 package com.example.tileshop.dto.order;
 
-import com.example.tileshop.constant.DeliveryMethod;
-import com.example.tileshop.constant.OrderStatus;
-import com.example.tileshop.constant.PaymentMethod;
-import com.example.tileshop.constant.PaymentStatus;
+import com.example.tileshop.constant.*;
 import com.example.tileshop.dto.orderitem.OrderItemResponseDTO;
 import com.example.tileshop.dto.user.UserResponseDTO;
 import com.example.tileshop.entity.common.DateAuditing;
@@ -28,11 +25,21 @@ public class OrderResponseDTO extends DateAuditing {
 
     private DeliveryMethod deliveryMethod;
 
+    private String recipientName;
+
+    private Gender recipientGender;
+
+    private String recipientEmail;
+
+    private String recipientPhone;
+
     private String shippingAddress;
 
     private PaymentMethod paymentMethod;
 
     private String note;
+
+    private String cancelReason;
 
     private String transactionId;
 

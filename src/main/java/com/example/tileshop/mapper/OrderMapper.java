@@ -17,9 +17,14 @@ public class OrderMapper {
         dto.setTotalAmount(order.getTotalAmount());
         dto.setStatus(order.getStatus());
         dto.setDeliveryMethod(order.getDeliveryMethod());
+        dto.setRecipientName(order.getRecipientName());
+        dto.setRecipientGender(order.getRecipientGender());
+        dto.setRecipientEmail(order.getRecipientEmail());
+        dto.setRecipientPhone(order.getRecipientPhone());
         dto.setShippingAddress(order.getShippingAddress());
         dto.setPaymentMethod(order.getPaymentMethod());
         dto.setNote(order.getNote());
+        dto.setCancelReason(order.getCancelReason());
         dto.setTransactionId(order.getTransactionId());
         dto.setPaymentStatus(order.getPaymentStatus());
         dto.setPaymentTime(order.getPaymentTime());

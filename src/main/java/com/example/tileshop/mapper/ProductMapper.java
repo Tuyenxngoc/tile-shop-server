@@ -48,6 +48,8 @@ public class ProductMapper {
                         ? product.getImages().getFirst().getImageUrl()
                         : null
         );
+        dto.setCategory(CategoryMapper.toSimpleDTO(product.getCategory()));
+
         return dto;
     }
 

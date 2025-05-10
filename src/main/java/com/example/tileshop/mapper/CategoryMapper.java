@@ -1,6 +1,7 @@
 package com.example.tileshop.mapper;
 
 import com.example.tileshop.dto.category.CategoryResponseDTO;
+import com.example.tileshop.dto.category.CategorySimpleDTO;
 import com.example.tileshop.dto.category.CategoryTreeResponseDTO;
 import com.example.tileshop.dto.common.BaseEntityDTO;
 import com.example.tileshop.entity.Attribute;
@@ -38,6 +39,19 @@ public class CategoryMapper {
         }
 
         CategoryTreeResponseDTO dto = new CategoryTreeResponseDTO();
+        dto.setId(category.getId());
+        dto.setName(category.getName());
+        dto.setSlug(category.getSlug());
+
+        return dto;
+    }
+
+    public static CategorySimpleDTO toSimpleDTO(Category category) {
+        if (category == null) {
+            return null;
+        }
+
+        CategorySimpleDTO dto = new CategorySimpleDTO();
         dto.setId(category.getId());
         dto.setName(category.getName());
         dto.setSlug(category.getSlug());

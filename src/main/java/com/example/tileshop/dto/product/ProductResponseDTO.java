@@ -1,5 +1,6 @@
 package com.example.tileshop.dto.product;
 
+import com.example.tileshop.dto.category.CategorySimpleDTO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -29,4 +30,6 @@ public class ProductResponseDTO {
     private double averageRating;
 
     private String imageUrl;
+
+    private CategorySimpleDTO category;
 }
