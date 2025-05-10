@@ -47,7 +47,6 @@ public class Order extends DateAuditing {
     @Column(nullable = false, length = 20)
     private String recipientPhone;
 
-    @Column(nullable = false)
     private String shippingAddress;
 
     @Enumerated(EnumType.STRING)

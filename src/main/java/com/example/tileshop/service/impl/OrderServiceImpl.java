@@ -182,20 +182,25 @@ public class OrderServiceImpl implements OrderService {
         }
 
         Order order = new Order();
+        order.setUser(user);
+        order.setStatus(OrderStatus.PENDING);
+        order.setRecipientGender(requestDTO.getGender());
+        order.setRecipientName(requestDTO.getFullName());
+        order.setRecipientPhone(requestDTO.getPhoneNumber());
+        order.setRecipientEmail(requestDTO.getEmail());
+        order.setNote(requestDTO.getNote());
 
+        // Nếu nhận hàng tại nhà thì cập nhật địa chỉ giao hàng
         order.setDeliveryMethod(requestDTO.getDeliveryMethod());
         if (!DeliveryMethod.STORE_PICKUP.equals(order.getDeliveryMethod())) {
             order.setShippingAddress(requestDTO.getShippingAddress());
         }
 
+        // Nếu không phải thanh toán khi nhận hàng thì cập nhật trang thái thanh toán là đang chờ
         order.setPaymentMethod(requestDTO.getPaymentMethod());
         if (!PaymentMethod.COD.equals(order.getPaymentMethod())) {
             order.setPaymentStatus(PaymentStatus.PENDING);
         }
-
-        order.setUser(user);
-        order.setNote(requestDTO.getNote());
-        order.setStatus(OrderStatus.PENDING);
 
         double totalAmount = 0.0;
         List<OrderItem> orderItems = new ArrayList<>();
