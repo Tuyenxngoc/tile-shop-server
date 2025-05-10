@@ -29,4 +29,6 @@ public interface OrderService {
     CommonResponseDTO create(OrderRequestDTO orderRequestDTO, String userId);
 
     CommonResponseDTO cancelOrder(Long id, CancelOrderRequestDTO requestDTO, CustomUserDetails userDetails);
+
+    byte[] generateOrderReport(OrderFilterRequestDTO filter);
 }

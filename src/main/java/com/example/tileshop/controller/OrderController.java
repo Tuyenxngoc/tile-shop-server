@@ -18,10 +18,14 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springdoc.core.annotations.ParameterObject;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @RestApiV1
 @RequiredArgsConstructor
@@ -51,6 +55,29 @@ public class OrderController {
     @GetMapping(UrlConstant.Order.Admin.COUNT_BY_STATUS)
     public ResponseEntity<?> countOrdersByStatus() {
         return VsResponseUtil.success(orderService.countOrdersByStatus());
+    }
+
+    @Operation(summary = "API Generate and Download Order Report")
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping(UrlConstant.Order.Admin.EXPORT_REPORT)
+    public ResponseEntity<byte[]> generateOrderReport(@ParameterObject OrderFilterRequestDTO filter) {
+        byte[] report = orderService.generateOrderReport(filter);
+
+        LocalDateTime fromDate = filter.getFromDate();
+        LocalDateTime toDate = filter.getToDate();
+
+        String statusString = filter.getStatus() != null ? filter.getStatus().toString() : "all";
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+        String fromDateString = (fromDate != null) ? fromDate.format(formatter) : "unknownFromDate";
+        String toDateString = (toDate != null) ? toDate.format(formatter) : "unknownToDate";
+
+        String fileName = String.format("Order.%s.%s_%s.xlsx", statusString, fromDateString, toDateString);
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + fileName)
+                .header(HttpHeaders.CONTENT_TYPE, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+                .body(report);
     }
 
     // -------------------- USER APIs --------------------

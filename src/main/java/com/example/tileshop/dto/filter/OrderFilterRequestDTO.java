@@ -15,9 +15,14 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class OrderFilterRequestDTO {
     private OrderStatus status;// Trạng thái đơn
+
     private PaymentMethod paymentMethod;// Phương thức thanh toán
+
     private Double minTotalAmount;// Tổng tiền từ
+
     private Double maxTotalAmount;// Tổng tiền đến
+
     private LocalDateTime fromDate;// Ngày tạo từ
+
     private LocalDateTime toDate;// Ngày tạo đến
 }

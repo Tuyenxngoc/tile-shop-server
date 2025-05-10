@@ -137,7 +137,7 @@ public class SecurityConfig {
         configuration.setAllowedOrigins(List.of("http://localhost:3000", "ws://localhost:8080"));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS", "HEAD"));
         configuration.setAllowedHeaders(List.of("authorization", "content-type", "x-auth-token", "X-Refresh-Token"));
-        configuration.setExposedHeaders(List.of("x-auth-token"));
+        configuration.setExposedHeaders(List.of("x-auth-token", "Content-Disposition", "Content-Type"));
         configuration.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();

@@ -112,6 +112,7 @@ public class UrlConstant {
             public static final String UPDATE_STATUS = PRE_FIX_ADMIN + "/{id}/status";
             public static final String DELETE = PRE_FIX_ADMIN + "/{id}";
             public static final String COUNT_BY_STATUS = PRE_FIX_ADMIN + "/count-by-status";
+            public static final String EXPORT_REPORT = PRE_FIX_ADMIN + "/export-report";
         }
 
         public static final class User {

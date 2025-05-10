@@ -25,14 +25,20 @@ import com.example.tileshop.specification.OrderSpecification;
 import com.example.tileshop.util.MessageUtil;
 import com.example.tileshop.util.PaginationUtil;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.*;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class OrderServiceImpl implements OrderService {
@@ -267,5 +273,73 @@ public class OrderServiceImpl implements OrderService {
 
         String message = messageUtil.getMessage(SuccessMessage.Order.ORDER_CANCELLED);
         return new CommonResponseDTO(message, OrderMapper.toDTO(order));
+    }
+
+    @Override
+    public byte[] generateOrderReport(OrderFilterRequestDTO filter) {
+        List<Order> orders = orderRepository.findAll(OrderSpecification.filterByConditions(filter));
+
+        // Tạo Workbook và Sheet
+        Workbook workbook = new XSSFWorkbook();
+        Sheet sheet = workbook.createSheet("orders");
+
+        Font headerFont = workbook.createFont();
+        headerFont.setBold(true);
+        headerFont.setFontHeightInPoints((short) 12);
+
+        CellStyle headerCellStyle = workbook.createCellStyle();
+        headerCellStyle.setFont(headerFont);
+        headerCellStyle.setAlignment(HorizontalAlignment.CENTER);
+        headerCellStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+
+        CellStyle dataCellStyle = workbook.createCellStyle();
+        dataCellStyle.setAlignment(HorizontalAlignment.LEFT);
+
+        // Tạo tiêu đề cột
+        Row headerRow = sheet.createRow(0);
+        String[] headers = {"Mã đơn hàng", "Mã người dùng", "Tên người nhận", "Số điện thoại người nhận",
+                "Tổng tiền", "Phương thức thanh toán", "Trạng thái", "Ngày tạo"};
+
+        // Ghi tiêu đề vào các cột
+        for (int i = 0; i < headers.length; i++) {
+            Cell cell = headerRow.createCell(i);
+            cell.setCellValue(headers[i]);
+            cell.setCellStyle(headerCellStyle);
+        }
+
+        // Điền dữ liệu vào các dòng của bảng
+        int rowNum = 1;
+        for (Order order : orders) {
+            Row row = sheet.createRow(rowNum++);
+            Object[] values = {
+                    order.getId(),
+                    order.getUser().getId(),
+                    order.getRecipientName(),
+                    order.getRecipientPhone(),
+                    order.getTotalAmount(),
+                    order.getPaymentMethod().name(),
+                    order.getStatus().name(),
+                    order.getCreatedDate().toString()
+            };
+
+            for (int i = 0; i < values.length; i++) {
+                Cell cell = row.createCell(i);
+                cell.setCellValue(values[i].toString());
+                cell.setCellStyle(dataCellStyle);
+            }
+        }
+
+        // Tự động điều chỉnh độ rộng cột
+        for (int i = 0; i < headers.length; i++) {
+            sheet.autoSizeColumn(i);
+        }
+
+        try (ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream()) {
+            workbook.write(byteArrayOutputStream);
+            return byteArrayOutputStream.toByteArray();
+        } catch (IOException e) {
+            log.error("Error while generating Excel report", e);
+            throw new RuntimeException("Error while generating Excel report", e);
+        }
     }
 }
