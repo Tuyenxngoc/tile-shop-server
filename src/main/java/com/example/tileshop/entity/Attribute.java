@@ -29,7 +29,6 @@ public class Attribute extends DateAuditing {
     @Column(nullable = false)
     private boolean isRequired = false;
 
-    @Column
     private String defaultValue;
 
     @OneToMany(mappedBy = "attribute", cascade = CascadeType.ALL, orphanRemoval = true)

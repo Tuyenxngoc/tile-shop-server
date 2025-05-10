@@ -15,10 +15,10 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @Getter
 public abstract class UserAuditing {
     @CreatedBy
-    @Column(name = "created_by", updatable = false, nullable = false)
+    @Column(updatable = false, nullable = false)
     protected String createdBy;
 
     @LastModifiedBy
-    @Column(name = "last_modified_by", nullable = false)
+    @Column(nullable = false)
     protected String lastModifiedBy;
 }

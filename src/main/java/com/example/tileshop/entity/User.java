@@ -28,23 +28,21 @@ public class User extends ActiveAuditing {
     @Column(name = "user_id", columnDefinition = "CHAR(36)")
     private String id;
 
-    @Column(name = "username", nullable = false)
+    @Column(nullable = false)
     private String username;
 
-    @Column(name = "password", nullable = false)
+    @Column(nullable = false)
     @JsonIgnore
     private String password;
 
-    @Column(name = "email", nullable = false)
+    @Column(nullable = false)
     private String email;
 
-    @Column(name = "phone_number", nullable = false)
+    @Column(nullable = false)
     private String phoneNumber;
 
-    @Column(name = "full_name")
     private String fullName;
 
-    @Column(name = "address")
     private String address;
 
     @Enumerated(EnumType.STRING)

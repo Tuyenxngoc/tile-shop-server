@@ -39,11 +39,11 @@ public class News extends DateAuditing {
     @Column(columnDefinition = "LONGTEXT", nullable = false)
     private String content;
 
-    @Column(name = "image_url", length = 512)
+    @Column(length = 512)
     private String imageUrl;
 
-    @Column(name = "view_count")
-    private Long viewCount = 0L;
+    @Column(nullable = false)
+    private long viewCount;
 
     @ManyToOne
     @JoinColumn(name = "category_id", foreignKey = @ForeignKey(name = "FK_NEWS_CATEGORY_ID"), nullable = false)

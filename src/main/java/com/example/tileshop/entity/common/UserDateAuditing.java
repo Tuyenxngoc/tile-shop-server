@@ -15,10 +15,10 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @EntityListeners(AuditingEntityListener.class)
 public abstract class UserDateAuditing extends DateAuditing {
     @CreatedBy
-    @Column(name = "created_by", updatable = false, nullable = false)
+    @Column(updatable = false, nullable = false)
     protected String createdBy;
 
     @LastModifiedBy
-    @Column(name = "last_modified_by", nullable = false)
+    @Column(nullable = false)
     protected String lastModifiedBy;
 }

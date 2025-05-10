@@ -9,6 +9,6 @@ import lombok.Setter;
 @Getter
 @MappedSuperclass
 public abstract class SoftDeleteAuditing extends DateAuditing {
-    @Column(name = "delete_flag", nullable = false)
+    @Column(nullable = false)
     protected Boolean deleteFlag = Boolean.FALSE;
 }

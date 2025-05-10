@@ -18,6 +18,7 @@ public class ProductAttribute {
     @Column(name = "product_attribute_id")
     private Long id;
 
+    @Column(nullable = false)
     private String value;
 
     @ManyToOne

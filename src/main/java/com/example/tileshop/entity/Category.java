@@ -40,7 +40,7 @@ public class Category extends DateAuditing {
     @Column(columnDefinition = "LONGTEXT")
     private String description;
 
-    @Column(name = "image_url", length = 512)
+    @Column(length = 512)
     private String imageUrl;
 
     @ManyToOne

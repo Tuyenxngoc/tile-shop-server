@@ -28,7 +28,7 @@ public class Role extends DateAuditing {
     private String name;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "code", nullable = false)
+    @Column(nullable = false)
     private RoleConstant code;
 
     @OneToMany(mappedBy = "role", cascade = CascadeType.ALL, fetch = FetchType.LAZY)

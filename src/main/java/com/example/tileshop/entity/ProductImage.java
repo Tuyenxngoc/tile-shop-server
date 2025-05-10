@@ -18,7 +18,7 @@ public class ProductImage {
     @Column(name = "product_image_id")
     private Long id;
 
-    @Column(name = "image_url", nullable = false, length = 512)
+    @Column(nullable = false, length = 512)
     private String imageUrl;
 
     @ManyToOne

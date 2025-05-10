@@ -18,8 +18,10 @@ public class OrderItem {
     @Column(name = "order_item_id")
     private Long id;
 
+    @Column(nullable = false)
     private int quantity;
 
+    @Column(nullable = false)
     private double priceAtTimeOfOrder;
 
     @ManyToOne

@@ -9,6 +9,6 @@ import lombok.Setter;
 @Getter
 @MappedSuperclass
 public abstract class ActiveAuditing extends DateAuditing {
-    @Column(name = "active_flag", nullable = false)
+    @Column(nullable = false)
     protected Boolean activeFlag = Boolean.TRUE;
 }

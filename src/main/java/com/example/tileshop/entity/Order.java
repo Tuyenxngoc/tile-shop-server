@@ -28,27 +28,30 @@ public class Order extends DateAuditing {
     private double totalAmount;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private OrderStatus status;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private DeliveryMethod deliveryMethod;
 
-    @Column(name = "recipient_name", nullable = false, length = 100)
+    @Column(nullable = false, length = 100)
     private String recipientName;
 
     @Enumerated(EnumType.STRING)
     private Gender recipientGender;
 
-    @Column(name = "recipient_email", length = 100)
+    @Column(length = 100)
     private String recipientEmail;
 
-    @Column(name = "recipient_phone", nullable = false, length = 20)
+    @Column(nullable = false, length = 20)
     private String recipientPhone;
 
-    @Column(name = "shipping_address", nullable = false)
+    @Column(nullable = false)
     private String shippingAddress;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private PaymentMethod paymentMethod;
 
     @Column(length = 512)

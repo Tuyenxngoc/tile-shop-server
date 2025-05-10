@@ -43,13 +43,13 @@ public class Product extends DateAuditing {
     private double price;
 
     @Column(nullable = false)
-    private int discountPercentage = 0;
+    private int discountPercentage;
 
     @Column(nullable = false)
     private int stockQuantity;
 
     @Column(nullable = false)
-    private double averageRating = 0.0;
+    private double averageRating;
 
     @ManyToOne
     @JoinColumn(name = "category_id", foreignKey = @ForeignKey(name = "FK_PRODUCT_CATEGORY_ID"), nullable = false)

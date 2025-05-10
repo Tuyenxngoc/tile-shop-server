@@ -63,6 +63,7 @@ public class NewsServiceImpl implements NewsService {
         News news = NewsMapper.toEntity(requestDTO);
         news.setCategory(newsCategory);
         news.setImageUrl(newImageUrl);
+        news.setViewCount(0);
 
         newsRepository.save(news);
 

@@ -25,11 +25,11 @@ public class Review extends DateAuditing {
 
     private int rating;
 
-    @Column(name = "comment", length = 512)
+    @Column(length = 512)
     private String comment;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "status", nullable = false)
+    @Column(nullable = false)
     private ReviewStatus status = ReviewStatus.PENDING;
 
     private String approvedBy;

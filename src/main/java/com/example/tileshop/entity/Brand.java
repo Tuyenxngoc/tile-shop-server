@@ -32,10 +32,10 @@ public class Brand extends DateAuditing {
     @Column(columnDefinition = "LONGTEXT")
     private String description;
 
-    @Column(name = "logo_url", length = 512)
+    @Column(length = 512)
     private String logoUrl;
 
-    @OneToMany(mappedBy = "brand", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "brand", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonIgnore
     private List<Product> products = new ArrayList<>();
 }
