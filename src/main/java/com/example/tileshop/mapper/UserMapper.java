@@ -1,5 +1,6 @@
 package com.example.tileshop.mapper;
 
+import com.example.tileshop.dto.common.BaseEntityDTO;
 import com.example.tileshop.dto.user.UserResponseDTO;
 import com.example.tileshop.entity.User;
 
@@ -10,8 +11,15 @@ public class UserMapper {
         }
 
         UserResponseDTO dto = new UserResponseDTO();
-        // TODO: set fields từ User vào dto
-        // vd: dto.setId(user.getId());
+        dto.setId(user.getId());
+        dto.setUsername(user.getUsername());
+        dto.setEmail(user.getEmail());
+        dto.setPhoneNumber(user.getPhoneNumber());
+        dto.setFullName(user.getFullName());
+        dto.setAddress(user.getAddress());
+        dto.setGender(user.getGender());
+        dto.setActiveFlag(user.getActiveFlag());
+        dto.setRole(new BaseEntityDTO(user.getRole().getId(), user.getRole().getName()));
 
         return dto;
     }

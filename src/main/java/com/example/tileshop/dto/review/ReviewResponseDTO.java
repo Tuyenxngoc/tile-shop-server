@@ -7,6 +7,7 @@ import com.example.tileshop.dto.user.UserResponseDTO;
 import com.example.tileshop.entity.Review;
 import com.example.tileshop.entity.ReviewImage;
 import com.example.tileshop.mapper.ProductMapper;
+import com.example.tileshop.mapper.UserMapper;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -41,7 +42,7 @@ public class ReviewResponseDTO extends DateAuditingDTO {
         this.comment = review.getComment();
         this.status = review.getStatus();
         this.images = review.getImages().stream().map(ReviewImage::getImageUrl).toList();
-        this.user = new UserResponseDTO(review.getUser());
+        this.user = UserMapper.toDTO(review.getUser());
         this.product = ProductMapper.toResponseDTO(review.getProduct());
     }
 }

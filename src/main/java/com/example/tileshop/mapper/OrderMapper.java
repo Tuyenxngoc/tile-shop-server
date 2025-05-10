@@ -1,7 +1,6 @@
 package com.example.tileshop.mapper;
 
 import com.example.tileshop.dto.order.OrderResponseDTO;
-import com.example.tileshop.dto.user.UserResponseDTO;
 import com.example.tileshop.entity.Order;
 
 public class OrderMapper {
@@ -29,7 +28,7 @@ public class OrderMapper {
         dto.setPaymentStatus(order.getPaymentStatus());
         dto.setPaymentTime(order.getPaymentTime());
         dto.setResponseCode(order.getResponseCode());
-        dto.setUser(new UserResponseDTO(order.getUser()));
+        dto.setUser(UserMapper.toDTO(order.getUser()));
         dto.setOrderItems(order.getOrderItems().stream()
                 .map(OrderItemMapper::toDTO)
                 .toList());

@@ -16,6 +16,7 @@ import com.example.tileshop.exception.BadRequestException;
 import com.example.tileshop.exception.ConflictException;
 import com.example.tileshop.exception.ForbiddenException;
 import com.example.tileshop.exception.NotFoundException;
+import com.example.tileshop.mapper.UserMapper;
 import com.example.tileshop.repository.RoleRepository;
 import com.example.tileshop.repository.UserRepository;
 import com.example.tileshop.service.UserService;
@@ -100,7 +101,7 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
 
         String message = messageUtil.getMessage(SuccessMessage.CREATE);
-        return new CommonResponseDTO(message, new UserResponseDTO(user));
+        return new CommonResponseDTO(message, UserMapper.toDTO(user));
     }
 
     @Override
@@ -131,7 +132,7 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
 
         String message = messageUtil.getMessage(SuccessMessage.UPDATE);
-        return new CommonResponseDTO(message, new UserResponseDTO(user));
+        return new CommonResponseDTO(message, UserMapper.toDTO(user));
     }
 
     @Override
@@ -165,7 +166,7 @@ public class UserServiceImpl implements UserService {
         Page<User> page = userRepository.findAll(spec, pageable);
 
         List<UserResponseDTO> items = page.getContent().stream()
-                .map(UserResponseDTO::new)
+                .map(UserMapper::toDTO)
                 .toList();
 
         PagingMeta pagingMeta = PaginationUtil.buildPagingMeta(requestDTO, SortByDataConstant.USER, page);
@@ -181,7 +182,7 @@ public class UserServiceImpl implements UserService {
     public UserResponseDTO findById(String id) {
         User user = getEntity(id);
 
-        return new UserResponseDTO(user);
+        return UserMapper.toDTO(user);
     }
 
     @Override

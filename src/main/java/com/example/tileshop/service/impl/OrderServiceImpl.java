@@ -246,7 +246,7 @@ public class OrderServiceImpl implements OrderService {
     public CommonResponseDTO cancelOrder(Long id, CancelOrderRequestDTO requestDTO, CustomUserDetails userDetails) {
         Order order = getEntity(id);
 
-        // Kiểm tra quyền truy cập của người dùng, chỉ cho phép người đặt đơn hoặc admin hủy
+        // Kiểm tra quyền truy cập của người dùng, chỉ cho phép người đặt đơn hoặc admin hủy todo
         if (!order.getUser().getId().equals(userDetails.getUserId()) && userDetails.getAuthorities().stream()
                 .noneMatch(auth -> auth.getAuthority().equals(RoleConstant.ROLE_ADMIN.name()))) {
             throw new BadRequestException(ErrorMessage.Order.ERR_NOT_FOUND_ID, id);

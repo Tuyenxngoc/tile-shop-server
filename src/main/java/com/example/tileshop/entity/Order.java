@@ -70,7 +70,7 @@ public class Order extends DateAuditing {
     private String responseCode;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "FK_ORDER_USER_ID"), nullable = false)
+    @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "FK_ORDER_USER_ID"))
     @JsonIgnore
     private User user;
 
