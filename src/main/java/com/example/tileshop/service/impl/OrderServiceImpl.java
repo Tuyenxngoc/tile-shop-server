@@ -36,6 +36,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @Slf4j
@@ -246,9 +247,13 @@ public class OrderServiceImpl implements OrderService {
     public CommonResponseDTO cancelOrder(Long id, CancelOrderRequestDTO requestDTO, CustomUserDetails userDetails) {
         Order order = getEntity(id);
 
-        // Kiểm tra quyền truy cập của người dùng, chỉ cho phép người đặt đơn hoặc admin hủy todo
-        if (!order.getUser().getId().equals(userDetails.getUserId()) && userDetails.getAuthorities().stream()
-                .noneMatch(auth -> auth.getAuthority().equals(RoleConstant.ROLE_ADMIN.name()))) {
+        // Kiểm tra quyền truy cập của người dùng: chỉ cho phép người đặt đơn hoặc admin hủy
+        boolean isAdmin = userDetails.getAuthorities().stream()
+                .anyMatch(auth -> auth.getAuthority().equals(RoleConstant.ROLE_ADMIN.name()));
+
+        boolean isOrderOwner = order.getUser() != null && order.getUser().getId().equals(userDetails.getUserId());
+
+        if (!isOrderOwner && !isAdmin) {
             throw new BadRequestException(ErrorMessage.Order.ERR_NOT_FOUND_ID, id);
         }
 
@@ -297,8 +302,19 @@ public class OrderServiceImpl implements OrderService {
 
         // Tạo tiêu đề cột
         Row headerRow = sheet.createRow(0);
-        String[] headers = {"Mã đơn hàng", "Mã người dùng", "Tên người nhận", "Số điện thoại người nhận",
-                "Tổng tiền", "Phương thức thanh toán", "Trạng thái", "Ngày tạo"};
+        String[] headers = {
+                "Mã đơn hàng",
+                "Tên người nhận",
+                "Số điện thoại",
+                "Email",
+                "Địa chỉ giao hàng",
+                "Tổng tiền",
+                "Phương thức thanh toán",
+                "Tình trạng đơn hàng",
+                "Trạng thái thanh toán",
+                "Lý do hủy",
+                "Ngày tạo đơn"
+        };
 
         // Ghi tiêu đề vào các cột
         for (int i = 0; i < headers.length; i++) {
@@ -308,18 +324,22 @@ public class OrderServiceImpl implements OrderService {
         }
 
         // Điền dữ liệu vào các dòng của bảng
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         int rowNum = 1;
         for (Order order : orders) {
             Row row = sheet.createRow(rowNum++);
             Object[] values = {
                     order.getId(),
-                    order.getUser().getId(),
                     order.getRecipientName(),
                     order.getRecipientPhone(),
+                    order.getRecipientEmail() != null ? order.getRecipientEmail() : "",
+                    order.getShippingAddress() != null ? order.getShippingAddress() : "",
                     order.getTotalAmount(),
                     order.getPaymentMethod().name(),
                     order.getStatus().name(),
-                    order.getCreatedDate().toString()
+                    order.getPaymentStatus() != null ? order.getPaymentStatus().name() : "",
+                    order.getCancelReason() != null ? order.getCancelReason() : "",
+                    order.getCreatedDate() != null ? order.getCreatedDate().format(dateTimeFormatter) : ""
             };
 
             for (int i = 0; i < values.length; i++) {
