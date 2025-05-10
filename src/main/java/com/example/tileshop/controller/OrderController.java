@@ -5,6 +5,7 @@ import com.example.tileshop.annotation.RestApiV1;
 import com.example.tileshop.constant.OrderStatus;
 import com.example.tileshop.constant.UrlConstant;
 import com.example.tileshop.dto.filter.OrderFilterRequestDTO;
+import com.example.tileshop.dto.order.CancelOrderRequestDTO;
 import com.example.tileshop.dto.order.OrderRequestDTO;
 import com.example.tileshop.dto.pagination.PaginationFullRequestDTO;
 import com.example.tileshop.security.CustomUserDetails;
@@ -72,7 +73,13 @@ public class OrderController {
 
     @Operation(summary = "API Create Order")
     @PostMapping(UrlConstant.Order.User.CREATE)
-    public ResponseEntity<?> createOrder(@Valid @RequestBody OrderRequestDTO orderRequestDTO, @CurrentUser CustomUserDetails userDetails) {
-        return VsResponseUtil.success(HttpStatus.CREATED, orderService.create(orderRequestDTO, userDetails.getUserId()));
+    public ResponseEntity<?> createOrder(@Valid @RequestBody OrderRequestDTO requestDTO, @CurrentUser CustomUserDetails userDetails) {
+        return VsResponseUtil.success(HttpStatus.CREATED, orderService.create(requestDTO, userDetails.getUserId()));
+    }
+
+    @Operation(summary = "API Cancel Order")
+    @PutMapping(UrlConstant.Order.User.CANCEL)
+    public ResponseEntity<?> cancelOrder(@PathVariable Long id, @Valid @RequestBody CancelOrderRequestDTO requestDTO, @CurrentUser CustomUserDetails userDetails) {
+        return VsResponseUtil.success(orderService.cancelOrder(id, requestDTO, userDetails));
     }
 }

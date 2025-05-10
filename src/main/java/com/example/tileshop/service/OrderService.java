@@ -3,6 +3,7 @@ package com.example.tileshop.service;
 import com.example.tileshop.constant.OrderStatus;
 import com.example.tileshop.dto.common.CommonResponseDTO;
 import com.example.tileshop.dto.filter.OrderFilterRequestDTO;
+import com.example.tileshop.dto.order.CancelOrderRequestDTO;
 import com.example.tileshop.dto.order.OrderRequestDTO;
 import com.example.tileshop.dto.order.OrderResponseDTO;
 import com.example.tileshop.dto.pagination.PaginationFullRequestDTO;
@@ -26,4 +27,6 @@ public interface OrderService {
     OrderResponseDTO userFindById(Long id, CustomUserDetails userDetails);
 
     CommonResponseDTO create(OrderRequestDTO orderRequestDTO, String userId);
+
+    CommonResponseDTO cancelOrder(Long id, CancelOrderRequestDTO requestDTO, CustomUserDetails userDetails);
 }

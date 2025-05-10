@@ -122,6 +122,8 @@ public class ErrorMessage {
         public static final String ERR_INVALID_OR_TAMPERED_DATA = "exception.order.invalid.or.tampered.data";
         public static final String ERR_SAME_STATUS = "exception.order.same-status";
         public static final String ERR_INVALID_STATUS_TRANSITION = "exception.order.invalid-status-transition";
+        public static final String ERR_ORDER_ALREADY_DELIVERED = "exception.order.already-delivered";
+        public static final String ERR_ORDER_ALREADY_CANCELLED = "exception.order.already-cancelled";
     }
 
     public static class OrderItem {

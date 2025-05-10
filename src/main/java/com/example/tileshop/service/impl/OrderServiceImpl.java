@@ -3,6 +3,7 @@ package com.example.tileshop.service.impl;
 import com.example.tileshop.constant.*;
 import com.example.tileshop.dto.common.CommonResponseDTO;
 import com.example.tileshop.dto.filter.OrderFilterRequestDTO;
+import com.example.tileshop.dto.order.CancelOrderRequestDTO;
 import com.example.tileshop.dto.order.OrderPaymentResponseDTO;
 import com.example.tileshop.dto.order.OrderRequestDTO;
 import com.example.tileshop.dto.order.OrderResponseDTO;
@@ -233,5 +234,38 @@ public class OrderServiceImpl implements OrderService {
 
         String message = messageUtil.getMessage(SuccessMessage.CREATE);
         return new CommonResponseDTO(message, new OrderPaymentResponseDTO(order));
+    }
+
+    @Override
+    public CommonResponseDTO cancelOrder(Long id, CancelOrderRequestDTO requestDTO, CustomUserDetails userDetails) {
+        Order order = getEntity(id);
+
+        // Kiểm tra quyền truy cập của người dùng, chỉ cho phép người đặt đơn hoặc admin hủy
+        if (!order.getUser().getId().equals(userDetails.getUserId()) && userDetails.getAuthorities().stream()
+                .noneMatch(auth -> auth.getAuthority().equals(RoleConstant.ROLE_ADMIN.name()))) {
+            throw new BadRequestException(ErrorMessage.Order.ERR_NOT_FOUND_ID, id);
+        }
+
+        // Kiểm tra nếu trạng thái đơn hàng đã hoàn thành hoặc đã giao thì không thể hủy
+        if (order.getStatus() == OrderStatus.DELIVERED) {
+            throw new BadRequestException(ErrorMessage.Order.ERR_ORDER_ALREADY_DELIVERED);
+        }
+
+        // Kiểm tra nếu trạng thái đơn hàng là đã hủy rồi thì không thể hủy tiếp
+        if (order.getStatus() == OrderStatus.CANCELLED) {
+            throw new BadRequestException(ErrorMessage.Order.ERR_ORDER_ALREADY_CANCELLED);
+        }
+
+        // Cập nhật trạng thái đơn hàng thành CANCELLED
+        order.setStatus(OrderStatus.CANCELLED);
+
+        // Lưu lý do hủy đơn hàng
+        order.setCancelReason(requestDTO.getCancelReason());
+
+        // Lưu lại đơn hàng sau khi cập nhật
+        orderRepository.save(order);
+
+        String message = messageUtil.getMessage(SuccessMessage.Order.ORDER_CANCELLED);
+        return new CommonResponseDTO(message, OrderMapper.toDTO(order));
     }
 }
