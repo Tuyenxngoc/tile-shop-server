@@ -10,7 +10,7 @@ import java.lang.annotation.*;
 @Target({ElementType.FIELD, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ValidTextLength {
-    String message() default "invalid.text.length";
+    String message() default "Chuỗi không hợp lệ";
 
     int min() default 0;
 

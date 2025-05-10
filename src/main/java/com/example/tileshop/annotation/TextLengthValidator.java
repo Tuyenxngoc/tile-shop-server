@@ -16,7 +16,7 @@ public class TextLengthValidator implements ConstraintValidator<ValidTextLength,
     @Override
     public boolean isValid(String value, ConstraintValidatorContext context) {
         if (value == null || value.trim().isEmpty()) {
-            return false;
+            return true;
         }
         return value.length() >= min && value.length() <= max;
     }
