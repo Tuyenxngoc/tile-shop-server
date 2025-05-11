@@ -339,7 +339,7 @@ public class OrderServiceImpl implements OrderService {
                     order.getStatus().name(),
                     order.getPaymentStatus() != null ? order.getPaymentStatus().name() : "",
                     order.getCancelReason() != null ? order.getCancelReason() : "",
-                    order.getCreatedDate() != null ? order.getCreatedDate().format(dateTimeFormatter) : ""
+                    order.getCreatedDate().format(dateTimeFormatter)
             };
 
             for (int i = 0; i < values.length; i++) {
