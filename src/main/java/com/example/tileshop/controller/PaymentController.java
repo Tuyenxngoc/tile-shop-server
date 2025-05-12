@@ -1,8 +1,10 @@
 package com.example.tileshop.controller;
 
 import com.example.tileshop.annotation.RestApiV1;
+import com.example.tileshop.constant.UrlConstant;
 import com.example.tileshop.service.VnPayService;
 import com.example.tileshop.util.VsResponseUtil;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AccessLevel;
@@ -19,12 +21,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class PaymentController {
     VnPayService paymentService;
 
-    @GetMapping("payment/vn-pay")
+    @Operation(summary = "Initiate VNPay payment process")
+    @GetMapping(UrlConstant.Payment.VN_PAY)
     public ResponseEntity<?> pay(@RequestParam("orderId") Long orderId, HttpServletRequest request) {
         return VsResponseUtil.success(paymentService.createPaymentUrl(orderId, request));
     }
 
-    @GetMapping("payment/vn-pay-return")
+    @Operation(summary = "Handle VNPay payment callback")
+    @GetMapping(UrlConstant.Payment.VN_PAY_RETURN)
     public ResponseEntity<?> payCallbackHandler(@RequestParam("vnp_SecureHash") String receivedHash, HttpServletRequest request) {
         return VsResponseUtil.success(paymentService.handleVNPayReturn(receivedHash, request));
     }

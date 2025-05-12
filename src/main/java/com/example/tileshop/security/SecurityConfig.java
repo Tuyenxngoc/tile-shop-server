@@ -50,7 +50,9 @@ public class SecurityConfig {
             "/images/**",
             "/files/**",
             //websocket
-            "/ws/**"
+            "/ws/**",
+
+            "/api/v1/chat",
     };
 
     private static final String[] GET_WHITELIST_URL = {

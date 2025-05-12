@@ -21,6 +21,13 @@ public class UrlConstant {
         public static final String GET_DASHBOARD_STATS = PRE_FIX + "/dashboard";
     }
 
+    public static class Payment {
+        private static final String PRE_FIX = "/payment";
+
+        public static final String VN_PAY = PRE_FIX + "/vn-pay";
+        public static final String VN_PAY_RETURN = PRE_FIX + "/vn-pay-return";
+    }
+
     public static class Attribute {
         private static final String PRE_FIX = "/attributes";
 
