@@ -41,18 +41,19 @@ public class SecurityConfig {
             "/v3/api-docs/**",
             "/swagger-ui/**",
             "/swagger-ui.html",
+
             //auth
             "/api/v1/auth/login",
             "/api/v1/auth/register",
             "/api/v1/auth/forgot-password",
             "/api/v1/auth/refresh-token",
+
             //resources
             "/images/**",
             "/files/**",
+
             //websocket
             "/ws/**",
-
-            "/api/v1/chat",
     };
 
     private static final String[] GET_WHITELIST_URL = {
@@ -90,7 +91,10 @@ public class SecurityConfig {
             "/api/v1/store-info",
     };
 
-    private static final String[] POST_WHITELIST_URL = {};
+    private static final String[] POST_WHITELIST_URL = {
+            //Chat
+            "/api/v1/chat/ai",
+    };
 
     CustomUserDetailsService userDetailsService;
 

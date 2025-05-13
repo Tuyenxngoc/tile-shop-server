@@ -15,6 +15,12 @@ public class UrlConstant {
         public static final String GET_CURRENT_USER = PRE_FIX + "/current";
     }
 
+    public static final class Chat {
+        private static final String PRE_FIX = "/chat";
+
+        public static final String CHAT_WITH_AI = PRE_FIX + "/ai";
+    }
+
     public static class Stat {
         private static final String PRE_FIX = "/statistics";
 

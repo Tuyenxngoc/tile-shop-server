@@ -1,5 +1,6 @@
 package com.example.tileshop.service.impl;
 
+import com.example.tileshop.dto.chat.ChatRequestDTO;
 import com.example.tileshop.service.GeminiService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -28,31 +29,59 @@ public class GeminiServiceImpl implements GeminiService {
     private final ObjectMapper objectMapper;
 
     @Override
-    public String askGemini(String userMessage) throws Exception {
+    public String askGemini(ChatRequestDTO requestDTO) {
         String fullUrl = apiUrl + "?key=" + apiKey;
 
-        String requestBody = objectMapper.writeValueAsString(Map.of(
-                "contents", new Object[]{
-                        Map.of("parts", new Object[]{
-                                Map.of("text", userMessage)
-                        })
-                }
-        ));
+        try {
+            String requestBody = objectMapper.writeValueAsString(Map.of(
+                    "contents", new Object[]{
+                            Map.of(
+                                    "role", "user",  // Có thể là "user" hoặc "model"
+                                    "parts", new Object[]{
+                                            Map.of("text", requestDTO.getMessage())
+                                    }
+                            )
+                    },
+                    "generationConfig", Map.of(
+                            "temperature", 0.9,        // Độ sáng tạo (0-1)
+                            "topP", 0.8,               // Đa dạng hóa response
+                            "topK", 40,                // Số lựa chọn
+                            "maxOutputTokens", 2048,   // Giới hạn token
+                            "stopSequences", new String[]{} // Chuỗi dừng
+                    ),
+                    "safetySettings", new Object[]{
+                            Map.of(
+                                    "category", "HARM_CATEGORY_HARASSMENT",
+                                    "threshold", "BLOCK_MEDIUM_AND_ABOVE"
+                            ),
+                            Map.of(
+                                    "category", "HARM_CATEGORY_HATE_SPEECH",
+                                    "threshold", "BLOCK_MEDIUM_AND_ABOVE"
+                            )
+                    },
+                    "systemInstruction", Map.of(
+                            "parts", new Object[]{
+                                    Map.of("text", "Bạn là một trợ lý ảo chuyên về bán hàng gạch ốp lát, thiết bị vệ sinh. Hãy trả lời ngắn gọn, thân thiện.")
+                            }
+                    )
+            ));
 
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(new URI(fullUrl))
-                .header("Content-Type", "application/json")
-                .POST(HttpRequest.BodyPublishers.ofString(requestBody))
-                .build();
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(new URI(fullUrl))
+                    .header("Content-Type", "application/json")
+                    .POST(HttpRequest.BodyPublishers.ofString(requestBody))
+                    .build();
 
-        HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-        Map<String, Object> result = objectMapper.readValue(response.body(), Map.class);
+            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+            Map<String, Object> result = objectMapper.readValue(response.body(), Map.class);
 
-        // Lấy text trả về
-        Map<String, Object> candidate = ((List<Map<String, Object>>) result.get("candidates")).get(0);
-        Map<String, Object> content = (Map<String, Object>) candidate.get("content");
-        Map<String, Object> part = ((List<Map<String, Object>>) content.get("parts")).get(0);
-        return (String) part.get("text");
+            // Lấy text trả về
+            Map<String, Object> candidate = ((List<Map<String, Object>>) result.get("candidates")).get(0);
+            Map<String, Object> content = (Map<String, Object>) candidate.get("content");
+            Map<String, Object> part = ((List<Map<String, Object>>) content.get("parts")).get(0);
+            return (String) part.get("text");
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
-
 }
