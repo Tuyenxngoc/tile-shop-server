@@ -61,7 +61,13 @@ public class GeminiServiceImpl implements GeminiService {
                     },
                     "systemInstruction", Map.of(
                             "parts", new Object[]{
-                                    Map.of("text", "Bạn là một trợ lý ảo chuyên về bán hàng gạch ốp lát, thiết bị vệ sinh. Hãy trả lời ngắn gọn, thân thiện.")
+                                    Map.of("text", """
+                                                Bạn là một trợ lý ảo chuyên tư vấn về gạch ốp lát và thiết bị vệ sinh cho cửa hàng Hùng Hương.
+                                                Chỉ trả lời các câu hỏi liên quan đến sản phẩm, giá cả, khuyến mãi hoặc tư vấn lựa chọn sản phẩm của cửa hàng.
+                                                Nếu câu hỏi không liên quan đến gạch ốp lát, thiết bị vệ sinh hoặc các thông tin của cửa hàng, hãy lịch sự từ chối với nội dung:
+                                                'Xin lỗi, tôi chỉ hỗ trợ các thông tin về gạch ốp lát và thiết bị vệ sinh của Hùng Hương.'
+                                                Luôn trả lời ngắn gọn, rõ ràng, thân thiện và đúng chuyên môn.
+                                            """)
                             }
                     )
             ));
