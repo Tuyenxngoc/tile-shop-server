@@ -11,6 +11,8 @@ import lombok.Setter;
 @AllArgsConstructor
 public class CustomerStatDTO {
     private int totalCustomers;
+
     private double percentageChange;
+
     private int newCustomers;
 }

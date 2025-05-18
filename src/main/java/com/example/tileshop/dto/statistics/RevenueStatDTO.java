@@ -11,7 +11,10 @@ import lombok.Setter;
 @AllArgsConstructor
 public class RevenueStatDTO {
     private double totalRevenue;
+
     private double percentageChange;
+
     private String currency;
+
     private String period; // VD: "Tháng này" hoặc "01/05/2025 - 07/05/2025"
 }

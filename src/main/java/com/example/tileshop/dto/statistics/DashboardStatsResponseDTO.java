@@ -11,7 +11,10 @@ import lombok.Setter;
 @AllArgsConstructor
 public class DashboardStatsResponseDTO {
     private RevenueStatDTO revenueStat;
+
     private OrderStatDTO orderStat;
+
     private CustomerStatDTO customerStat;
+
     private ProductStatDTO productStat;
 }

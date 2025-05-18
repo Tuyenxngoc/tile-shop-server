@@ -1,15 +1,30 @@
 package com.example.tileshop.service.impl;
 
 import com.example.tileshop.dto.filter.TimeFilter;
+import com.example.tileshop.dto.order.OrderResponseDTO;
+import com.example.tileshop.dto.product.ProductResponseDTO;
 import com.example.tileshop.dto.statistics.*;
+import com.example.tileshop.dto.user.UserResponseDTO;
+import com.example.tileshop.entity.Order;
+import com.example.tileshop.entity.Product;
+import com.example.tileshop.entity.User;
+import com.example.tileshop.mapper.OrderMapper;
+import com.example.tileshop.mapper.ProductMapper;
+import com.example.tileshop.mapper.UserMapper;
 import com.example.tileshop.repository.OrderRepository;
 import com.example.tileshop.repository.ProductRepository;
 import com.example.tileshop.repository.UserRepository;
 import com.example.tileshop.service.StatService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -107,5 +122,41 @@ public class StatServiceImpl implements StatService {
         responseDTO.setProductStat(productStat);
 
         return responseDTO;
+    }
+
+    @Override
+    public List<ProductResponseDTO> getTopSellingProducts(TimeFilter filter) {
+        Specification<Product> spec = Specification.where(null);
+        Pageable pageable = PageRequest.of(0, 5, Sort.by(Sort.Direction.DESC, "createdDate"));
+
+        Page<Product> products = productRepository.findAll(spec, pageable);
+
+        return products.getContent().stream()
+                .map(ProductMapper::toResponseDTO)
+                .toList();
+    }
+
+    @Override
+    public List<UserResponseDTO> getTopCustomers(TimeFilter filter) {
+        Specification<User> spec = Specification.where(null);
+        Pageable pageable = PageRequest.of(0, 5, Sort.by(Sort.Direction.DESC, "createdDate"));
+
+        Page<User> users = userRepository.findAll(spec, pageable);
+
+        return users.getContent().stream()
+                .map(UserMapper::toDTO)
+                .toList();
+    }
+
+    @Override
+    public List<OrderResponseDTO> getRecentOrders() {
+        Specification<Order> spec = Specification.where(null);
+        Pageable pageable = PageRequest.of(0, 5, Sort.by(Sort.Direction.DESC, "createdDate"));
+
+        Page<Order> orders = orderRepository.findAll(spec, pageable);
+
+        return orders.getContent().stream()
+                .map(OrderMapper::toDTO)
+                .toList();
     }
 }

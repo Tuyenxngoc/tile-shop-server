@@ -11,7 +11,10 @@ import lombok.Setter;
 @AllArgsConstructor
 public class ProductStatDTO {
     private int totalProducts;
+
     private int outOfStockProducts;
+
     private int lowStockProducts;
+
     private double percentageChange;
 }

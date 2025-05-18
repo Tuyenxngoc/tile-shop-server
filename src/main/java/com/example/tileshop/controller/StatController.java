@@ -28,4 +28,26 @@ public class StatController {
     public ResponseEntity<?> getDashboardStatistics(@ParameterObject TimeFilter timeFilter) {
         return VsResponseUtil.success(statService.getStatistics(timeFilter));
     }
+
+    @Operation(summary = "API Get Top Best Selling Products")
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping(UrlConstant.Stat.GET_TOP_SELLING_PRODUCTS)
+    public ResponseEntity<?> getTopSellingProducts(@ParameterObject TimeFilter timeFilter) {
+        return VsResponseUtil.success(statService.getTopSellingProducts(timeFilter));
+    }
+
+    @Operation(summary = "API Get Top Customers With Most Purchases")
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping(UrlConstant.Stat.GET_TOP_CUSTOMERS)
+    public ResponseEntity<?> getTopCustomers(@ParameterObject TimeFilter timeFilter) {
+        return VsResponseUtil.success(statService.getTopCustomers(timeFilter));
+    }
+
+    @Operation(summary = "API Get Recent Orders")
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping(UrlConstant.Stat.GET_RECENT_ORDERS)
+    public ResponseEntity<?> getRecentOrders() {
+        return VsResponseUtil.success(statService.getRecentOrders());
+    }
+
 }
