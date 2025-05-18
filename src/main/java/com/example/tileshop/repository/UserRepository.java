@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Repository
@@ -26,9 +26,9 @@ public interface UserRepository extends JpaRepository<User, String>, JpaSpecific
     int countCustomers();
 
     @Query("SELECT COUNT(c) FROM User c WHERE c.createdDate BETWEEN :startDate AND :endDate")
-    int countNewCustomers(@Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
+    int countNewCustomers(@Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate);
 
-    default double getCustomerChangePercentage(LocalDate startDate, LocalDate endDate, LocalDate prevStartDate, LocalDate prevEndDate) {
+    default double getCustomerChangePercentage(LocalDateTime startDate, LocalDateTime endDate, LocalDateTime prevStartDate, LocalDateTime prevEndDate) {
         int currentCount = countNewCustomers(startDate, endDate);
         int previousCount = countNewCustomers(prevStartDate, prevEndDate);
         if (previousCount == 0) return 100.0;

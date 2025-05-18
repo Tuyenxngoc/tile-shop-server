@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Repository
@@ -25,10 +25,6 @@ public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpec
     @Query("SELECT COUNT(p) FROM Product p WHERE p.stockQuantity <= :threshold")
     int countLowStockProducts(@Param("threshold") int threshold);
 
-    default double getProductChangePercentage(LocalDate startDate, LocalDate endDate, LocalDate prevStartDate, LocalDate prevEndDate) {
-        int currentCount = countProducts();
-        int previousCount = currentCount - 5;
-        if (previousCount == 0) return 100.0;
-        return ((double) (currentCount - previousCount) / previousCount) * 100;
-    }
+    @Query("SELECT COUNT(p) FROM Product p WHERE p.createdDate BETWEEN :startDate AND :endDate")
+    int countProductsCreatedBetween(@Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate);
 }
