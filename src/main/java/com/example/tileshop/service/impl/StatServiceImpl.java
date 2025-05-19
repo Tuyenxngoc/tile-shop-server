@@ -123,22 +123,30 @@ public class StatServiceImpl implements StatService {
     public List<TopSellingProductDTO> getTopSellingProducts(TimeFilter filter) {
         Pageable pageable = PageRequest.of(0, 5);
 
-        return productRepository.findTopSellingProducts(
-                filter.getStartDate().atStartOfDay(),
-                filter.getEndDate().atTime(23, 59, 59),
-                pageable
-        );
+        LocalDateTime startDate = filter.getStartDate() != null
+                ? filter.getStartDate().atStartOfDay()
+                : null;
+
+        LocalDateTime endDate = filter.getEndDate() != null
+                ? filter.getEndDate().atTime(23, 59, 59)
+                : null;
+
+        return productRepository.findTopSellingProducts(startDate, endDate, pageable);
     }
 
     @Override
     public List<TopCustomerDTO> getTopCustomers(TimeFilter filter) {
         Pageable pageable = PageRequest.of(0, 5);
 
-        return userRepository.findTopCustomers(
-                filter.getStartDate().atStartOfDay(),
-                filter.getEndDate().atTime(23, 59, 59),
-                pageable
-        );
+        LocalDateTime startDate = filter.getStartDate() != null
+                ? filter.getStartDate().atStartOfDay()
+                : null;
+
+        LocalDateTime endDate = filter.getEndDate() != null
+                ? filter.getEndDate().atTime(23, 59, 59)
+                : null;
+
+        return userRepository.findTopCustomers(startDate, endDate, pageable);
     }
 
     @Override

@@ -32,11 +32,7 @@ public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpec
     int countProductsCreatedBetween(@Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate);
 
     @Query("""
-                SELECT new com.example.tileshop.dto.statistics.TopSellingProductDTO(
-                    p.id, p.name, p.slug, p.price, p.discountPercentage, p.stockQuantity,
-                    p.averageRating, p.imageUrl, p.category,
-                    SUM(oi.quantity), SUM(oi.totalPrice)
-                )
+                SELECT new com.example.tileshop.dto.statistics.TopSellingProductDTO(p, SUM(oi.quantity), SUM(oi.quantity * oi.priceAtTimeOfOrder))
                 FROM OrderItem oi
                 JOIN oi.product p
                 JOIN oi.order o

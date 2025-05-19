@@ -5,8 +5,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
-
 @Getter
 @Setter
 @NoArgsConstructor
@@ -14,13 +12,13 @@ import java.time.LocalDateTime;
 public class TopCustomerDTO {
     private String id;
 
+    private String username;
+
     private String fullName;
 
     private String email;
 
-    private int totalOrders;
+    private long totalOrders;
 
     private double totalSpent;
-
-    private LocalDateTime lastOrderDate;
 }

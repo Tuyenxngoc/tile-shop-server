@@ -33,18 +33,19 @@ public interface UserRepository extends JpaRepository<User, String>, JpaSpecific
 
     @Query("""
                 SELECT new com.example.tileshop.dto.statistics.TopCustomerDTO(
-                    u.id, u.fullName, u.email, COUNT(o.id), SUM(o.totalAmount), o.createdDate
+                    u.id, u.username, u.fullName, u.email, COUNT(o.id), SUM(o.totalAmount)
                 )
                 FROM User u
                 JOIN Order o ON o.user.id = u.id
-                WHERE o.createdDate BETWEEN :start AND :end
-                  AND o.status = 'COMPLETED'
-                GROUP BY u.id, u.fullName, u.email
+                WHERE (:startDate IS NULL OR o.createdDate >= :startDate)
+                  AND (:endDate IS NULL OR o.createdDate <= :endDate)
+                  AND o.status = 'DELIVERED'
+                GROUP BY u.id, u.username, u.fullName, u.email
                 ORDER BY SUM(o.totalAmount) DESC
             """)
     List<TopCustomerDTO> findTopCustomers(
-            LocalDateTime start,
-            LocalDateTime end,
+            @Param("startDate") LocalDateTime startDate,
+            @Param("endDate") LocalDateTime endDate,
             Pageable pageable
     );
 }

@@ -1,6 +1,8 @@
 package com.example.tileshop.dto.statistics;
 
 import com.example.tileshop.dto.category.CategorySimpleDTO;
+import com.example.tileshop.entity.Product;
+import com.example.tileshop.mapper.CategoryMapper;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -35,24 +37,19 @@ public class TopSellingProductDTO {
 
     private double totalAmount;   // tổng tiền bán ra
 
-    public TopSellingProductDTO(long id, String name, String slug, double price, double discountPercentage,
-                                int stockQuantity, double averageRating, String imageUrl, CategorySimpleDTO category,
-                                long totalQuantity, double totalAmount) {
-        this.id = id;
-        this.name = name;
-        this.slug = slug;
-        this.price = price;
-        this.discountPercentage = discountPercentage;
-        if (discountPercentage > 0) {
-            double discountAmount = (price * discountPercentage) / 100;
-            this.salePrice = price - discountAmount;
-        } else {
-            this.salePrice = price;
+    public TopSellingProductDTO(Product product, long totalQuantity, double totalAmount) {
+        this.id = product.getId();
+        this.name = product.getName();
+        this.slug = product.getSlug();
+        this.price = product.getPrice();
+        this.discountPercentage = product.getDiscountPercentage();
+        this.salePrice = product.calculateFinalPrice();
+        this.stockQuantity = product.getStockQuantity();
+        this.averageRating = product.getAverageRating();
+        if (product.getImages() != null && !product.getImages().isEmpty()) {
+            this.imageUrl = product.getImages().getFirst().getImageUrl();
         }
-        this.stockQuantity = stockQuantity;
-        this.averageRating = averageRating;
-        this.imageUrl = imageUrl;
-        this.category = category;
+        this.category = CategoryMapper.toSimpleDTO(product.getCategory());
         this.totalQuantity = totalQuantity;
         this.totalAmount = totalAmount;
     }

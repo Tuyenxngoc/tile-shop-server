@@ -41,7 +41,7 @@ public interface OrderRepository extends JpaRepository<Order, Long>, JpaSpecific
 
     @Query("""
                 SELECT new com.example.tileshop.dto.statistics.RecentOrderDTO(
-                    o.id, o.totalAmount, o.status, o.createdDate, u.fullName
+                    o.id, o.totalAmount, o.status, o.createdDate, u
                 )
                 FROM Order o
                 JOIN o.user u
