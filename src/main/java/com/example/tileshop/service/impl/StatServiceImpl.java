@@ -1,26 +1,14 @@
 package com.example.tileshop.service.impl;
 
 import com.example.tileshop.dto.filter.TimeFilter;
-import com.example.tileshop.dto.order.OrderResponseDTO;
-import com.example.tileshop.dto.product.ProductResponseDTO;
 import com.example.tileshop.dto.statistics.*;
-import com.example.tileshop.dto.user.UserResponseDTO;
-import com.example.tileshop.entity.Order;
-import com.example.tileshop.entity.Product;
-import com.example.tileshop.entity.User;
-import com.example.tileshop.mapper.OrderMapper;
-import com.example.tileshop.mapper.ProductMapper;
-import com.example.tileshop.mapper.UserMapper;
 import com.example.tileshop.repository.OrderRepository;
 import com.example.tileshop.repository.ProductRepository;
 import com.example.tileshop.repository.UserRepository;
 import com.example.tileshop.service.StatService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -34,6 +22,13 @@ public class StatServiceImpl implements StatService {
     private final UserRepository userRepository;
 
     private final ProductRepository productRepository;
+
+    private double getCustomerChangePercentage(LocalDateTime startDate, LocalDateTime endDate, LocalDateTime prevStartDate, LocalDateTime prevEndDate) {
+        int currentCount = userRepository.countNewCustomers(startDate, endDate);
+        int previousCount = userRepository.countNewCustomers(prevStartDate, prevEndDate);
+        if (previousCount == 0) return 100.0;
+        return ((double) (currentCount - previousCount) / previousCount) * 100;
+    }
 
     private double getProductChangePercentage(LocalDateTime startDate, LocalDateTime endDate, LocalDateTime prevStartDate, LocalDateTime prevEndDate) {
         int currentCount = productRepository.countProductsCreatedBetween(startDate, endDate);
@@ -100,7 +95,7 @@ public class StatServiceImpl implements StatService {
         // Customer Stat
         int totalCustomers = userRepository.countCustomers();
         int newCustomers = userRepository.countNewCustomers(startDate, endDate);
-        double customerChange = userRepository.getCustomerChangePercentage(startDate, endDate, prevStartDate, prevEndDate);
+        double customerChange = getCustomerChangePercentage(startDate, endDate, prevStartDate, prevEndDate);
 
         CustomerStatDTO customerStat = new CustomerStatDTO();
         customerStat.setTotalCustomers(totalCustomers);
@@ -125,38 +120,31 @@ public class StatServiceImpl implements StatService {
     }
 
     @Override
-    public List<ProductResponseDTO> getTopSellingProducts(TimeFilter filter) {
-        Specification<Product> spec = Specification.where(null);
-        Pageable pageable = PageRequest.of(0, 5, Sort.by(Sort.Direction.DESC, "createdDate"));
+    public List<TopSellingProductDTO> getTopSellingProducts(TimeFilter filter) {
+        Pageable pageable = PageRequest.of(0, 5);
 
-        Page<Product> products = productRepository.findAll(spec, pageable);
-
-        return products.getContent().stream()
-                .map(ProductMapper::toResponseDTO)
-                .toList();
+        return productRepository.findTopSellingProducts(
+                filter.getStartDate().atStartOfDay(),
+                filter.getEndDate().atTime(23, 59, 59),
+                pageable
+        );
     }
 
     @Override
-    public List<UserResponseDTO> getTopCustomers(TimeFilter filter) {
-        Specification<User> spec = Specification.where(null);
-        Pageable pageable = PageRequest.of(0, 5, Sort.by(Sort.Direction.DESC, "createdDate"));
+    public List<TopCustomerDTO> getTopCustomers(TimeFilter filter) {
+        Pageable pageable = PageRequest.of(0, 5);
 
-        Page<User> users = userRepository.findAll(spec, pageable);
-
-        return users.getContent().stream()
-                .map(UserMapper::toDTO)
-                .toList();
+        return userRepository.findTopCustomers(
+                filter.getStartDate().atStartOfDay(),
+                filter.getEndDate().atTime(23, 59, 59),
+                pageable
+        );
     }
 
     @Override
-    public List<OrderResponseDTO> getRecentOrders() {
-        Specification<Order> spec = Specification.where(null);
-        Pageable pageable = PageRequest.of(0, 5, Sort.by(Sort.Direction.DESC, "createdDate"));
+    public List<RecentOrderDTO> getRecentOrders() {
+        Pageable pageable = PageRequest.of(0, 5);
 
-        Page<Order> orders = orderRepository.findAll(spec, pageable);
-
-        return orders.getContent().stream()
-                .map(OrderMapper::toDTO)
-                .toList();
+        return orderRepository.findRecentOrders(pageable);
     }
 }

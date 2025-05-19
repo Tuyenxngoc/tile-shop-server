@@ -1,6 +1,8 @@
 package com.example.tileshop.repository;
 
+import com.example.tileshop.dto.statistics.RecentOrderDTO;
 import com.example.tileshop.entity.Order;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
@@ -36,4 +38,14 @@ public interface OrderRepository extends JpaRepository<Order, Long>, JpaSpecific
 
     @Query("SELECT COUNT(o) FROM Order o WHERE o.status = 'CANCELLED' AND o.createdDate BETWEEN :startDate AND :endDate")
     int countCancelledOrders(@Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate);
+
+    @Query("""
+                SELECT new com.example.tileshop.dto.statistics.RecentOrderDTO(
+                    o.id, o.totalAmount, o.status, o.createdDate, u.fullName
+                )
+                FROM Order o
+                JOIN o.user u
+                ORDER BY o.createdDate DESC
+            """)
+    List<RecentOrderDTO> findRecentOrders(Pageable pageable);
 }

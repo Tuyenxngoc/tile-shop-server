@@ -1,19 +1,19 @@
 package com.example.tileshop.service;
 
 import com.example.tileshop.dto.filter.TimeFilter;
-import com.example.tileshop.dto.order.OrderResponseDTO;
-import com.example.tileshop.dto.product.ProductResponseDTO;
 import com.example.tileshop.dto.statistics.DashboardStatsResponseDTO;
-import com.example.tileshop.dto.user.UserResponseDTO;
+import com.example.tileshop.dto.statistics.RecentOrderDTO;
+import com.example.tileshop.dto.statistics.TopCustomerDTO;
+import com.example.tileshop.dto.statistics.TopSellingProductDTO;
 
 import java.util.List;
 
 public interface StatService {
     DashboardStatsResponseDTO getStatistics(TimeFilter timeFilter);
 
-    List<ProductResponseDTO> getTopSellingProducts(TimeFilter filter);
+    List<TopSellingProductDTO> getTopSellingProducts(TimeFilter filter);
 
-    List<UserResponseDTO> getTopCustomers(TimeFilter filter);
+    List<TopCustomerDTO> getTopCustomers(TimeFilter filter);
 
-    List<OrderResponseDTO> getRecentOrders();
+    List<RecentOrderDTO> getRecentOrders();
 }
