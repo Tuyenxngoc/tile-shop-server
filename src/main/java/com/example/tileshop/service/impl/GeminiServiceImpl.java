@@ -17,7 +17,6 @@ import java.util.Map;
 @Service
 @RequiredArgsConstructor
 public class GeminiServiceImpl implements GeminiService {
-
     @Value("${gemini.api.key}")
     private String apiKey;
 

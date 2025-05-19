@@ -155,4 +155,9 @@ public class StatServiceImpl implements StatService {
 
         return orderRepository.findRecentOrders(pageable);
     }
+
+    @Override
+    public List<RevenueByDateDTO> getRevenueStats(TimeFilter timeFilter) {
+        return List.of();
+    }
 }

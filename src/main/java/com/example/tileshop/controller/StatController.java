@@ -50,4 +50,10 @@ public class StatController {
         return VsResponseUtil.success(statService.getRecentOrders());
     }
 
+    @Operation(summary = "API Get Revenue Statistics By Time")
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping(UrlConstant.Stat.GET_REVENUE_STATS)
+    public ResponseEntity<?> getRevenueStats(@ParameterObject TimeFilter timeFilter) {
+        return VsResponseUtil.success(statService.getRevenueStats(timeFilter));
+    }
 }

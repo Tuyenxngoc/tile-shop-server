@@ -46,5 +46,4 @@ public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpec
             @Param("endDate") LocalDateTime endDate,
             Pageable pageable
     );
-
 }
