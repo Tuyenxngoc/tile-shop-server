@@ -67,6 +67,12 @@ public class CategoryController {
         return VsResponseUtil.success(categoryService.findById(id));
     }
 
+    @Operation(summary = "API Get Category By Slug")
+    @GetMapping(UrlConstant.Category.GET_BY_SLUG)
+    public ResponseEntity<?> getCategoryBySlug(@PathVariable String slug) {
+        return VsResponseUtil.success(categoryService.findBySlug(slug));
+    }
+
     @Operation(summary = "API Get Categories Tree")
     @GetMapping(UrlConstant.Category.GET_TREE)
     public ResponseEntity<?> getCategoriesTree() {

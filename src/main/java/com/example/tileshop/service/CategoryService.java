@@ -23,5 +23,7 @@ public interface CategoryService {
 
     CategoryResponseDTO findById(Long id);
 
+    CategoryResponseDTO findBySlug(String slug);
+
     List<CategoryTreeResponseDTO> getCategoriesTree();
 }

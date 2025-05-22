@@ -322,6 +322,14 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
+    public CategoryResponseDTO findBySlug(String slug) {
+        Category category = categoryRepository.findBySlug(slug)
+                .orElseThrow(() -> new NotFoundException(ErrorMessage.Category.ERR_NOT_FOUND_ID, slug));
+
+        return CategoryMapper.toDTO(category);
+    }
+
+    @Override
     public List<CategoryTreeResponseDTO> getCategoriesTree() {
         List<Category> categories = categoryRepository.findAll();
 
