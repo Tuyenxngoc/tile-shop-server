@@ -38,6 +38,7 @@ public class SuccessMessage {
     }
 
     public static class Order {
+        public static final String UPDATE = "success.order.update";
         public static final String UPDATE_STATUS = "success.order.update-status";
         public static final String ORDER_CANCELLED = "success.order.order-cancelled";
     }

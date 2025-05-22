@@ -7,6 +7,7 @@ import com.example.tileshop.constant.UrlConstant;
 import com.example.tileshop.dto.filter.OrderFilterRequestDTO;
 import com.example.tileshop.dto.order.CancelOrderRequestDTO;
 import com.example.tileshop.dto.order.OrderRequestDTO;
+import com.example.tileshop.dto.order.OrderUpdateRequestDTO;
 import com.example.tileshop.dto.pagination.PaginationFullRequestDTO;
 import com.example.tileshop.security.CustomUserDetails;
 import com.example.tileshop.service.OrderService;
@@ -48,6 +49,16 @@ public class OrderController {
     @PutMapping(UrlConstant.Order.Admin.UPDATE_STATUS)
     public ResponseEntity<?> updateOrderStatus(@PathVariable Long id, @RequestParam(name = "status") OrderStatus status) {
         return VsResponseUtil.success(orderService.updateStatus(id, status));
+    }
+
+    @Operation(summary = "API Update Order Details")
+    @PreAuthorize("hasRole('ADMIN')")
+    @PutMapping(UrlConstant.Order.Admin.UPDATE)
+    public ResponseEntity<?> updateOrder(
+            @PathVariable Long id,
+            @Valid @RequestBody OrderUpdateRequestDTO requestDTO
+    ) {
+        return VsResponseUtil.success(orderService.updateOrder(id, requestDTO));
     }
 
     @Operation(summary = "API Count orders by status")

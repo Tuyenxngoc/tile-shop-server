@@ -6,6 +6,7 @@ import com.example.tileshop.dto.filter.OrderFilterRequestDTO;
 import com.example.tileshop.dto.order.CancelOrderRequestDTO;
 import com.example.tileshop.dto.order.OrderRequestDTO;
 import com.example.tileshop.dto.order.OrderResponseDTO;
+import com.example.tileshop.dto.order.OrderUpdateRequestDTO;
 import com.example.tileshop.dto.pagination.PaginationFullRequestDTO;
 import com.example.tileshop.dto.pagination.PaginationResponseDTO;
 import com.example.tileshop.security.CustomUserDetails;
@@ -31,4 +32,6 @@ public interface OrderService {
     CommonResponseDTO cancelOrder(Long id, CancelOrderRequestDTO requestDTO, CustomUserDetails userDetails);
 
     byte[] generateOrderReport(OrderFilterRequestDTO filter);
+
+    CommonResponseDTO updateOrder(Long id, OrderUpdateRequestDTO requestDTO);
 }

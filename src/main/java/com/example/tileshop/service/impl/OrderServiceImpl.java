@@ -3,10 +3,7 @@ package com.example.tileshop.service.impl;
 import com.example.tileshop.constant.*;
 import com.example.tileshop.dto.common.CommonResponseDTO;
 import com.example.tileshop.dto.filter.OrderFilterRequestDTO;
-import com.example.tileshop.dto.order.CancelOrderRequestDTO;
-import com.example.tileshop.dto.order.OrderPaymentResponseDTO;
-import com.example.tileshop.dto.order.OrderRequestDTO;
-import com.example.tileshop.dto.order.OrderResponseDTO;
+import com.example.tileshop.dto.order.*;
 import com.example.tileshop.dto.pagination.PaginationFullRequestDTO;
 import com.example.tileshop.dto.pagination.PaginationResponseDTO;
 import com.example.tileshop.dto.pagination.PagingMeta;
@@ -360,5 +357,36 @@ public class OrderServiceImpl implements OrderService {
             log.error("Error while generating Excel report", e);
             throw new RuntimeException("Error while generating Excel report", e);
         }
+    }
+
+    @Override
+    public CommonResponseDTO updateOrder(Long id, OrderUpdateRequestDTO requestDTO) {
+        Order order = getEntity(id);
+
+        // Nếu đơn hàng đã hủy hoặc đã hoàn thành, không được phép cập nhật thông tin
+        if (order.getStatus() == OrderStatus.CANCELLED || order.getStatus() == OrderStatus.DELIVERED) {
+            throw new BadRequestException(ErrorMessage.Order.ERR_CANNOT_UPDATE_FINALIZED_ORDER);
+        }
+
+        // Cập nhật thông tin người nhận
+        order.setRecipientName(requestDTO.getRecipientName());
+        order.setRecipientPhone(requestDTO.getRecipientPhone());
+        order.setRecipientEmail(requestDTO.getRecipientEmail());
+        order.setRecipientGender(requestDTO.getRecipientGender());
+
+        // Cập nhật ghi chú
+        order.setNote(requestDTO.getNote());
+
+        // Cập nhật phương thức giao hàng và địa chỉ
+        order.setDeliveryMethod(requestDTO.getDeliveryMethod());
+        order.setShippingAddress(requestDTO.getShippingAddress());
+
+        // Cập nhật lý do hủy đơn
+        order.setCancelReason(requestDTO.getCancelReason());
+
+        orderRepository.save(order);
+
+        String message = messageUtil.getMessage(SuccessMessage.Order.UPDATE);
+        return new CommonResponseDTO(message, OrderMapper.toDTO(order));
     }
 }
