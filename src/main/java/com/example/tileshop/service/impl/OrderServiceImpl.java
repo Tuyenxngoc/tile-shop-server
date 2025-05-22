@@ -108,20 +108,19 @@ public class OrderServiceImpl implements OrderService {
 
         // Kiểm tra nếu trạng thái hiện tại bằng trạng thái mới
         if (currentStatus == newStatus) {
-            throw new BadRequestException(ErrorMessage.Order.ERR_SAME_STATUS, newStatus.name());
+            throw new BadRequestException(ErrorMessage.Order.ERR_SAME_STATUS, newStatus.getDescription());
+        }
+
+        if (OrderStatus.CANCELLED.equals(newStatus)) {
+            throw new BadRequestException("Vui lòng sử dụng API huỷ đơn hàng.");
         }
 
         // Kiểm tra tính hợp lệ của việc chuyển trạng thái
         if (!canTransition(currentStatus, newStatus)) {
-            throw new BadRequestException(ErrorMessage.Order.ERR_INVALID_STATUS_TRANSITION, currentStatus.name(), newStatus.name());
+            throw new BadRequestException(ErrorMessage.Order.ERR_INVALID_STATUS_TRANSITION, currentStatus.getDescription(), newStatus.getDescription());
         }
 
         order.setStatus(newStatus);
-
-        // Nếu trạng thái mới là DELIVERED thì set PaymentStatus thành PAID (nếu phương thức thanh toán không phải COD)
-        if (OrderStatus.DELIVERED.equals(newStatus) && !PaymentMethod.COD.equals(order.getPaymentMethod())) {
-            order.setPaymentStatus(PaymentStatus.PAID);
-        }
 
         orderRepository.save(order);
 
@@ -213,14 +212,14 @@ public class OrderServiceImpl implements OrderService {
         double totalAmount = 0.0;
         List<OrderItem> orderItems = new ArrayList<>();
         for (CartItem cartItem : cartItems) {
-            Product product = cartItem.getProduct();
+            Product product = productRepository.findProductForUpdate(cartItem.getProduct().getId());
 
             // Kiểm tra số lượng tồn kho
             if (product.getStockQuantity() < cartItem.getQuantity()) {
-                throw new ConflictException(ErrorMessage.Product.ERR_OUT_OF_STOCK);
+                throw new ConflictException(ErrorMessage.Product.ERR_OUT_OF_STOCK, product.getName(), product.getStockQuantity());
             }
 
-            // Giảm số lượng sản phẩm
+            // Giảm số lượng tồn kho sản phẩm
             product.setStockQuantity(product.getStockQuantity() - cartItem.getQuantity());
             productRepository.save(product);
 
@@ -257,23 +256,22 @@ public class OrderServiceImpl implements OrderService {
             throw new BadRequestException(ErrorMessage.Order.ERR_NOT_FOUND_ID, id);
         }
 
-        // Kiểm tra nếu trạng thái đơn hàng đã hoàn thành hoặc đã giao thì không thể hủy
-        if (order.getStatus() == OrderStatus.DELIVERED) {
-            throw new BadRequestException(ErrorMessage.Order.ERR_ORDER_ALREADY_DELIVERED);
+        // Kiểm tra trạng thái đơn hàng có cho phép hủy không
+        if (!canTransition(order.getStatus(), OrderStatus.CANCELLED)) {
+            throw new BadRequestException(ErrorMessage.Order.ERR_INVALID_STATUS_TRANSITION, order.getStatus().getDescription(), OrderStatus.CANCELLED.getDescription());
         }
 
-        // Kiểm tra nếu trạng thái đơn hàng là đã hủy rồi thì không thể hủy tiếp
-        if (order.getStatus() == OrderStatus.CANCELLED) {
-            throw new BadRequestException(ErrorMessage.Order.ERR_ORDER_ALREADY_CANCELLED);
+        // Hoàn lại số lượng tồn kho cho từng sản phẩm trong đơn
+        for (OrderItem orderItem : order.getOrderItems()) {
+            Product product = productRepository.findProductForUpdate(orderItem.getProduct().getId());
+            product.setStockQuantity(product.getStockQuantity() + orderItem.getQuantity());
+            productRepository.save(product);
         }
 
-        // Cập nhật trạng thái đơn hàng thành CANCELLED
+        // Cập nhật trạng thái đơn hàng và lý do hủy
         order.setStatus(OrderStatus.CANCELLED);
-
-        // Lưu lý do hủy đơn hàng
         order.setCancelReason(requestDTO.getCancelReason());
 
-        // Lưu lại đơn hàng sau khi cập nhật
         orderRepository.save(order);
 
         String message = messageUtil.getMessage(SuccessMessage.Order.ORDER_CANCELLED);
@@ -285,76 +283,76 @@ public class OrderServiceImpl implements OrderService {
         List<Order> orders = orderRepository.findAll(OrderSpecification.filterByConditions(filter));
 
         // Tạo Workbook và Sheet
-        Workbook workbook = new XSSFWorkbook();
-        Sheet sheet = workbook.createSheet("orders");
+        try (Workbook workbook = new XSSFWorkbook();
+             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream()) {
+            Sheet sheet = workbook.createSheet("orders");
 
-        Font headerFont = workbook.createFont();
-        headerFont.setBold(true);
-        headerFont.setFontHeightInPoints((short) 12);
+            Font headerFont = workbook.createFont();
+            headerFont.setBold(true);
+            headerFont.setFontHeightInPoints((short) 12);
 
-        CellStyle headerCellStyle = workbook.createCellStyle();
-        headerCellStyle.setFont(headerFont);
-        headerCellStyle.setAlignment(HorizontalAlignment.CENTER);
-        headerCellStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+            CellStyle headerCellStyle = workbook.createCellStyle();
+            headerCellStyle.setFont(headerFont);
+            headerCellStyle.setAlignment(HorizontalAlignment.CENTER);
+            headerCellStyle.setVerticalAlignment(VerticalAlignment.CENTER);
 
-        CellStyle dataCellStyle = workbook.createCellStyle();
-        dataCellStyle.setAlignment(HorizontalAlignment.LEFT);
+            CellStyle dataCellStyle = workbook.createCellStyle();
+            dataCellStyle.setAlignment(HorizontalAlignment.LEFT);
 
-        // Tạo tiêu đề cột
-        Row headerRow = sheet.createRow(0);
-        String[] headers = {
-                "Mã đơn hàng",
-                "Tên người nhận",
-                "Số điện thoại",
-                "Email",
-                "Địa chỉ giao hàng",
-                "Tổng tiền",
-                "Phương thức thanh toán",
-                "Tình trạng đơn hàng",
-                "Trạng thái thanh toán",
-                "Lý do hủy",
-                "Ngày tạo đơn"
-        };
-
-        // Ghi tiêu đề vào các cột
-        for (int i = 0; i < headers.length; i++) {
-            Cell cell = headerRow.createCell(i);
-            cell.setCellValue(headers[i]);
-            cell.setCellStyle(headerCellStyle);
-        }
-
-        // Điền dữ liệu vào các dòng của bảng
-        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        int rowNum = 1;
-        for (Order order : orders) {
-            Row row = sheet.createRow(rowNum++);
-            Object[] values = {
-                    order.getId(),
-                    order.getRecipientName(),
-                    order.getRecipientPhone(),
-                    order.getRecipientEmail() != null ? order.getRecipientEmail() : "",
-                    order.getShippingAddress() != null ? order.getShippingAddress() : "",
-                    order.getTotalAmount(),
-                    order.getPaymentMethod().name(),
-                    order.getStatus().name(),
-                    order.getPaymentStatus() != null ? order.getPaymentStatus().name() : "",
-                    order.getCancelReason() != null ? order.getCancelReason() : "",
-                    order.getCreatedDate().format(dateTimeFormatter)
+            // Tạo tiêu đề cột
+            Row headerRow = sheet.createRow(0);
+            String[] headers = {
+                    "Mã đơn hàng",
+                    "Tên người nhận",
+                    "Số điện thoại",
+                    "Email",
+                    "Địa chỉ giao hàng",
+                    "Tổng tiền",
+                    "Phương thức thanh toán",
+                    "Tình trạng đơn hàng",
+                    "Trạng thái thanh toán",
+                    "Lý do hủy",
+                    "Ngày tạo đơn"
             };
 
-            for (int i = 0; i < values.length; i++) {
-                Cell cell = row.createCell(i);
-                cell.setCellValue(values[i].toString());
-                cell.setCellStyle(dataCellStyle);
+            // Ghi tiêu đề vào các cột
+            for (int i = 0; i < headers.length; i++) {
+                Cell cell = headerRow.createCell(i);
+                cell.setCellValue(headers[i]);
+                cell.setCellStyle(headerCellStyle);
             }
-        }
 
-        // Tự động điều chỉnh độ rộng cột
-        for (int i = 0; i < headers.length; i++) {
-            sheet.autoSizeColumn(i);
-        }
+            // Điền dữ liệu vào các dòng của bảng
+            DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            int rowNum = 1;
+            for (Order order : orders) {
+                Row row = sheet.createRow(rowNum++);
+                Object[] values = {
+                        order.getId(),
+                        order.getRecipientName(),
+                        order.getRecipientPhone(),
+                        order.getRecipientEmail() != null ? order.getRecipientEmail() : "",
+                        order.getShippingAddress() != null ? order.getShippingAddress() : "",
+                        order.getTotalAmount(),
+                        order.getPaymentMethod().name(),
+                        order.getStatus().name(),
+                        order.getPaymentStatus() != null ? order.getPaymentStatus().name() : "",
+                        order.getCancelReason() != null ? order.getCancelReason() : "",
+                        order.getCreatedDate().format(dateTimeFormatter)
+                };
 
-        try (ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream()) {
+                for (int i = 0; i < values.length; i++) {
+                    Cell cell = row.createCell(i);
+                    cell.setCellValue(values[i].toString());
+                    cell.setCellStyle(dataCellStyle);
+                }
+            }
+
+            // Tự động điều chỉnh độ rộng cột
+            for (int i = 0; i < headers.length; i++) {
+                sheet.autoSizeColumn(i);
+            }
+
             workbook.write(byteArrayOutputStream);
             return byteArrayOutputStream.toByteArray();
         } catch (IOException e) {

@@ -86,7 +86,7 @@ public class CartServiceImpl implements CartService {
 
         int newQuantity = cartItem.getQuantity() + requestDTO.getQuantity();
         if (newQuantity > product.getStockQuantity()) {
-            throw new BadRequestException(ErrorMessage.Product.ERR_OUT_OF_STOCK);
+            throw new BadRequestException(ErrorMessage.Product.ERR_OUT_OF_STOCK, product.getName(), product.getStockQuantity());
         }
 
         cartItem.setQuantity(newQuantity);
@@ -107,7 +107,7 @@ public class CartServiceImpl implements CartService {
                 .orElseThrow(() -> new NotFoundException(ErrorMessage.Product.ERR_NOT_FOUND_ID, productId));
 
         if (quantity > product.getStockQuantity()) {
-            throw new BadRequestException(ErrorMessage.Product.ERR_OUT_OF_STOCK);
+            throw new BadRequestException(ErrorMessage.Product.ERR_OUT_OF_STOCK, product.getName(), product.getStockQuantity());
         }
 
         cartItem.setQuantity(quantity);
