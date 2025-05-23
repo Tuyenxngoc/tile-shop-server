@@ -74,6 +74,7 @@ public class SecurityConfig {
             //Brand
             "/api/v1/brands",
             "/api/v1/brands/*",
+            "/api/v1/brands/slug/*",
 
             //Category
             "/api/v1/categories",

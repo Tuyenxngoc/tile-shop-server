@@ -66,4 +66,10 @@ public class BrandController {
     public ResponseEntity<?> getBrandById(@PathVariable Long id) {
         return VsResponseUtil.success(brandService.findById(id));
     }
+
+    @Operation(summary = "API Get Brand By Slug")
+    @GetMapping(UrlConstant.Brand.GET_BY_SLUG)
+    public ResponseEntity<?> getBrandBySlug(@PathVariable String slug) {
+        return VsResponseUtil.success(brandService.findBySlug(slug));
+    }
 }

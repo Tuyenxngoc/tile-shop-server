@@ -19,4 +19,6 @@ public interface BrandService {
     PaginationResponseDTO<BrandResponseDTO> findAll(PaginationFullRequestDTO requestDTO);
 
     BrandResponseDTO findById(Long id);
+
+    BrandResponseDTO findBySlug(String slug);
 }

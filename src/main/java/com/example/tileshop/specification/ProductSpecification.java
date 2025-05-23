@@ -57,6 +57,14 @@ public class ProductSpecification {
                                         "%" + keyword.toLowerCase() + "%")
                         );
                     }
+
+                    case "brandSlug" -> {
+                        Join<Product, Brand> brandJoin = root.join(Product_.brand, JoinType.LEFT);
+                        predicate = builder.and(predicate,
+                                builder.like(builder.lower(brandJoin.get(Brand_.slug)),
+                                        "%" + keyword.toLowerCase() + "%")
+                        );
+                    }
                 }
             }
 

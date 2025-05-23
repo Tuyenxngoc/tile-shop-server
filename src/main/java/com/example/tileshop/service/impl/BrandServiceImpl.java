@@ -181,4 +181,12 @@ public class BrandServiceImpl implements BrandService {
 
         return BrandMapper.toDTO(brand);
     }
+
+    @Override
+    public BrandResponseDTO findBySlug(String slug) {
+        Brand brand = brandRepository.findBySlug(slug)
+                .orElseThrow(() -> new NotFoundException(ErrorMessage.Brand.ERR_NOT_FOUND_ID, slug));
+
+        return BrandMapper.toDTO(brand);
+    }
 }
