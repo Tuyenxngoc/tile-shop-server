@@ -1,5 +1,6 @@
 package com.example.tileshop.specification;
 
+import com.example.tileshop.dto.filter.ProductFilterDTO;
 import com.example.tileshop.entity.*;
 import com.example.tileshop.util.SpecificationsUtil;
 import jakarta.persistence.criteria.Join;
@@ -48,10 +49,38 @@ public class ProductSpecification {
                             builder.equal(root.get(Product_.averageRating),
                                     SpecificationsUtil.castToRequiredType(root.get(Product_.averageRating).getJavaType(), keyword))
                     );
+
+                    case "categorySlug" -> {
+                        Join<Product, Category> categoryJoin = root.join(Product_.category);
+                        predicate = builder.and(predicate,
+                                builder.like(builder.lower(categoryJoin.get(Category_.slug)),
+                                        "%" + keyword.toLowerCase() + "%")
+                        );
+                    }
                 }
             }
 
             return predicate;
+        };
+    }
+
+    public static Specification<Product> filterByProductFilterDTO(ProductFilterDTO filterDTO) {
+        return (root, query, builder) -> {
+            List<Predicate> predicates = new ArrayList<>();
+
+            if (filterDTO == null) {
+                return builder.conjunction();
+            }
+
+            // Lọc theo khoảng giá
+            if (filterDTO.getMinPrice() != null) {
+                predicates.add(builder.greaterThanOrEqualTo(root.get(Product_.price), filterDTO.getMinPrice()));
+            }
+            if (filterDTO.getMaxPrice() != null) {
+                predicates.add(builder.lessThanOrEqualTo(root.get(Product_.price), filterDTO.getMaxPrice()));
+            }
+
+            return builder.and(predicates.toArray(new Predicate[0]));
         };
     }
 

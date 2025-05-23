@@ -2,6 +2,7 @@ package com.example.tileshop.controller;
 
 import com.example.tileshop.annotation.RestApiV1;
 import com.example.tileshop.constant.UrlConstant;
+import com.example.tileshop.dto.filter.ProductFilterDTO;
 import com.example.tileshop.dto.pagination.PaginationFullRequestDTO;
 import com.example.tileshop.dto.pagination.PaginationSortRequestDTO;
 import com.example.tileshop.dto.product.ProductRequestDTO;
@@ -62,8 +63,11 @@ public class ProductController {
 
     @Operation(summary = "API Get Products")
     @GetMapping(UrlConstant.Product.GET_ALL)
-    public ResponseEntity<?> getProducts(@ParameterObject PaginationFullRequestDTO requestDTO) {
-        return VsResponseUtil.success(productService.findAll(requestDTO));
+    public ResponseEntity<?> getProducts(
+            @ParameterObject PaginationFullRequestDTO requestDTO,
+            @ParameterObject ProductFilterDTO filterDTO
+    ) {
+        return VsResponseUtil.success(productService.findAll(requestDTO, filterDTO));
     }
 
     @Operation(summary = "API Get Product By Id")

@@ -4,6 +4,7 @@ import com.example.tileshop.constant.ErrorMessage;
 import com.example.tileshop.constant.SortByDataConstant;
 import com.example.tileshop.constant.SuccessMessage;
 import com.example.tileshop.dto.common.CommonResponseDTO;
+import com.example.tileshop.dto.filter.ProductFilterDTO;
 import com.example.tileshop.dto.pagination.PaginationFullRequestDTO;
 import com.example.tileshop.dto.pagination.PaginationResponseDTO;
 import com.example.tileshop.dto.pagination.PaginationSortRequestDTO;
@@ -227,10 +228,11 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public PaginationResponseDTO<ProductResponseDTO> findAll(PaginationFullRequestDTO requestDTO) {
+    public PaginationResponseDTO<ProductResponseDTO> findAll(PaginationFullRequestDTO requestDTO, ProductFilterDTO filterDTO) {
         Pageable pageable = PaginationUtil.buildPageable(requestDTO, SortByDataConstant.PRODUCT);
 
-        Specification<Product> spec = Specification.where(ProductSpecification.filterByField(requestDTO.getSearchBy(), requestDTO.getKeyword()));
+        Specification<Product> spec = Specification.where(ProductSpecification.filterByField(requestDTO.getSearchBy(), requestDTO.getKeyword()))
+                .and(ProductSpecification.filterByProductFilterDTO(filterDTO));
 
         Page<Product> page = productRepository.findAll(spec, pageable);
 

@@ -3,7 +3,6 @@ package com.example.tileshop.mapper;
 import com.example.tileshop.dto.category.CategoryResponseDTO;
 import com.example.tileshop.dto.category.CategorySimpleDTO;
 import com.example.tileshop.dto.category.CategoryTreeResponseDTO;
-import com.example.tileshop.dto.common.BaseEntityDTO;
 import com.example.tileshop.entity.Attribute;
 import com.example.tileshop.entity.Category;
 import com.example.tileshop.entity.CategoryAttribute;
@@ -23,7 +22,7 @@ public class CategoryMapper {
         dto.setDescription(category.getDescription());
         dto.setImageUrl(category.getImageUrl());
         dto.setParent(category.getParent() != null
-                ? new BaseEntityDTO(category.getParent().getId(), category.getParent().getName())
+                ? toSimpleDTO(category.getParent())
                 : null);
         dto.setAttributeIds(category.getCategoryAttributes().stream()
                 .map(CategoryAttribute::getAttribute)

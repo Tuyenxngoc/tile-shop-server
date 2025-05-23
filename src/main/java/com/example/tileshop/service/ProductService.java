@@ -1,6 +1,7 @@
 package com.example.tileshop.service;
 
 import com.example.tileshop.dto.common.CommonResponseDTO;
+import com.example.tileshop.dto.filter.ProductFilterDTO;
 import com.example.tileshop.dto.pagination.PaginationFullRequestDTO;
 import com.example.tileshop.dto.pagination.PaginationResponseDTO;
 import com.example.tileshop.dto.pagination.PaginationSortRequestDTO;
@@ -20,7 +21,7 @@ public interface ProductService {
 
     CommonResponseDTO delete(Long id);
 
-    PaginationResponseDTO<ProductResponseDTO> findAll(PaginationFullRequestDTO requestDTO);
+    PaginationResponseDTO<ProductResponseDTO> findAll(PaginationFullRequestDTO requestDTO, ProductFilterDTO filterDTO);
 
     ProductUpdateResponseDTO findById(Long id);
 
