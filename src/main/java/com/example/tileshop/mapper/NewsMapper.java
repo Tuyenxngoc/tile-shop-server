@@ -1,6 +1,5 @@
 package com.example.tileshop.mapper;
 
-import com.example.tileshop.dto.common.BaseEntityDTO;
 import com.example.tileshop.dto.news.NewsRequestDTO;
 import com.example.tileshop.dto.news.NewsResponseDTO;
 import com.example.tileshop.entity.News;
@@ -21,7 +20,7 @@ public class NewsMapper {
         dto.setContent(news.getContent());
         dto.setImageUrl(news.getImageUrl());
         dto.setViewCount(news.getViewCount());
-        dto.setCategory(new BaseEntityDTO(news.getCategory().getId(), news.getCategory().getName()));
+        dto.setCategory(NewsCategoryMapper.toDTO(news.getCategory()));
 
         return dto;
     }

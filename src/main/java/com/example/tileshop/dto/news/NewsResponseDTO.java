@@ -1,7 +1,7 @@
 package com.example.tileshop.dto.news;
 
-import com.example.tileshop.dto.common.BaseEntityDTO;
 import com.example.tileshop.dto.common.DateAuditingDTO;
+import com.example.tileshop.dto.newscategory.NewsCategoryResponseDTO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,5 +26,5 @@ public class NewsResponseDTO extends DateAuditingDTO {
 
     private long viewCount;
 
-    private BaseEntityDTO category;
+    private NewsCategoryResponseDTO category;
 }

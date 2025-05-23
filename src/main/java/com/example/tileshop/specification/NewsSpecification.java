@@ -52,6 +52,14 @@ public class NewsSpecification {
                                 SpecificationsUtil.castToRequiredType(categoryJoin.get(NewsCategory_.id).getJavaType(), keyword)
                         ));
                     }
+
+                    case "categorySlug" -> {
+                        Join<News, NewsCategory> categoryJoin = root.join(News_.category);
+                        predicate = builder.and(predicate,
+                                builder.like(builder.lower(categoryJoin.get(NewsCategory_.slug)),
+                                        "%" + keyword.toLowerCase() + "%")
+                        );
+                    }
                 }
             }
 
