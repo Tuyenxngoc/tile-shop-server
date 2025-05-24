@@ -28,6 +28,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -44,6 +45,9 @@ import java.util.concurrent.CompletableFuture;
 @Service
 @RequiredArgsConstructor
 public class OrderServiceImpl implements OrderService {
+    @Value("${order.max-pending-orders}")
+    private int maxPendingOrders;
+
     private final OrderRepository orderRepository;
 
     private final CartItemRepository cartItemRepository;
@@ -187,6 +191,12 @@ public class OrderServiceImpl implements OrderService {
     public CommonResponseDTO create(OrderRequestDTO requestDTO, String userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException(messageUtil.getMessage(ErrorMessage.User.ERR_NOT_FOUND_ID, userId)));
+
+        // Kiểm tra số lượng đơn hàng đang chờ xác nhận
+        long pendingOrders = orderRepository.countByUserIdAndStatus(userId, OrderStatus.PENDING);
+        if (pendingOrders >= maxPendingOrders) {
+            throw new BadRequestException(ErrorMessage.Order.ERR_TOO_MANY_PENDING_ORDERS, maxPendingOrders);
+        }
 
         List<CartItem> cartItems = cartItemRepository.findByCartUserId(userId);
         if (cartItems.isEmpty()) {

@@ -1,5 +1,6 @@
 package com.example.tileshop.repository;
 
+import com.example.tileshop.constant.OrderStatus;
 import com.example.tileshop.dto.statistics.RecentOrderDTO;
 import com.example.tileshop.entity.Order;
 import org.springframework.data.domain.Pageable;
@@ -20,6 +21,8 @@ public interface OrderRepository extends JpaRepository<Order, Long>, JpaSpecific
     List<Order> findAllByUserId(String userId);
 
     Optional<Order> findByIdAndUserId(Long id, String userId);
+
+    long countByUserIdAndStatus(String userId, OrderStatus status);
 
     @Query("SELECT o.status, COUNT(o) FROM Order o GROUP BY o.status")
     List<Object[]> countOrdersGroupByStatus();

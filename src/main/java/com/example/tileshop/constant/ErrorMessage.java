@@ -123,6 +123,7 @@ public class ErrorMessage {
         public static final String ERR_SAME_STATUS = "exception.order.same-status";
         public static final String ERR_INVALID_STATUS_TRANSITION = "exception.order.invalid-status-transition";
         public static final String ERR_CANNOT_UPDATE_FINALIZED_ORDER = "exception.order.cannot.update.finalized";
+        public static final String ERR_TOO_MANY_PENDING_ORDERS = "exception.order.too.many.pending.orders";
     }
 
     public static class OrderItem {
