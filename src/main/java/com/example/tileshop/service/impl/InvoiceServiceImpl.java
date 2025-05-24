@@ -227,6 +227,156 @@ public class InvoiceServiceImpl implements InvoiceService {
         }
     }
 
+    @Override
+    public void generateCompanyInvoice(Order order, OutputStream outputStream, String companyName, String companyAddress, String taxCode) {
+        Document document = new Document(PageSize.A4, 50, 50, 50, 50);
+
+        try {
+            PdfWriter.getInstance(document, outputStream);
+            document.open();
+
+            // Header cửa hàng y như cũ
+            PdfPTable headerTable = new PdfPTable(2);
+            headerTable.setWidthPercentage(100);
+
+            PdfPCell shopInfoCell = new PdfPCell();
+            shopInfoCell.setBorder(Rectangle.NO_BORDER);
+
+            Paragraph shopName = new Paragraph("GẠCH MEN CAO CẤP HÙNG HƯƠNG", boldFontLarge);
+            shopName.setAlignment(Element.ALIGN_LEFT);
+
+            Paragraph shopAddress = new Paragraph("Địa chỉ: 308 Tây Tựu, Bắc Từ Liêm, Hà Nội", normalFontMedium);
+            Paragraph shopPhone = new Paragraph("Điện thoại: 0988 027 222", normalFontMedium);
+
+            shopInfoCell.addElement(shopName);
+            shopInfoCell.addElement(shopAddress);
+            shopInfoCell.addElement(shopPhone);
+
+            PdfPCell logoCell = new PdfPCell();
+            logoCell.setBorder(Rectangle.NO_BORDER);
+            try {
+                String logoPath = "src/main/resources/static/images/logo.png";
+                Image logo = Image.getInstance(logoPath);
+                logo.scaleToFit(100, 100);
+                logo.setAlignment(Image.ALIGN_RIGHT);
+                logoCell.addElement(logo);
+            } catch (Exception e) {
+                log.warn("Không thể tải logo, bỏ qua phần logo");
+            }
+
+            headerTable.addCell(shopInfoCell);
+            headerTable.addCell(logoCell);
+            document.add(headerTable);
+
+            document.add(Chunk.NEWLINE);
+
+            // Title
+            Paragraph title = new Paragraph("HÓA ĐƠN GTGT", headerFont);
+            title.setAlignment(Element.ALIGN_CENTER);
+            title.setSpacingAfter(20);
+            document.add(title);
+
+            // Company Info
+            document.add(new Paragraph("Tên công ty: " + companyName, boldFontMedium));
+            document.add(new Paragraph("Địa chỉ: " + companyAddress, normalFontMedium));
+            document.add(new Paragraph("Mã số thuế: " + taxCode, normalFontMedium));
+            document.add(new Paragraph("Mã hóa đơn: " + order.getId(), normalFontMedium));
+            document.add(new Paragraph("Ngày đặt: " + order.getCreatedDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")), normalFontMedium));
+
+            document.add(Chunk.NEWLINE);
+
+            // Table setup
+            PdfPTable table = new PdfPTable(5);
+            table.setWidthPercentage(100);
+            table.setWidths(new float[]{0.8f, 3.5f, 1.2f, 1.5f, 1.5f});
+
+            // Table Header
+            addTableHeader(table, "STT", boldFontMedium);
+            addTableHeader(table, "Sản phẩm", boldFontMedium);
+            addTableHeader(table, "Số lượng", boldFontMedium);
+            addTableHeader(table, "Đơn giá", boldFontMedium);
+            addTableHeader(table, "Thành tiền", boldFontMedium);
+
+            // Table content
+            List<OrderItem> orderItems = order.getOrderItems();
+            for (int i = 0; i < orderItems.size(); i++) {
+                OrderItem item = orderItems.get(i);
+
+                // Cột STT - căn giữa
+                PdfPCell sttCell = new PdfPCell(new Phrase(String.valueOf(i + 1), normalFontMedium));
+                sttCell.setHorizontalAlignment(Element.ALIGN_CENTER);
+                table.addCell(sttCell);
+
+                // Cột tên sản phẩm - căn trái
+                PdfPCell productCell = new PdfPCell(new Phrase(item.getProduct().getName(), normalFontMedium));
+                productCell.setHorizontalAlignment(Element.ALIGN_LEFT);
+                table.addCell(productCell);
+
+                // Cột số lượng - căn giữa
+                PdfPCell qtyCell = new PdfPCell(new Phrase(String.valueOf(item.getQuantity()), normalFontMedium));
+                qtyCell.setHorizontalAlignment(Element.ALIGN_CENTER);
+                table.addCell(qtyCell);
+
+                // Cột đơn giá - căn phải
+                PdfPCell priceCell = new PdfPCell(new Phrase(String.format("%,.0f", item.getPriceAtTimeOfOrder()), normalFontMedium));
+                priceCell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+                table.addCell(priceCell);
+
+                // Cột thành tiền - căn phải
+                PdfPCell totalCell = new PdfPCell(new Phrase(String.format("%,.0f", item.getQuantity() * item.getPriceAtTimeOfOrder()), normalFontMedium));
+                totalCell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+                table.addCell(totalCell);
+            }
+
+            document.add(table);
+
+            document.add(Chunk.NEWLINE);
+
+            // Total
+            Paragraph total = new Paragraph("Tổng tiền: " + String.format("%,.0f VND", order.getTotalAmount()), boldFontLarge);
+            total.setAlignment(Element.ALIGN_RIGHT);
+            total.setSpacingAfter(20);
+            document.add(total);
+
+            // Date
+            Paragraph dateParagraph = new Paragraph();
+            dateParagraph.setAlignment(Element.ALIGN_RIGHT);
+            dateParagraph.add(new Chunk("Ngày ", normalFontMedium));
+            dateParagraph.add(new Chunk(order.getCreatedDate().format(DateTimeFormatter.ofPattern("dd")), boldFontMedium));
+            dateParagraph.add(new Chunk(" tháng ", normalFontMedium));
+            dateParagraph.add(new Chunk(order.getCreatedDate().format(DateTimeFormatter.ofPattern("MM")), boldFontMedium));
+            dateParagraph.add(new Chunk(" năm ", normalFontMedium));
+            dateParagraph.add(new Chunk(order.getCreatedDate().format(DateTimeFormatter.ofPattern("yyyy")), boldFontMedium));
+            dateParagraph.setSpacingAfter(30f);
+            document.add(dateParagraph);
+
+            // Sign
+            PdfPTable signTable = new PdfPTable(2);
+            signTable.setWidthPercentage(100);
+            signTable.setSpacingAfter(60f);
+
+            Paragraph customerSign = new Paragraph("Đại diện bên mua", italicFontMedium);
+            customerSign.setAlignment(Element.ALIGN_CENTER);
+
+            Paragraph sellerSign = new Paragraph("Đại diện bên bán", italicFontMedium);
+            sellerSign.setAlignment(Element.ALIGN_CENTER);
+
+            signTable.addCell(createSignCell(customerSign));
+            signTable.addCell(createSignCell(sellerSign));
+
+            document.add(signTable);
+
+            // Footer
+            Paragraph footer = new Paragraph("Cảm ơn Quý công ty đã tin tưởng và hợp tác!", italicFontMedium);
+            footer.setAlignment(Element.ALIGN_CENTER);
+            document.add(footer);
+
+            document.close();
+        } catch (Exception e) {
+            log.error("Unexpected error while generating company invoice for order ID: {}. Error: {}", order.getId(), e.getMessage(), e);
+        }
+    }
+
     private void addTableHeader(PdfPTable table, String headerTitle, Font font) {
         PdfPCell header = new PdfPCell();
         header.setBackgroundColor(BaseColor.LIGHT_GRAY);

@@ -3,6 +3,7 @@ package com.example.tileshop.util;
 import com.example.tileshop.dto.common.DataMailDTO;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
+import jakarta.mail.util.ByteArrayDataSource;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -14,6 +15,7 @@ import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
 import java.nio.charset.StandardCharsets;
+import java.util.Locale;
 import java.util.Objects;
 
 @Component
@@ -52,7 +54,7 @@ public class SendMailUtil {
      */
     public void sendMailWithAttachment(DataMailDTO mail, MultipartFile[] files) throws MessagingException {
         MimeMessage message = mailSender.createMimeMessage();
-        MimeMessageHelper helper = new MimeMessageHelper(message, true, "utf-8");
+        MimeMessageHelper helper = new MimeMessageHelper(message, true, StandardCharsets.UTF_8.name());
         helper.setTo(mail.getTo());
         helper.setSubject(mail.getSubject());
         helper.setText(mail.getContent());
@@ -61,6 +63,37 @@ public class SendMailUtil {
                 helper.addAttachment(Objects.requireNonNull(file.getOriginalFilename()), file);
             }
         }
+        mailSender.send(message);
+    }
+
+    /**
+     * Gửi mail với nội dung HTML và file đính kèm
+     *
+     * @param mail            Thông tin mail cần gửi
+     * @param template        Tên file HTML template trong resources/templates
+     * @param attachmentBytes File đính kèm dạng byte[]
+     * @param attachmentName  Tên file đính kèm
+     */
+    public void sendMailWithAttachmentAndHtml(DataMailDTO mail, String template, byte[] attachmentBytes, String attachmentName)
+            throws MessagingException {
+
+        MimeMessage message = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message, true, StandardCharsets.UTF_8.name());
+
+        helper.setTo(mail.getTo());
+        helper.setSubject(mail.getSubject());
+
+        // Xử lý nội dung HTML
+        Context context = new Context(Locale.of("vi", "VN"));
+        context.setVariables(mail.getProperties());
+        String htmlMsg = templateEngine.process(template, context);
+        helper.setText(htmlMsg, true);
+
+        // Đính kèm file PDF từ byte array
+        if (attachmentBytes != null && attachmentName != null) {
+            helper.addAttachment(attachmentName, new ByteArrayDataSource(attachmentBytes, "application/pdf"));
+        }
+
         mailSender.send(message);
     }
 }

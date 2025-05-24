@@ -2,6 +2,7 @@ package com.example.tileshop.service.impl;
 
 import com.example.tileshop.constant.*;
 import com.example.tileshop.dto.common.CommonResponseDTO;
+import com.example.tileshop.dto.common.DataMailDTO;
 import com.example.tileshop.dto.filter.OrderFilterRequestDTO;
 import com.example.tileshop.dto.order.*;
 import com.example.tileshop.dto.pagination.PaginationFullRequestDTO;
@@ -22,6 +23,7 @@ import com.example.tileshop.service.OrderService;
 import com.example.tileshop.specification.OrderSpecification;
 import com.example.tileshop.util.MessageUtil;
 import com.example.tileshop.util.PaginationUtil;
+import com.example.tileshop.util.SendMailUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.*;
@@ -36,6 +38,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 
 @Slf4j
 @Service
@@ -52,6 +55,8 @@ public class OrderServiceImpl implements OrderService {
     private final ProductRepository productRepository;
 
     private final InvoiceService invoiceService;
+
+    private final SendMailUtil sendMailUtil;
 
     private static final Map<OrderStatus, Set<OrderStatus>> allowedTransitions = Map.of(
             OrderStatus.PENDING, EnumSet.of(OrderStatus.CONFIRMED, OrderStatus.CANCELLED),
@@ -238,8 +243,63 @@ public class OrderServiceImpl implements OrderService {
         orderRepository.save(order);
         cartItemRepository.deleteByCartUserId(userId);
 
+        // Gửi hóa đơn qua email
+        if (requestDTO.getRequestInvoice()) {
+            sendOrderInvoiceByEmail(order, requestDTO.getInvoiceCompanyName(), requestDTO.getInvoiceCompanyAddress(), requestDTO.getInvoiceTaxCode());
+        }
+
         String message = messageUtil.getMessage(SuccessMessage.CREATE);
         return new CommonResponseDTO(message, new OrderPaymentResponseDTO(order));
+    }
+
+    private void sendOrderInvoiceByEmail(Order order, String invoiceCompanyName, String invoiceCompanyAddress, String invoiceTaxCode) {
+        final byte[] invoiceBytes;
+        try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+            invoiceService.generateCompanyInvoice(order, baos, invoiceCompanyName, invoiceCompanyAddress, invoiceTaxCode);
+            invoiceBytes = baos.toByteArray();
+        } catch (Exception e) {
+            log.error("Error while generating invoice PDF for order ID: {}", order.getId(), e);
+            return;
+        }
+
+        CompletableFuture.runAsync(() -> {
+            try {
+                DataMailDTO mailDTO = new DataMailDTO();
+                mailDTO.setTo(order.getRecipientEmail());
+                mailDTO.setSubject("Hóa đơn mua hàng #" + order.getId());
+
+                Map<String, Object> props = new HashMap<>();
+                props.put("currentTime", new Date());
+                props.put("fullName", order.getRecipientName());
+                props.put("orderId", order.getId());
+                props.put("recipientName", order.getRecipientName());
+                props.put("shippingAddress", order.getShippingAddress());
+                props.put("paymentMethod", order.getPaymentMethod().name());
+
+                List<Map<String, Object>> orderItems = new ArrayList<>();
+                for (OrderItem item : order.getOrderItems()) {
+                    Map<String, Object> itemMap = new HashMap<>();
+                    itemMap.put("productName", item.getProduct().getName());
+                    itemMap.put("quantity", item.getQuantity());
+                    itemMap.put("priceAtTimeOfOrder", item.getPriceAtTimeOfOrder());
+                    orderItems.add(itemMap);
+                }
+
+                props.put("orderItems", orderItems);
+                props.put("totalAmount", order.getTotalAmount());
+
+                mailDTO.setProperties(props);
+
+                sendMailUtil.sendMailWithAttachmentAndHtml(
+                        mailDTO,
+                        "invoice.html",
+                        invoiceBytes,
+                        "HoaDon_" + order.getId() + ".pdf"
+                );
+            } catch (Exception e) {
+                log.error("Lỗi gửi mail hóa đơn cho order ID: {}", order.getId(), e);
+            }
+        });
     }
 
     @Override
