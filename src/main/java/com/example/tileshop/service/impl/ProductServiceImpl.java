@@ -223,6 +223,9 @@ public class ProductServiceImpl implements ProductService {
         if (!product.getCartItems().isEmpty()) {
             throw new BadRequestException(ErrorMessage.Product.ERR_EXIST_CART_ITEMS);
         }
+
+        productRepository.delete(product);
+
         String message = messageUtil.getMessage(SuccessMessage.DELETE);
         return new CommonResponseDTO(message);
     }

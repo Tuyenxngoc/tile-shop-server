@@ -33,5 +33,7 @@ public interface OrderService {
 
     byte[] generateOrderReport(OrderFilterRequestDTO filter);
 
+    byte[] generateInvoicePdf(Long id);
+
     CommonResponseDTO updateOrder(Long id, OrderUpdateRequestDTO requestDTO);
 }

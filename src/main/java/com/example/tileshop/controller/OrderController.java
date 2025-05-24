@@ -91,6 +91,20 @@ public class OrderController {
                 .body(report);
     }
 
+    @Operation(summary = "API print invoice PDF")
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping(UrlConstant.Order.Admin.PRINT_INVOICE)
+    public ResponseEntity<byte[]> printInvoice(@PathVariable Long id) {
+        byte[] invoicePdf = orderService.generateInvoicePdf(id);
+
+        String fileName = "Invoice_" + id + ".pdf";
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + fileName)
+                .header(HttpHeaders.CONTENT_TYPE, "application/pdf")
+                .body(invoicePdf);
+    }
+
     // -------------------- USER APIs --------------------
 
     @Operation(summary = "User - API Get All Orders")

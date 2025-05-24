@@ -17,6 +17,7 @@ import com.example.tileshop.repository.OrderRepository;
 import com.example.tileshop.repository.ProductRepository;
 import com.example.tileshop.repository.UserRepository;
 import com.example.tileshop.security.CustomUserDetails;
+import com.example.tileshop.service.InvoiceService;
 import com.example.tileshop.service.OrderService;
 import com.example.tileshop.specification.OrderSpecification;
 import com.example.tileshop.util.MessageUtil;
@@ -49,6 +50,8 @@ public class OrderServiceImpl implements OrderService {
     private final MessageUtil messageUtil;
 
     private final ProductRepository productRepository;
+
+    private final InvoiceService invoiceService;
 
     private static final Map<OrderStatus, Set<OrderStatus>> allowedTransitions = Map.of(
             OrderStatus.PENDING, EnumSet.of(OrderStatus.CONFIRMED, OrderStatus.CANCELLED),
@@ -121,7 +124,7 @@ public class OrderServiceImpl implements OrderService {
 
         orderRepository.save(order);
 
-        String message = messageUtil.getMessage(SuccessMessage.Order.UPDATE_STATUS, newStatus.name());
+        String message = messageUtil.getMessage(SuccessMessage.Order.UPDATE_STATUS, newStatus.getDescription());
         return new CommonResponseDTO(message, OrderMapper.toDTO(order));
     }
 
@@ -356,6 +359,19 @@ public class OrderServiceImpl implements OrderService {
         } catch (IOException e) {
             log.error("Error while generating Excel report", e);
             throw new RuntimeException("Error while generating Excel report", e);
+        }
+    }
+
+    @Override
+    public byte[] generateInvoicePdf(Long id) {
+        Order order = getEntity(id);
+
+        try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+            invoiceService.generateInvoice(order, baos);
+            return baos.toByteArray();
+        } catch (Exception e) {
+            log.error("Error while generating invoice PDF for order ID: {}", id, e);
+            throw new RuntimeException("Error generating invoice PDF file", e);
         }
     }
 
