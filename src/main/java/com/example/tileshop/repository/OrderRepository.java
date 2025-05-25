@@ -1,6 +1,7 @@
 package com.example.tileshop.repository;
 
 import com.example.tileshop.constant.OrderStatus;
+import com.example.tileshop.dto.statistics.CategoryRevenueChartDTO;
 import com.example.tileshop.dto.statistics.RecentOrderDTO;
 import com.example.tileshop.entity.Order;
 import org.springframework.data.domain.Pageable;
@@ -51,4 +52,21 @@ public interface OrderRepository extends JpaRepository<Order, Long>, JpaSpecific
                 ORDER BY o.createdDate DESC
             """)
     List<RecentOrderDTO> findRecentOrders(Pageable pageable);
+
+    @Query("""
+                SELECT new com.example.tileshop.dto.statistics.CategoryRevenueChartDTO(
+                    c.id, c.name, SUM(oi.priceAtTimeOfOrder * oi.quantity)
+                )
+                FROM Order o
+                JOIN o.orderItems oi
+                JOIN oi.product p
+                JOIN p.category c
+                WHERE o.status = 'DELIVERED'
+                  AND o.createdDate BETWEEN :startDate AND :endDate
+                GROUP BY c.name
+            """)
+    List<CategoryRevenueChartDTO> getRevenueByCategory(
+            @Param("startDate") LocalDateTime startDate,
+            @Param("endDate") LocalDateTime endDate
+    );
 }

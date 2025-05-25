@@ -17,4 +17,6 @@ public interface StatService {
     List<RecentOrderDTO> getRecentOrders();
 
     List<Point> getRevenueStats(RevenueStatsFilter filter);
+
+    List<CategoryRevenueChartDTO> getRevenueByCategory(RevenueStatsFilter filter);
 }

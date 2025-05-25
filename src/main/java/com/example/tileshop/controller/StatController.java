@@ -61,4 +61,11 @@ public class StatController {
     public ResponseEntity<?> getRevenueStats(@ParameterObject RevenueStatsFilter filter) {
         return VsResponseUtil.success(statService.getRevenueStats(filter));
     }
+
+    @Operation(summary = "API Get Revenue Statistics by Category")
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping(UrlConstant.Stat.GET_REVENUE_BY_CATEGORY)
+    public ResponseEntity<?> getRevenueByCategory(@ParameterObject RevenueStatsFilter filter) {
+        return VsResponseUtil.success(statService.getRevenueByCategory(filter));
+    }
 }

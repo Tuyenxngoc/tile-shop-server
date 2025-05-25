@@ -29,6 +29,7 @@ public class UrlConstant {
         public static final String GET_TOP_CUSTOMERS = PRE_FIX + "/top-customers";
         public static final String GET_RECENT_ORDERS = PRE_FIX + "/recent-orders";
         public static final String GET_REVENUE_STATS = PRE_FIX + "/revenue";
+        public static final String GET_REVENUE_BY_CATEGORY = PRE_FIX + "/revenue-by-category";
     }
 
     public static class Payment {

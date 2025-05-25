@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -177,17 +178,14 @@ public class StatServiceImpl implements StatService {
     @Override
     public List<Point> getRevenueStats(RevenueStatsFilter filter) {
         if (filter == null) {
-            return null;
+            return Collections.emptyList();
         }
 
         LocalDate date = filter.getDate();
-        String type = filter.getType(); // "day" | "week" | "month" | "year"
+        String type = filter.getType();
 
-        if (date == null) {
-            return null;
-        }
-        if (type == null || !(type.equals("day") || type.equals("week") || type.equals("month") || type.equals("year"))) {
-            return null;
+        if (date == null || type == null) {
+            return Collections.emptyList();
         }
 
         List<Point> results = new ArrayList<>();
@@ -243,7 +241,54 @@ public class StatServiceImpl implements StatService {
                     results.add(new Point(timestamp, revenue));
                 }
             }
+            default -> {
+                return results;
+            }
         }
         return results;
+    }
+
+    @Override
+    public List<CategoryRevenueChartDTO> getRevenueByCategory(RevenueStatsFilter filter) {
+        if (filter == null) {
+            return Collections.emptyList();
+        }
+
+        LocalDate date = filter.getDate();
+        String type = filter.getType();
+
+        if (date == null || type == null) {
+            return Collections.emptyList();
+        }
+
+        LocalDate startDate;
+        LocalDate endDate;
+
+        switch (type) {
+            case "day" -> {
+                startDate = date;
+                endDate = date;
+            }
+            case "week" -> {
+                startDate = date.with(DayOfWeek.MONDAY);
+                endDate = date.with(DayOfWeek.SUNDAY);
+            }
+            case "month" -> {
+                startDate = date.withDayOfMonth(1);
+                endDate = date.withDayOfMonth(date.lengthOfMonth());
+            }
+            case "year" -> {
+                startDate = date.withDayOfYear(1);
+                endDate = date.withDayOfYear(date.lengthOfYear());
+            }
+            default -> {
+                return Collections.emptyList();
+            }
+        }
+
+        LocalDateTime start = startDate.atStartOfDay();
+        LocalDateTime end = endDate.atTime(LocalTime.MAX);
+
+        return orderRepository.getRevenueByCategory(start, end);
     }
 }
