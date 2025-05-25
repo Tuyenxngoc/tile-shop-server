@@ -1,12 +1,14 @@
 package com.example.tileshop.service;
 
+import com.example.tileshop.dto.filter.RevenueStatsFilter;
 import com.example.tileshop.dto.filter.TimeFilter;
 import com.example.tileshop.dto.statistics.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public interface StatService {
-    DashboardStatsResponseDTO getStatistics(TimeFilter timeFilter);
+    DashboardStatsResponseDTO getStatistics(LocalDate date);
 
     List<TopSellingProductDTO> getTopSellingProducts(TimeFilter filter);
 
@@ -14,5 +16,5 @@ public interface StatService {
 
     List<RecentOrderDTO> getRecentOrders();
 
-    List<RevenueByDateDTO> getRevenueStats(TimeFilter timeFilter);
+    List<Point> getRevenueStats(RevenueStatsFilter filter);
 }

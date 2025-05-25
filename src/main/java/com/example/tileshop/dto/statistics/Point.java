@@ -9,8 +9,8 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class RevenueByDateDTO {
-    private String date;      // "2025-05-01"
+public class Point {
+    private long timestamp;
 
-    private double revenue;   // 2000000
+    private double value;
 }

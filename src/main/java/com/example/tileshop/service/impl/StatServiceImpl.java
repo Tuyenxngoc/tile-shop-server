@@ -1,5 +1,6 @@
 package com.example.tileshop.service.impl;
 
+import com.example.tileshop.dto.filter.RevenueStatsFilter;
 import com.example.tileshop.dto.filter.TimeFilter;
 import com.example.tileshop.dto.statistics.*;
 import com.example.tileshop.repository.OrderRepository;
@@ -11,7 +12,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
+import java.time.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -26,8 +28,13 @@ public class StatServiceImpl implements StatService {
     private double getCustomerChangePercentage(LocalDateTime startDate, LocalDateTime endDate, LocalDateTime prevStartDate, LocalDateTime prevEndDate) {
         int currentCount = userRepository.countNewCustomers(startDate, endDate);
         int previousCount = userRepository.countNewCustomers(prevStartDate, prevEndDate);
-        if (previousCount == 0) return 100.0;
-        return ((double) (currentCount - previousCount) / previousCount) * 100;
+
+        if (previousCount == 0) {
+            return currentCount > 0 ? 100.0 : 0.0;
+        }
+
+        double percentage = ((double) (currentCount - previousCount) / previousCount) * 100;
+        return Math.round(percentage * 10.0) / 10.0;
     }
 
     private double getProductChangePercentage(LocalDateTime startDate, LocalDateTime endDate, LocalDateTime prevStartDate, LocalDateTime prevEndDate) {
@@ -38,29 +45,42 @@ public class StatServiceImpl implements StatService {
             return currentCount > 0 ? 100.0 : 0.0;
         }
 
-        return ((double) (currentCount - previousCount) / previousCount) * 100;
+        double percentage = ((double) (currentCount - previousCount) / previousCount) * 100;
+        return Math.round(percentage * 10.0) / 10.0;
     }
 
     private double getOrderChangePercentage(LocalDateTime startDate, LocalDateTime endDate, LocalDateTime prevStartDate, LocalDateTime prevEndDate) {
         int currentCount = orderRepository.countOrders(startDate, endDate);
         int previousCount = orderRepository.countOrders(prevStartDate, prevEndDate);
-        if (previousCount == 0) return 100.0;
-        return ((double) (currentCount - previousCount) / previousCount) * 100;
+
+        if (previousCount == 0) {
+            return currentCount > 0 ? 100.0 : 0.0;
+        }
+
+        double percentage = ((double) (currentCount - previousCount) / previousCount) * 100;
+        return Math.round(percentage * 10.0) / 10.0;
     }
 
     private double getRevenueChangePercentage(LocalDateTime startDate, LocalDateTime endDate, LocalDateTime prevStartDate, LocalDateTime prevEndDate) {
         double currentRevenue = orderRepository.getTotalRevenue(startDate, endDate);
         double previousRevenue = orderRepository.getTotalRevenue(prevStartDate, prevEndDate);
-        if (previousRevenue == 0) return 100.0;
-        return ((currentRevenue - previousRevenue) / previousRevenue) * 100;
+
+        if (previousRevenue == 0) {
+            return currentRevenue > 0 ? 100.0 : 0.0;
+        }
+
+        double percentage = ((currentRevenue - previousRevenue) / previousRevenue) * 100;
+        return Math.round(percentage * 10.0) / 10.0;
     }
 
     @Override
-    public DashboardStatsResponseDTO getStatistics(TimeFilter timeFilter) {
-        LocalDateTime startDate = LocalDateTime.now().minusDays(1); // hôm qua
-        LocalDateTime endDate = LocalDateTime.now();                // hôm nay
-        LocalDateTime prevStartDate = startDate;
-        LocalDateTime prevEndDate = startDate;
+    public DashboardStatsResponseDTO getStatistics(LocalDate date) {
+        LocalDateTime startDate = date.atStartOfDay();
+        LocalDateTime endDate = date.atTime(23, 59, 59, 999_999_999);  // 23:59:59.999999999 ngày date
+
+        LocalDate prevDate = date.minusDays(1);
+        LocalDateTime prevStartDate = prevDate.atStartOfDay();
+        LocalDateTime prevEndDate = prevDate.atTime(23, 59, 59, 999_999_999);  // 23:59:59.999999999 ngày prevDate
 
         DashboardStatsResponseDTO responseDTO = new DashboardStatsResponseDTO();
 
@@ -72,9 +92,7 @@ public class StatServiceImpl implements StatService {
         revenueStat.setTotalRevenue(totalRevenue);
         revenueStat.setPercentageChange(revenueChange);
         revenueStat.setCurrency("VND");
-        revenueStat.setPeriod(
-                timeFilter.getStartDate() + " - " + timeFilter.getEndDate()
-        );
+        revenueStat.setPeriod(startDate + " - " + endDate);
         responseDTO.setRevenueStat(revenueStat);
 
         // Order Stat
@@ -157,7 +175,75 @@ public class StatServiceImpl implements StatService {
     }
 
     @Override
-    public List<RevenueByDateDTO> getRevenueStats(TimeFilter timeFilter) {
-        return List.of();
+    public List<Point> getRevenueStats(RevenueStatsFilter filter) {
+        if (filter == null) {
+            return null;
+        }
+
+        LocalDate date = filter.getDate();
+        String type = filter.getType(); // "day" | "week" | "month" | "year"
+
+        if (date == null) {
+            return null;
+        }
+        if (type == null || !(type.equals("day") || type.equals("week") || type.equals("month") || type.equals("year"))) {
+            return null;
+        }
+
+        List<Point> results = new ArrayList<>();
+        switch (type) {
+            case "day" -> {
+                LocalDateTime dayStart = date.atStartOfDay();
+                for (int hour = 0; hour < 24; hour++) {
+                    LocalDateTime start = dayStart.plusHours(hour);
+                    LocalDateTime end = start.plusHours(1).minusSeconds(1);
+
+                    double revenue = orderRepository.getTotalRevenue(start, end);
+                    long timestamp = start.atZone(ZoneId.systemDefault()).toEpochSecond();
+                    results.add(new Point(timestamp, revenue));
+                }
+            }
+            case "week" -> {
+                LocalDate weekStart = date.with(DayOfWeek.MONDAY);
+                LocalDate weekEnd = date.with(DayOfWeek.SUNDAY);
+                LocalDate current = weekStart;
+                while (!current.isAfter(weekEnd)) {
+                    LocalDateTime start = current.atStartOfDay();
+                    LocalDateTime end = current.atTime(LocalTime.MAX);
+
+                    double revenue = orderRepository.getTotalRevenue(start, end);
+                    long timestamp = start.atZone(ZoneId.systemDefault()).toEpochSecond();
+                    results.add(new Point(timestamp, revenue));
+
+                    current = current.plusDays(1);
+                }
+            }
+            case "month" -> {
+                LocalDate monthStart = date.withDayOfMonth(1);
+                LocalDate monthEnd = date.withDayOfMonth(date.lengthOfMonth());
+                LocalDate current = monthStart;
+                while (!current.isAfter(monthEnd)) {
+                    LocalDateTime start = current.atStartOfDay();
+                    LocalDateTime end = current.atTime(LocalTime.MAX);
+                    double revenue = orderRepository.getTotalRevenue(start, end);
+                    long timestamp = start.atZone(ZoneId.systemDefault()).toEpochSecond();
+                    results.add(new Point(timestamp, revenue));
+                    current = current.plusDays(1);
+                }
+            }
+            case "year" -> {
+                Year year = Year.of(date.getYear());
+                for (int month = 1; month <= 12; month++) {
+                    LocalDate monthStart = year.atMonth(month).atDay(1);
+                    LocalDate monthEnd = monthStart.withDayOfMonth(monthStart.lengthOfMonth());
+                    LocalDateTime start = monthStart.atStartOfDay();
+                    LocalDateTime end = monthEnd.atTime(LocalTime.MAX);
+                    double revenue = orderRepository.getTotalRevenue(start, end);
+                    long timestamp = start.atZone(ZoneId.systemDefault()).toEpochSecond();
+                    results.add(new Point(timestamp, revenue));
+                }
+            }
+        }
+        return results;
     }
 }

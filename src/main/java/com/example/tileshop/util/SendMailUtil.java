@@ -76,7 +76,6 @@ public class SendMailUtil {
      */
     public void sendMailWithAttachmentAndHtml(DataMailDTO mail, String template, byte[] attachmentBytes, String attachmentName)
             throws MessagingException {
-
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true, StandardCharsets.UTF_8.name());
 
