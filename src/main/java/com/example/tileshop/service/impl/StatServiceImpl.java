@@ -1,5 +1,6 @@
 package com.example.tileshop.service.impl;
 
+import com.example.tileshop.constant.OrderStatus;
 import com.example.tileshop.dto.filter.RevenueStatsFilter;
 import com.example.tileshop.dto.filter.TimeFilter;
 import com.example.tileshop.dto.statistics.*;
@@ -7,15 +8,14 @@ import com.example.tileshop.repository.OrderRepository;
 import com.example.tileshop.repository.ProductRepository;
 import com.example.tileshop.repository.UserRepository;
 import com.example.tileshop.service.StatService;
+import com.example.tileshop.service.VisitTrackingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.*;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -26,9 +26,11 @@ public class StatServiceImpl implements StatService {
 
     private final ProductRepository productRepository;
 
+    private final VisitTrackingService visitTrackingService;
+
     private double getCustomerChangePercentage(LocalDateTime startDate, LocalDateTime endDate, LocalDateTime prevStartDate, LocalDateTime prevEndDate) {
-        int currentCount = userRepository.countNewCustomers(startDate, endDate);
-        int previousCount = userRepository.countNewCustomers(prevStartDate, prevEndDate);
+        int currentCount = userRepository.countCustomers(startDate, endDate);
+        int previousCount = userRepository.countCustomers(prevStartDate, prevEndDate);
 
         if (previousCount == 0) {
             return currentCount > 0 ? 100.0 : 0.0;
@@ -113,7 +115,7 @@ public class StatServiceImpl implements StatService {
 
         // Customer Stat
         int totalCustomers = userRepository.countCustomers();
-        int newCustomers = userRepository.countNewCustomers(startDate, endDate);
+        int newCustomers = userRepository.countCustomers(startDate, endDate);
         double customerChange = getCustomerChangePercentage(startDate, endDate, prevStartDate, prevEndDate);
 
         CustomerStatDTO customerStat = new CustomerStatDTO();
@@ -176,7 +178,7 @@ public class StatServiceImpl implements StatService {
     }
 
     @Override
-    public List<Point> getRevenueStats(RevenueStatsFilter filter) {
+    public List<PointDTO> getRevenueStats(RevenueStatsFilter filter) {
         if (filter == null) {
             return Collections.emptyList();
         }
@@ -188,7 +190,7 @@ public class StatServiceImpl implements StatService {
             return Collections.emptyList();
         }
 
-        List<Point> results = new ArrayList<>();
+        List<PointDTO> results = new ArrayList<>();
         switch (type) {
             case "day" -> {
                 LocalDateTime dayStart = date.atStartOfDay();
@@ -198,7 +200,7 @@ public class StatServiceImpl implements StatService {
 
                     double revenue = orderRepository.getTotalRevenue(start, end);
                     long timestamp = start.atZone(ZoneId.systemDefault()).toEpochSecond();
-                    results.add(new Point(timestamp, revenue));
+                    results.add(new PointDTO(timestamp, revenue));
                 }
             }
             case "week" -> {
@@ -211,7 +213,7 @@ public class StatServiceImpl implements StatService {
 
                     double revenue = orderRepository.getTotalRevenue(start, end);
                     long timestamp = start.atZone(ZoneId.systemDefault()).toEpochSecond();
-                    results.add(new Point(timestamp, revenue));
+                    results.add(new PointDTO(timestamp, revenue));
 
                     current = current.plusDays(1);
                 }
@@ -225,7 +227,7 @@ public class StatServiceImpl implements StatService {
                     LocalDateTime end = current.atTime(LocalTime.MAX);
                     double revenue = orderRepository.getTotalRevenue(start, end);
                     long timestamp = start.atZone(ZoneId.systemDefault()).toEpochSecond();
-                    results.add(new Point(timestamp, revenue));
+                    results.add(new PointDTO(timestamp, revenue));
                     current = current.plusDays(1);
                 }
             }
@@ -238,7 +240,7 @@ public class StatServiceImpl implements StatService {
                     LocalDateTime end = monthEnd.atTime(LocalTime.MAX);
                     double revenue = orderRepository.getTotalRevenue(start, end);
                     long timestamp = start.atZone(ZoneId.systemDefault()).toEpochSecond();
-                    results.add(new Point(timestamp, revenue));
+                    results.add(new PointDTO(timestamp, revenue));
                 }
             }
             default -> {
@@ -290,5 +292,123 @@ public class StatServiceImpl implements StatService {
         LocalDateTime end = endDate.atTime(LocalTime.MAX);
 
         return orderRepository.getRevenueByCategory(start, end);
+    }
+
+    @Override
+    public Map<String, MetricDTO> getChartData(ChartDataFilter filter) {
+        Map<String, MetricDTO> metrics = new LinkedHashMap<>();
+        LocalDate date = filter.getDate();
+        String type = filter.getType();
+
+        for (String key : filter.getKeys()) {
+            double total = 0;
+            double previousTotal;
+            List<PointDTO> points = new ArrayList<>();
+            LocalDateTime prevStart, prevEnd;
+
+            switch (type) {
+                case "day" -> {
+                    LocalDateTime dayStart = date.atStartOfDay();
+                    prevStart = dayStart.minusDays(1);
+                    prevEnd = prevStart.plusDays(1).minusSeconds(1);
+
+                    for (int hour = 0; hour < 24; hour++) {
+                        LocalDateTime start = dayStart.plusHours(hour);
+                        if (start.isAfter(LocalDateTime.now())) break;
+
+                        LocalDateTime end = start.plusHours(1).minusSeconds(1);
+
+                        double value = getValueByKey(key, start, end);
+                        long timestamp = start.atZone(ZoneId.systemDefault()).toEpochSecond();
+                        points.add(new PointDTO(timestamp, value));
+                        total += value;
+                    }
+                }
+                case "week" -> {
+                    LocalDate weekStart = date.with(DayOfWeek.MONDAY);
+                    prevStart = weekStart.minusWeeks(1).atStartOfDay();
+                    prevEnd = prevStart.plusDays(6).with(LocalTime.MAX);
+
+                    for (int i = 0; i < 7; i++) {
+                        LocalDate current = weekStart.plusDays(i);
+                        LocalDateTime start = current.atStartOfDay();
+                        if (start.isAfter(LocalDateTime.now())) break;
+
+                        LocalDateTime end = current.atTime(LocalTime.MAX);
+
+                        double value = getValueByKey(key, start, end);
+                        long timestamp = start.atZone(ZoneId.systemDefault()).toEpochSecond();
+                        points.add(new PointDTO(timestamp, value));
+                        total += value;
+                    }
+                }
+                case "month" -> {
+                    LocalDate current = date.withDayOfMonth(1);
+                    LocalDate endOfMonth = current.withDayOfMonth(current.lengthOfMonth());
+
+                    prevStart = current.minusMonths(1).withDayOfMonth(1).atStartOfDay();
+                    prevEnd = current.minusDays(1).atTime(LocalTime.MAX);
+
+                    while (!current.isAfter(endOfMonth)) {
+                        LocalDateTime start = current.atStartOfDay();
+                        if (start.isAfter(LocalDateTime.now())) break;
+
+                        LocalDateTime end = current.atTime(LocalTime.MAX);
+
+                        double value = getValueByKey(key, start, end);
+                        long timestamp = start.atZone(ZoneId.systemDefault()).toEpochSecond();
+                        points.add(new PointDTO(timestamp, value));
+                        total += value;
+
+                        current = current.plusDays(1);
+                    }
+                }
+                case "year" -> {
+                    Year year = Year.of(date.getYear());
+
+                    prevStart = year.minusYears(1).atDay(1).atStartOfDay();
+                    prevEnd = year.minusYears(1).atMonth(12).atEndOfMonth().atTime(LocalTime.MAX);
+
+                    for (int month = 1; month <= 12; month++) {
+                        LocalDate firstDay = year.atMonth(month).atDay(1);
+                        LocalDateTime start = firstDay.atStartOfDay();
+                        if (start.isAfter(LocalDateTime.now())) break;
+
+                        LocalDate lastDay = firstDay.withDayOfMonth(firstDay.lengthOfMonth());
+                        LocalDateTime end = lastDay.atTime(LocalTime.MAX);
+
+                        double value = getValueByKey(key, start, end);
+                        long timestamp = start.atZone(ZoneId.systemDefault()).toEpochSecond();
+                        points.add(new PointDTO(timestamp, value));
+                        total += value;
+                    }
+                }
+                default -> {
+                    continue;
+                }
+            }
+
+            previousTotal = getValueByKey(key, prevStart, prevEnd);
+            double chainRatio = (previousTotal == 0) ? 0 : ((total - previousTotal) / previousTotal);
+            metrics.put(key, new MetricDTO(total, chainRatio, points));
+        }
+
+        return metrics;
+    }
+
+    private double getValueByKey(String key, LocalDateTime start, LocalDateTime end) {
+        return switch (key) {
+            case "revenue" -> orderRepository.getTotalRevenue(start, end);
+            case "orders" -> orderRepository.countOrders(start, end);
+            case "canceled" -> orderRepository.countOrdersByStatus(OrderStatus.CANCELLED, start, end);
+            case "conversion" -> {
+                long totalOrders = orderRepository.countOrders(start, end);
+                long totalVisits = visitTrackingService.getVisits(start, end);
+                yield totalVisits == 0 ? 0 : (double) totalOrders / totalVisits;
+            }
+            case "visits" -> visitTrackingService.getVisits(start, end);
+            case "pageviews" -> visitTrackingService.getPageViews(start, end);
+            default -> 0;
+        };
     }
 }

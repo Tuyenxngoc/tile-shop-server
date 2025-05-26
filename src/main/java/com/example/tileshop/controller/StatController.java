@@ -4,6 +4,7 @@ import com.example.tileshop.annotation.RestApiV1;
 import com.example.tileshop.constant.UrlConstant;
 import com.example.tileshop.dto.filter.RevenueStatsFilter;
 import com.example.tileshop.dto.filter.TimeFilter;
+import com.example.tileshop.dto.statistics.ChartDataFilter;
 import com.example.tileshop.service.StatService;
 import com.example.tileshop.util.VsResponseUtil;
 import io.swagger.v3.oas.annotations.Operation;
@@ -16,6 +17,8 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDate;
@@ -67,5 +70,12 @@ public class StatController {
     @GetMapping(UrlConstant.Stat.GET_REVENUE_BY_CATEGORY)
     public ResponseEntity<?> getRevenueByCategory(@ParameterObject RevenueStatsFilter filter) {
         return VsResponseUtil.success(statService.getRevenueByCategory(filter));
+    }
+
+    @Operation(summary = "API Get Chart Data for Dashboard")
+    @PreAuthorize("hasRole('ADMIN')")
+    @PostMapping(UrlConstant.Stat.GET_CHART_DATA)
+    public ResponseEntity<?> getChartData(@RequestBody ChartDataFilter filter) {
+        return VsResponseUtil.success(statService.getChartData(filter));
     }
 }

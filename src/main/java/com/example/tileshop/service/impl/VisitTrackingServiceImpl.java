@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.Duration;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Set;
 
 @Slf4j
@@ -57,6 +58,60 @@ public class VisitTrackingServiceImpl implements VisitTrackingService {
         String uniqueKey = getUniqueKey(url, LocalDate.now());
         Long size = redisTemplate.opsForSet().size(uniqueKey);
         return size != null ? size : 0L;
+    }
+
+    @Override
+    public long getVisits(LocalDateTime start, LocalDateTime end) {
+        LocalDate today = LocalDate.now();
+        LocalDate startDate = start.toLocalDate();
+        LocalDate endDate = end.toLocalDate();
+
+        long dbSum = 0;
+        long redisSum = 0;
+
+        // Truy vấn DB nếu có ngày trước hôm nay
+        if (startDate.isBefore(today)) {
+            LocalDate dbEndDate = endDate.isBefore(today) ? endDate : today.minusDays(1);
+            dbSum = visitStatisticsRepository.sumUniqueVisitsByDateRange(startDate, dbEndDate);
+        }
+
+        // Redis cho ngày hôm nay
+        if (!endDate.isBefore(today)) {
+            Set<String> keys = redisTemplate.keys("visit:unique:*:" + today);
+            for (String key : keys) {
+                Long size = redisTemplate.opsForSet().size(key);
+                redisSum += size != null ? size : 0;
+            }
+        }
+
+        return dbSum + redisSum;
+    }
+
+    @Override
+    public double getPageViews(LocalDateTime start, LocalDateTime end) {
+        LocalDate today = LocalDate.now();
+        LocalDate startDate = start.toLocalDate();
+        LocalDate endDate = end.toLocalDate();
+
+        long dbSum = 0;
+        long redisSum = 0;
+
+        // DB: các ngày trước hôm nay
+        if (startDate.isBefore(today)) {
+            LocalDate dbEndDate = endDate.isBefore(today) ? endDate : today.minusDays(1);
+            dbSum = visitStatisticsRepository.sumTotalVisitsByDateRange(startDate, dbEndDate);
+        }
+
+        // Redis: hôm nay
+        if (!endDate.isBefore(today)) {
+            Set<String> keys = redisTemplate.keys("visit:total:*:" + today);
+            for (String key : keys) {
+                String value = redisTemplate.opsForValue().get(key);
+                redisSum += value != null ? Long.parseLong(value) : 0;
+            }
+        }
+
+        return dbSum + redisSum;
     }
 
     @Override

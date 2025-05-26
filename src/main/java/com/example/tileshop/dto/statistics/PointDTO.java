@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Point {
+public class PointDTO {
     private long timestamp;
 
     private double value;

@@ -29,7 +29,7 @@ public interface UserRepository extends JpaRepository<User, String>, JpaSpecific
     int countCustomers();
 
     @Query("SELECT COUNT(c) FROM User c WHERE c.createdDate BETWEEN :startDate AND :endDate")
-    int countNewCustomers(@Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate);
+    int countCustomers(@Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate);
 
     @Query("""
                 SELECT new com.example.tileshop.dto.statistics.TopCustomerDTO(

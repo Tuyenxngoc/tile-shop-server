@@ -6,6 +6,7 @@ import com.example.tileshop.dto.statistics.*;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 public interface StatService {
     DashboardStatsResponseDTO getStatistics(LocalDate date);
@@ -16,7 +17,9 @@ public interface StatService {
 
     List<RecentOrderDTO> getRecentOrders();
 
-    List<Point> getRevenueStats(RevenueStatsFilter filter);
+    List<PointDTO> getRevenueStats(RevenueStatsFilter filter);
 
     List<CategoryRevenueChartDTO> getRevenueByCategory(RevenueStatsFilter filter);
+
+    Map<String, MetricDTO> getChartData(ChartDataFilter filter);
 }
