@@ -2,12 +2,11 @@ package com.example.tileshop.controller;
 
 import com.example.tileshop.annotation.RestApiV1;
 import com.example.tileshop.constant.UrlConstant;
-import com.example.tileshop.dto.chat.ChatRequestDTO;
-import com.example.tileshop.service.GeminiService;
-import com.example.tileshop.util.VsResponseUtil;
+import com.example.tileshop.dto.VisitRequest;
+import com.example.tileshop.service.VisitTrackingService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -18,13 +17,15 @@ import org.springframework.web.bind.annotation.RequestBody;
 @RestApiV1
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-@Tag(name = "Chat")
-public class ChatController {
-    GeminiService geminiService;
+@Tag(name = "Visit")
+public class VisitController {
+    VisitTrackingService visitTrackingService;
 
-    @Operation(summary = "API Chat with AI Gemini")
-    @PostMapping(UrlConstant.Chat.CHAT_WITH_AI)
-    public ResponseEntity<?> chatWithAI(@Valid @RequestBody ChatRequestDTO requestDTO) {
-        return VsResponseUtil.success(geminiService.askGemini(requestDTO));
+    @Operation(summary = "API Track Visit")
+    @PostMapping(UrlConstant.Visit.TRACK)
+    public ResponseEntity<Void> trackVisit(@RequestBody VisitRequest request, HttpServletRequest httpRequest) {
+        String ip = httpRequest.getRemoteAddr();
+        visitTrackingService.trackVisit(request.getUrl(), ip);
+        return ResponseEntity.ok().build();
     }
 }

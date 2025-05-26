@@ -32,6 +32,12 @@ public class UrlConstant {
         public static final String GET_REVENUE_BY_CATEGORY = PRE_FIX + "/revenue-by-category";
     }
 
+    public static class Visit {
+        private static final String PRE_FIX = "/visit";
+
+        public static final String TRACK = PRE_FIX + "/track";
+    }
+
     public static class Payment {
         private static final String PRE_FIX = "/payment";
 

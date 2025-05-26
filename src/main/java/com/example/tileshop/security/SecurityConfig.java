@@ -96,6 +96,9 @@ public class SecurityConfig {
     private static final String[] POST_WHITELIST_URL = {
             //Chat
             "/api/v1/chat/ai",
+
+            //Visit
+            "/api/v1/visit/track",
     };
 
     CustomUserDetailsService userDetailsService;
