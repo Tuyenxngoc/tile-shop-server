@@ -100,9 +100,9 @@ public class StatServiceImpl implements StatService {
 
         // Order Stat
         int totalOrders = orderRepository.countOrders(startDate, endDate);
-        int completedOrders = orderRepository.countCompletedOrders(startDate, endDate);
-        int pendingOrders = orderRepository.countPendingOrders(startDate, endDate);
-        int cancelledOrders = orderRepository.countCancelledOrders(startDate, endDate);
+        int completedOrders = orderRepository.countOrdersByStatus(OrderStatus.DELIVERED, startDate, endDate);
+        int pendingOrders = orderRepository.countOrdersByStatus(OrderStatus.PENDING, startDate, endDate);
+        int cancelledOrders = orderRepository.countOrdersByStatus(OrderStatus.CANCELLED, startDate, endDate);
         double orderChange = getOrderChangePercentage(startDate, endDate, prevStartDate, prevEndDate);
 
         OrderStatDTO orderStat = new OrderStatDTO();
@@ -225,6 +225,7 @@ public class StatServiceImpl implements StatService {
                 while (!current.isAfter(monthEnd)) {
                     LocalDateTime start = current.atStartOfDay();
                     LocalDateTime end = current.atTime(LocalTime.MAX);
+
                     double revenue = orderRepository.getTotalRevenue(start, end);
                     long timestamp = start.atZone(ZoneId.systemDefault()).toEpochSecond();
                     results.add(new PointDTO(timestamp, revenue));
@@ -238,6 +239,7 @@ public class StatServiceImpl implements StatService {
                     LocalDate monthEnd = monthStart.withDayOfMonth(monthStart.lengthOfMonth());
                     LocalDateTime start = monthStart.atStartOfDay();
                     LocalDateTime end = monthEnd.atTime(LocalTime.MAX);
+
                     double revenue = orderRepository.getTotalRevenue(start, end);
                     long timestamp = start.atZone(ZoneId.systemDefault()).toEpochSecond();
                     results.add(new PointDTO(timestamp, revenue));
@@ -300,7 +302,8 @@ public class StatServiceImpl implements StatService {
         LocalDate date = filter.getDate();
         String type = filter.getType();
 
-        for (String key : filter.getKeys()) {
+        List<String> allKeys = List.of("revenue", "orders", "conversion", "visits", "pageviews");
+        for (String key : allKeys) {
             double total = 0;
             double previousTotal;
             List<PointDTO> points = new ArrayList<>();
@@ -314,8 +317,6 @@ public class StatServiceImpl implements StatService {
 
                     for (int hour = 0; hour < 24; hour++) {
                         LocalDateTime start = dayStart.plusHours(hour);
-                        if (start.isAfter(LocalDateTime.now())) break;
-
                         LocalDateTime end = start.plusHours(1).minusSeconds(1);
 
                         double value = getValueByKey(key, start, end);
@@ -332,8 +333,6 @@ public class StatServiceImpl implements StatService {
                     for (int i = 0; i < 7; i++) {
                         LocalDate current = weekStart.plusDays(i);
                         LocalDateTime start = current.atStartOfDay();
-                        if (start.isAfter(LocalDateTime.now())) break;
-
                         LocalDateTime end = current.atTime(LocalTime.MAX);
 
                         double value = getValueByKey(key, start, end);
@@ -351,8 +350,6 @@ public class StatServiceImpl implements StatService {
 
                     while (!current.isAfter(endOfMonth)) {
                         LocalDateTime start = current.atStartOfDay();
-                        if (start.isAfter(LocalDateTime.now())) break;
-
                         LocalDateTime end = current.atTime(LocalTime.MAX);
 
                         double value = getValueByKey(key, start, end);
@@ -372,8 +369,6 @@ public class StatServiceImpl implements StatService {
                     for (int month = 1; month <= 12; month++) {
                         LocalDate firstDay = year.atMonth(month).atDay(1);
                         LocalDateTime start = firstDay.atStartOfDay();
-                        if (start.isAfter(LocalDateTime.now())) break;
-
                         LocalDate lastDay = firstDay.withDayOfMonth(firstDay.lengthOfMonth());
                         LocalDateTime end = lastDay.atTime(LocalTime.MAX);
 
@@ -389,7 +384,13 @@ public class StatServiceImpl implements StatService {
             }
 
             previousTotal = getValueByKey(key, prevStart, prevEnd);
-            double chainRatio = (previousTotal == 0) ? 0 : ((total - previousTotal) / previousTotal);
+            double chainRatio;
+            if (previousTotal == 0) {
+                chainRatio = (total == 0) ? 0 : 100;
+            } else {
+                chainRatio = ((total - previousTotal) / previousTotal) * 100;
+            }
+            chainRatio = Math.round(chainRatio * 100.0) / 100.0;
             metrics.put(key, new MetricDTO(total, chainRatio, points));
         }
 
@@ -400,11 +401,15 @@ public class StatServiceImpl implements StatService {
         return switch (key) {
             case "revenue" -> orderRepository.getTotalRevenue(start, end);
             case "orders" -> orderRepository.countOrders(start, end);
-            case "canceled" -> orderRepository.countOrdersByStatus(OrderStatus.CANCELLED, start, end);
             case "conversion" -> {
-                long totalOrders = orderRepository.countOrders(start, end);
+                long totalOrders = orderRepository.countDistinctCustomersWithOrders(start, end);
                 long totalVisits = visitTrackingService.getVisits(start, end);
-                yield totalVisits == 0 ? 0 : (double) totalOrders / totalVisits;
+                if (totalVisits == 0) {
+                    yield 0.0;
+                } else {
+                    double ratio = ((double) totalOrders / totalVisits) * 100;
+                    yield Math.round(ratio * 100.0) / 100.0;
+                }
             }
             case "visits" -> visitTrackingService.getVisits(start, end);
             case "pageviews" -> visitTrackingService.getPageViews(start, end);

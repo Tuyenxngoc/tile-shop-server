@@ -12,7 +12,6 @@ import java.time.LocalDateTime;
 @Component
 @RequiredArgsConstructor
 public class VisitStatisticsScheduler {
-
     private final VisitTrackingService visitTrackingService;
 
     // Chạy lúc 23:59:00 mỗi ngày

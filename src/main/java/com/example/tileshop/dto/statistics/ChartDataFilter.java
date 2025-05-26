@@ -10,7 +10,6 @@ import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
-import java.util.List;
 
 @Getter
 @Setter
@@ -23,6 +22,4 @@ public class ChartDataFilter {
 
     @NotBlank(message = ErrorMessage.INVALID_NOT_BLANK_FIELD)
     private String type;
-
-    private List<String> keys;
 }

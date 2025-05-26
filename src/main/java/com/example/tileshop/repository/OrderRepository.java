@@ -34,20 +34,21 @@ public interface OrderRepository extends JpaRepository<Order, Long>, JpaSpecific
     @Query("SELECT COUNT(o) FROM Order o WHERE o.createdDate BETWEEN :startDate AND :endDate")
     int countOrders(@Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate);
 
-    @Query("SELECT COUNT(o) FROM Order o WHERE o.status = 'DELIVERED' AND o.createdDate BETWEEN :startDate AND :endDate")
-    int countCompletedOrders(@Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate);
-
-    @Query("SELECT COUNT(o) FROM Order o WHERE o.status = 'PENDING' AND o.createdDate BETWEEN :startDate AND :endDate")
-    int countPendingOrders(@Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate);
-
-    @Query("SELECT COUNT(o) FROM Order o WHERE o.status = 'CANCELLED' AND o.createdDate BETWEEN :startDate AND :endDate")
-    int countCancelledOrders(@Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate);
-
     @Query("SELECT COUNT(o) FROM Order o WHERE o.status = :status AND o.createdDate BETWEEN :startDate AND :endDate")
     int countOrdersByStatus(
             @Param("status") OrderStatus status,
             @Param("startDate") LocalDateTime startDate,
             @Param("endDate") LocalDateTime endDate
+    );
+
+    @Query("""
+                SELECT COUNT(DISTINCT o.user.id)
+                FROM Order o
+                WHERE o.createdDate BETWEEN :startDate AND :endDate
+            """)
+    long countDistinctCustomersWithOrders(
+            @Param("startDate") LocalDateTime start,
+            @Param("endDate") LocalDateTime end
     );
 
     @Query("""

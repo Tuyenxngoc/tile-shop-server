@@ -1,6 +1,8 @@
 package com.example.tileshop.service.impl;
 
+import com.example.tileshop.constant.ErrorMessage;
 import com.example.tileshop.entity.VisitStatistics;
+import com.example.tileshop.exception.BadRequestException;
 import com.example.tileshop.repository.VisitStatisticsRepository;
 import com.example.tileshop.service.VisitTrackingService;
 import lombok.RequiredArgsConstructor;
@@ -31,33 +33,26 @@ public class VisitTrackingServiceImpl implements VisitTrackingService {
 
     @Override
     public void trackVisit(String url, String ipAddress) {
+        if (url.contains(":")) {
+            throw new BadRequestException(ErrorMessage.INVALID_URL_FORMAT);
+        }
         LocalDate now = LocalDate.now();
 
-        // Lượt xem trang (tăng 1 mỗi lần truy cập)
+        // Lượt xem trang
         String totalKey = getTotalKey(url, now);
+        Boolean totalKeyExists = redisTemplate.hasKey(totalKey);
         redisTemplate.opsForValue().increment(totalKey);
+        if (Boolean.FALSE.equals(totalKeyExists)) {
+            redisTemplate.expire(totalKey, Duration.ofDays(2));
+        }
 
-        // Lượt truy cập duy nhất (theo IP và ngày)
+        // Lượt truy cập unique theo IP
         String uniqueKey = getUniqueKey(url, now);
+        Boolean uniqueKeyExists = redisTemplate.hasKey(uniqueKey);
         redisTemplate.opsForSet().add(uniqueKey, ipAddress);
-
-        // Đặt TTL cho key để tự xoá sau vài ngày
-        redisTemplate.expire(uniqueKey, Duration.ofDays(2));
-        redisTemplate.expire(totalKey, Duration.ofDays(2));
-    }
-
-    @Override
-    public long getTotalVisit(String url) {
-        String totalKey = getTotalKey(url, LocalDate.now());
-        String value = redisTemplate.opsForValue().get(totalKey);
-        return value == null ? 0 : Long.parseLong(value);
-    }
-
-    @Override
-    public long getUniqueVisitToday(String url) {
-        String uniqueKey = getUniqueKey(url, LocalDate.now());
-        Long size = redisTemplate.opsForSet().size(uniqueKey);
-        return size != null ? size : 0L;
+        if (Boolean.FALSE.equals(uniqueKeyExists)) {
+            redisTemplate.expire(uniqueKey, Duration.ofDays(2));
+        }
     }
 
     @Override
@@ -75,12 +70,21 @@ public class VisitTrackingServiceImpl implements VisitTrackingService {
             dbSum = visitStatisticsRepository.sumUniqueVisitsByDateRange(startDate, dbEndDate);
         }
 
-        // Redis cho ngày hôm nay
-        if (!endDate.isBefore(today)) {
-            Set<String> keys = redisTemplate.keys("visit:unique:*:" + today);
+        // Redis: các ngày từ hôm nay trở đi
+        Set<String> keys = redisTemplate.keys("visit:unique:*:*");
+        if (keys != null) {
             for (String key : keys) {
-                Long size = redisTemplate.opsForSet().size(key);
-                redisSum += size != null ? size : 0;
+                String[] parts = key.split(":");
+                if (parts.length < 4) continue;
+
+                try {
+                    LocalDate keyDate = LocalDate.parse(parts[3]);
+                    if (!keyDate.isBefore(startDate) && !keyDate.isAfter(endDate)) {
+                        Long size = redisTemplate.opsForSet().size(key);
+                        redisSum += size != null ? size : 0;
+                    }
+                } catch (Exception ignored) {
+                }
             }
         }
 
@@ -102,12 +106,21 @@ public class VisitTrackingServiceImpl implements VisitTrackingService {
             dbSum = visitStatisticsRepository.sumTotalVisitsByDateRange(startDate, dbEndDate);
         }
 
-        // Redis: hôm nay
-        if (!endDate.isBefore(today)) {
-            Set<String> keys = redisTemplate.keys("visit:total:*:" + today);
+        // Redis: các ngày từ hôm nay trở đi
+        Set<String> keys = redisTemplate.keys("visit:total:*:*");
+        if (keys != null) {
             for (String key : keys) {
-                String value = redisTemplate.opsForValue().get(key);
-                redisSum += value != null ? Long.parseLong(value) : 0;
+                String[] parts = key.split(":");
+                if (parts.length < 4) continue;
+
+                try {
+                    LocalDate keyDate = LocalDate.parse(parts[3]);
+                    if (!keyDate.isBefore(startDate) && !keyDate.isAfter(endDate)) {
+                        String value = redisTemplate.opsForValue().get(key);
+                        redisSum += value != null ? Long.parseLong(value) : 0;
+                    }
+                } catch (Exception ignored) {
+                }
             }
         }
 
@@ -118,7 +131,7 @@ public class VisitTrackingServiceImpl implements VisitTrackingService {
     public void syncStatisticsFromRedis() {
         // Lấy tất cả key lượt truy cập tổng dạng visit:total:*
         Set<String> totalKeys = redisTemplate.keys("visit:total:*");
-        if (totalKeys.isEmpty()) {
+        if (totalKeys == null || totalKeys.isEmpty()) {
             log.info("Không có dữ liệu truy cập hàng ngày trong Redis.");
             return;
         }
