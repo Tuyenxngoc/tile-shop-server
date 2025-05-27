@@ -88,6 +88,11 @@ public class ProductSpecification {
                 predicates.add(builder.lessThanOrEqualTo(root.get(Product_.price), filterDTO.getMaxPrice()));
             }
 
+            // Loại bỏ sản phẩm có ID cụ thể
+            if (filterDTO.getExcludeId() != null) {
+                predicates.add(builder.notEqual(root.get(Product_.id), filterDTO.getExcludeId()));
+            }
+
             return builder.and(predicates.toArray(new Predicate[0]));
         };
     }

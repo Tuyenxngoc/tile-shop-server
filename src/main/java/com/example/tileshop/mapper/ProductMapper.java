@@ -1,6 +1,6 @@
 package com.example.tileshop.mapper;
 
-import com.example.tileshop.dto.common.BaseEntityDTO;
+import com.example.tileshop.dto.category.CategorySimpleDTO;
 import com.example.tileshop.dto.product.ProductDetailResponseDTO;
 import com.example.tileshop.dto.product.ProductResponseDTO;
 import com.example.tileshop.dto.product.ProductUpdateResponseDTO;
@@ -15,12 +15,12 @@ import java.util.Collections;
 import java.util.List;
 
 public class ProductMapper {
-    private static List<BaseEntityDTO> buildBreadcrumb(Category category) {
-        List<BaseEntityDTO> breadcrumb = new ArrayList<>();
+    private static List<CategorySimpleDTO> buildBreadcrumb(Category category) {
+        List<CategorySimpleDTO> breadcrumb = new ArrayList<>();
         Category current = category;
 
         while (current != null) {
-            breadcrumb.add(new BaseEntityDTO(current.getId(), current.getName()));
+            breadcrumb.add(new CategorySimpleDTO(current.getId(), current.getName(), current.getSlug()));
             current = current.getParent();
         }
 

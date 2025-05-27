@@ -13,4 +13,6 @@ public class ProductFilterDTO {
     private Double minPrice;
 
     private Double maxPrice;
+
+    private Long excludeId;
 }

@@ -1,7 +1,7 @@
 package com.example.tileshop.dto.product;
 
 import com.example.tileshop.dto.brand.BrandResponseDTO;
-import com.example.tileshop.dto.common.BaseEntityDTO;
+import com.example.tileshop.dto.category.CategorySimpleDTO;
 import com.example.tileshop.dto.productattribute.ProductAttributeResponseDTO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -33,7 +33,7 @@ public class ProductDetailResponseDTO {
 
     private double averageRating;
 
-    private List<BaseEntityDTO> categoryPath;
+    private List<CategorySimpleDTO> categoryPath;
 
     private BrandResponseDTO brand;
 
