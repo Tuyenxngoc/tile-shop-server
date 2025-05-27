@@ -311,13 +311,13 @@ public class StatServiceImpl implements StatService {
 
             switch (type) {
                 case "day" -> {
-                    LocalDateTime dayStart = date.atStartOfDay();
-                    prevStart = dayStart.minusDays(1);
-                    prevEnd = prevStart.plusDays(1).minusSeconds(1);
+                    LocalDateTime dayStart = date.atStartOfDay(); // Lấy thời điểm bắt đầu của ngày hiện tại (00:00:00)
+                    prevStart = dayStart.minusDays(1);// Thời điểm bắt đầu của ngày trước đó
+                    prevEnd = prevStart.plusDays(1).minusSeconds(1); // Thời điểm kết thúc của ngày trước đó (23:59:59)
 
                     for (int hour = 0; hour < 24; hour++) {
-                        LocalDateTime start = dayStart.plusHours(hour);
-                        LocalDateTime end = start.plusHours(1).minusSeconds(1);
+                        LocalDateTime start = dayStart.plusHours(hour);// Thời điểm bắt đầu của từng giờ trong ngày
+                        LocalDateTime end = start.plusHours(1).minusSeconds(1);// Thời điểm kết thúc của từng giờ (59:59)
 
                         double value = getValueByKey(key, start, end);
                         long timestamp = start.atZone(ZoneId.systemDefault()).toEpochSecond();
@@ -326,14 +326,14 @@ public class StatServiceImpl implements StatService {
                     }
                 }
                 case "week" -> {
-                    LocalDate weekStart = date.with(DayOfWeek.MONDAY);
-                    prevStart = weekStart.minusWeeks(1).atStartOfDay();
-                    prevEnd = prevStart.plusDays(6).with(LocalTime.MAX);
+                    LocalDate weekStart = date.with(DayOfWeek.MONDAY);// Lấy ngày thứ 2 trong tuần chứa date
+                    prevStart = weekStart.minusWeeks(1).atStartOfDay(); // Thời điểm bắt đầu của tuần trước
+                    prevEnd = prevStart.plusDays(6).with(LocalTime.MAX); // Thời điểm kết thúc của tuần trước (23:59:59)
 
                     for (int i = 0; i < 7; i++) {
-                        LocalDate current = weekStart.plusDays(i);
-                        LocalDateTime start = current.atStartOfDay();
-                        LocalDateTime end = current.atTime(LocalTime.MAX);
+                        LocalDate current = weekStart.plusDays(i);// Ngày thứ i trong tuần hiện tại
+                        LocalDateTime start = current.atStartOfDay();// 00:00:00 của ngày thứ i
+                        LocalDateTime end = current.atTime(LocalTime.MAX); // 23:59:59 của ngày thứ i
 
                         double value = getValueByKey(key, start, end);
                         long timestamp = start.atZone(ZoneId.systemDefault()).toEpochSecond();
@@ -342,35 +342,35 @@ public class StatServiceImpl implements StatService {
                     }
                 }
                 case "month" -> {
-                    LocalDate current = date.withDayOfMonth(1);
-                    LocalDate endOfMonth = current.withDayOfMonth(current.lengthOfMonth());
+                    LocalDate current = date.withDayOfMonth(1); // Ngày đầu tiên của tháng hiện tại
+                    LocalDate endOfMonth = current.withDayOfMonth(current.lengthOfMonth()); // Ngày cuối cùng của tháng hiện tại
 
-                    prevStart = current.minusMonths(1).withDayOfMonth(1).atStartOfDay();
-                    prevEnd = current.minusDays(1).atTime(LocalTime.MAX);
+                    prevStart = current.minusMonths(1).withDayOfMonth(1).atStartOfDay();// Bắt đầu của tháng trước
+                    prevEnd = current.minusDays(1).atTime(LocalTime.MAX); // Kết thúc của tháng trước (ngày cuối tháng trước - 23:59:59)
 
                     while (!current.isAfter(endOfMonth)) {
-                        LocalDateTime start = current.atStartOfDay();
-                        LocalDateTime end = current.atTime(LocalTime.MAX);
+                        LocalDateTime start = current.atStartOfDay(); // 00:00:00 của từng ngày trong tháng
+                        LocalDateTime end = current.atTime(LocalTime.MAX);// 23:59:59 của từng ngày
 
                         double value = getValueByKey(key, start, end);
                         long timestamp = start.atZone(ZoneId.systemDefault()).toEpochSecond();
                         points.add(new PointDTO(timestamp, value));
                         total += value;
 
-                        current = current.plusDays(1);
+                        current = current.plusDays(1); // Sang ngày tiếp theo
                     }
                 }
                 case "year" -> {
-                    Year year = Year.of(date.getYear());
+                    Year year = Year.of(date.getYear()); // Năm hiện tại (ví dụ: 2024)
 
-                    prevStart = year.minusYears(1).atDay(1).atStartOfDay();
-                    prevEnd = year.minusYears(1).atMonth(12).atEndOfMonth().atTime(LocalTime.MAX);
+                    prevStart = year.minusYears(1).atDay(1).atStartOfDay();// Ngày 1/1 của năm trước
+                    prevEnd = year.minusYears(1).atMonth(12).atEndOfMonth().atTime(LocalTime.MAX);// Ngày 31/12 của năm trước - 23:59:59
 
                     for (int month = 1; month <= 12; month++) {
-                        LocalDate firstDay = year.atMonth(month).atDay(1);
-                        LocalDateTime start = firstDay.atStartOfDay();
-                        LocalDate lastDay = firstDay.withDayOfMonth(firstDay.lengthOfMonth());
-                        LocalDateTime end = lastDay.atTime(LocalTime.MAX);
+                        LocalDate firstDay = year.atMonth(month).atDay(1); // Ngày đầu tiên của tháng thứ month trong năm hiện tại
+                        LocalDateTime start = firstDay.atStartOfDay();// 00:00:00 ngày đầu tháng
+                        LocalDate lastDay = firstDay.withDayOfMonth(firstDay.lengthOfMonth());// Ngày cuối tháng
+                        LocalDateTime end = lastDay.atTime(LocalTime.MAX);// 23:59:59 ngày cuối tháng
 
                         double value = getValueByKey(key, start, end);
                         long timestamp = start.atZone(ZoneId.systemDefault()).toEpochSecond();
