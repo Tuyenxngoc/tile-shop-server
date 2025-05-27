@@ -163,7 +163,7 @@ public class CategoryServiceImpl implements CategoryService {
 
         if (image != null && !image.isEmpty()) {
             if (uploadFileUtil.isImageInvalid(image)) {
-                throw new BadRequestException(ErrorMessage.INVALID_FILE_TYPE);
+                throw new BadRequestException(ErrorMessage.INVALID_IMAGE_FILE_TYPE);
             }
             String imageUrl = uploadFileUtil.uploadFile(image);
             category.setImageUrl(imageUrl);
@@ -213,7 +213,7 @@ public class CategoryServiceImpl implements CategoryService {
 
         if (image != null && !image.isEmpty()) {
             if (uploadFileUtil.isImageInvalid(image)) {
-                throw new BadRequestException(ErrorMessage.INVALID_FILE_TYPE);
+                throw new BadRequestException(ErrorMessage.INVALID_IMAGE_FILE_TYPE);
             }
             String oldImageUrl = category.getImageUrl();
 

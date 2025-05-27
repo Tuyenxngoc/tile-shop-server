@@ -49,7 +49,7 @@ public class NewsServiceImpl implements NewsService {
     @Override
     public CommonResponseDTO save(NewsRequestDTO requestDTO, MultipartFile image) {
         if (uploadFileUtil.isImageInvalid(image)) {
-            throw new BadRequestException(ErrorMessage.INVALID_FILE_TYPE);
+            throw new BadRequestException(ErrorMessage.INVALID_IMAGE_FILE_TYPE);
         }
         if (newsRepository.existsBySlug(requestDTO.getSlug())) {
             throw new BadRequestException(ErrorMessage.News.ERR_DUPLICATE_SLUG, requestDTO.getSlug());
@@ -87,7 +87,7 @@ public class NewsServiceImpl implements NewsService {
 
         if (image != null && !image.isEmpty()) {
             if (uploadFileUtil.isImageInvalid(image)) {
-                throw new BadRequestException(ErrorMessage.INVALID_FILE_TYPE);
+                throw new BadRequestException(ErrorMessage.INVALID_IMAGE_FILE_TYPE);
             }
             String oldImageUrl = news.getImageUrl();
 

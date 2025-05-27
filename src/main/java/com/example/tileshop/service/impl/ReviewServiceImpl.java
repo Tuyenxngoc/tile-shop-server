@@ -186,7 +186,7 @@ public class ReviewServiceImpl implements ReviewService {
                 throw new BadRequestException(ErrorMessage.Review.ERR_MAX_IMAGES);
             }
             if (images.stream().anyMatch(uploadFileUtil::isImageInvalid)) {
-                throw new BadRequestException(ErrorMessage.INVALID_FILE_TYPE);
+                throw new BadRequestException(ErrorMessage.INVALID_IMAGE_FILE_TYPE);
             }
         }
 

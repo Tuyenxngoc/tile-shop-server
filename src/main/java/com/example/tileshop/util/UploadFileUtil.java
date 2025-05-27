@@ -87,4 +87,12 @@ public class UploadFileUtil {
         String contentType = file.getContentType();
         return contentType == null || !contentType.startsWith("image/");
     }
+
+    public boolean isPdfInvalid(MultipartFile file) {
+        if (file == null || file.isEmpty()) {
+            return true;
+        }
+        String contentType = file.getContentType();
+        return contentType == null || !contentType.equalsIgnoreCase("application/pdf");
+    }
 }

@@ -69,7 +69,7 @@ public class SlideServiceImpl implements SlideService {
     @Override
     public synchronized CommonResponseDTO save(SlideRequestDTO requestDTO, MultipartFile image) {
         if (uploadFileUtil.isImageInvalid(image)) {
-            throw new BadRequestException(ErrorMessage.INVALID_FILE_TYPE);
+            throw new BadRequestException(ErrorMessage.INVALID_IMAGE_FILE_TYPE);
         }
 
         String imageUrl = uploadFileUtil.uploadFile(image);
@@ -101,7 +101,7 @@ public class SlideServiceImpl implements SlideService {
 
         if (image != null && !image.isEmpty()) {
             if (uploadFileUtil.isImageInvalid(image)) {
-                throw new BadRequestException(ErrorMessage.INVALID_FILE_TYPE);
+                throw new BadRequestException(ErrorMessage.INVALID_IMAGE_FILE_TYPE);
             }
             String oldImageUrl = slide.getImageUrl();
             String newImageUrl = uploadFileUtil.uploadFile(image);

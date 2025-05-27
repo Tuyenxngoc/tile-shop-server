@@ -55,7 +55,7 @@ public class StoreInfoServiceImpl implements StoreInfoService {
 
     private void validateImageFile(MultipartFile file) {
         if (uploadFileUtil.isImageInvalid(file)) {
-            throw new BadRequestException(ErrorMessage.INVALID_FILE_TYPE);
+            throw new BadRequestException(ErrorMessage.INVALID_IMAGE_FILE_TYPE);
         }
     }
 

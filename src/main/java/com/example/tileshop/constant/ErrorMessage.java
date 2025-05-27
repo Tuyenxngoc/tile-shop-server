@@ -53,7 +53,8 @@ public class ErrorMessage {
     public static final String INVALID_MAX_UPLOAD_SIZE_EXCEEDED = "invalid.max-upload-size-exceeded";
     public static final String INVALID_FILE_REQUIRED = "invalid.file.required";
     public static final String INVALID_FILE_SIZE = "invalid.file.size";
-    public static final String INVALID_FILE_TYPE = "invalid.file.type";
+    public static final String INVALID_IMAGE_FILE_TYPE = "invalid.image.file.type";
+    public static final String INVALID_PDF_FILE_TYPE = "invalid.pdf.file.type";
     public static final String INVALID_URL_FORMAT = "invalid.url-format";
     public static final String INVALID_OPERATOR_NOT_SUPPORTED = "invalid.operator.not-supported";
 

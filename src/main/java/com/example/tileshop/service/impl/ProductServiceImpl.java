@@ -59,7 +59,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public CommonResponseDTO save(ProductRequestDTO requestDTO, List<MultipartFile> images) {
         if (images.stream().anyMatch(uploadFileUtil::isImageInvalid)) {
-            throw new BadRequestException(ErrorMessage.INVALID_FILE_TYPE);
+            throw new BadRequestException(ErrorMessage.INVALID_IMAGE_FILE_TYPE);
         }
 
         if (productRepository.existsBySlug(requestDTO.getSlug())) {
@@ -128,7 +128,7 @@ public class ProductServiceImpl implements ProductService {
     public CommonResponseDTO update(Long id, ProductRequestDTO requestDTO, List<MultipartFile> images, Set<String> existingImageUrls) {
         // Validate images
         if (images != null && images.stream().anyMatch(uploadFileUtil::isImageInvalid)) {
-            throw new BadRequestException(ErrorMessage.INVALID_FILE_TYPE);
+            throw new BadRequestException(ErrorMessage.INVALID_IMAGE_FILE_TYPE);
         }
 
         Product product = getEntity(id);
