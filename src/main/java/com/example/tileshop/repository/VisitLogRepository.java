@@ -29,6 +29,9 @@ public interface VisitLogRepository extends JpaRepository<VisitLog, Long> {
     @Query("SELECT COUNT(DISTINCT v.ipAddress) FROM VisitLog v WHERE v.url = :url AND DATE(v.visitedAt) = :date")
     long countDistinctIpByUrlAndDate(String url, LocalDate date);
 
+    @Query("SELECT COUNT(v) FROM VisitLog v WHERE v.ipAddress = :ipAddress AND DATE(v.visitedAt) = :date")
+    long countByIpAddressAndDate(@Param("ipAddress") String ipAddress, @Param("date") LocalDate date);
+
     @Transactional
     @Modifying
     @Query("DELETE FROM VisitLog v WHERE DATE(v.visitedAt) = :date")

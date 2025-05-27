@@ -11,17 +11,25 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
 public class VisitTrackingServiceImpl implements VisitTrackingService {
+    private static final int MAX_VISITS_PER_IP_PER_DAY = 100;
+
     private final VisitLogRepository visitLogRepository;
 
     private final VisitStatisticsRepository visitStatisticsRepository;
 
     @Override
     public void trackVisit(String url, String ipAddress) {
+        LocalDate today = LocalDate.now();
+
+        long visitCount = visitLogRepository.countByIpAddressAndDate(ipAddress, today);
+        if (visitCount >= MAX_VISITS_PER_IP_PER_DAY) {
+            return;
+        }
+
         visitLogRepository.save(VisitLog.builder()
                 .url(url)
                 .ipAddress(ipAddress)
