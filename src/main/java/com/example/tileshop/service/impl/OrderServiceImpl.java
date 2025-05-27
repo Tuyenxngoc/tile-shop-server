@@ -129,6 +129,15 @@ public class OrderServiceImpl implements OrderService {
             throw new BadRequestException(ErrorMessage.Order.ERR_INVALID_STATUS_TRANSITION, currentStatus.getDescription(), newStatus.getDescription());
         }
 
+        // Xử lý hoàn sản phẩm khi trả hàng
+        if (OrderStatus.RETURNED.equals(newStatus)) {
+            for (OrderItem orderItem : order.getOrderItems()) {
+                Product product = productRepository.findProductForUpdate(orderItem.getProduct().getId());
+                product.setStockQuantity(product.getStockQuantity() + orderItem.getQuantity());
+                productRepository.save(product);
+            }
+        }
+
         order.setStatus(newStatus);
 
         orderRepository.save(order);
