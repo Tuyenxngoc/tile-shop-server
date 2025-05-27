@@ -23,7 +23,7 @@ import java.time.LocalDate;
 public class VisitStatistics {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "visit_id")
+    @Column(name = "visit_statistic_id")
     private Long id;
 
     @Column(nullable = false)

@@ -1,5 +1,6 @@
 package com.example.tileshop.service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public interface VisitTrackingService {
@@ -9,5 +10,5 @@ public interface VisitTrackingService {
 
     double getPageViews(LocalDateTime start, LocalDateTime end);
 
-    void syncStatisticsFromRedis();
+    void aggregateDailyStatistics(LocalDate yesterday);
 }

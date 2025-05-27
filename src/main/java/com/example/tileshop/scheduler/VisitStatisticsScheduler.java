@@ -6,7 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Slf4j
 @Component
@@ -14,10 +14,9 @@ import java.time.LocalDateTime;
 public class VisitStatisticsScheduler {
     private final VisitTrackingService visitTrackingService;
 
-    // Chạy lúc 23:59:00 mỗi ngày
-    @Scheduled(cron = "0 59 23 * * *")
-    public void syncDailyStatistics() {
-        visitTrackingService.syncStatisticsFromRedis();
-        log.info("Đã đồng bộ dữ liệu thống kê từ Redis về MySQL lúc {}", LocalDateTime.now());
+    @Scheduled(cron = "0 0 1 * * *") // mỗi ngày lúc 01:00 sáng
+    public void runDailyAggregation() {
+        LocalDate yesterday = LocalDate.now().minusDays(1);
+        visitTrackingService.aggregateDailyStatistics(yesterday);
     }
 }
