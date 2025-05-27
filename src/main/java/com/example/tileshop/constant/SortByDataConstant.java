@@ -68,10 +68,10 @@ public enum SortByDataConstant implements SortByInterface {
             return switch (sortBy) {
                 case "title" -> "title";
                 case "slug" -> "slug";
-                case "viewCount" -> "view_count";
+                case "viewCount" -> "viewCount";
                 case "createdDate" -> "createdDate";
                 case "lastModifiedDate" -> "lastModifiedDate";
-                case "category" -> "category_id";
+                case "category" -> "category";
                 default -> "id";
             };
         }
