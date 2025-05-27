@@ -309,6 +309,10 @@ public class StatServiceImpl implements StatService {
             List<PointDTO> points = new ArrayList<>();
             LocalDateTime prevStart, prevEnd;
 
+            // Biến riêng cho conversion: tỉ lệ chuyển đổi
+            double totalOrders = 0;
+            double totalVisits = 0;
+
             switch (type) {
                 case "day" -> {
                     LocalDateTime dayStart = date.atStartOfDay(); // Lấy thời điểm bắt đầu của ngày hiện tại (00:00:00)
@@ -318,11 +322,22 @@ public class StatServiceImpl implements StatService {
                     for (int hour = 0; hour < 24; hour++) {
                         LocalDateTime start = dayStart.plusHours(hour);// Thời điểm bắt đầu của từng giờ trong ngày
                         LocalDateTime end = start.plusHours(1).minusSeconds(1);// Thời điểm kết thúc của từng giờ (59:59)
-
-                        double value = getValueByKey(key, start, end);
                         long timestamp = start.atZone(ZoneId.systemDefault()).toEpochSecond();
-                        points.add(new PointDTO(timestamp, value));
-                        total += value;
+
+                        if (key.equals("conversion")) {
+                            long orders = orderRepository.countDistinctCustomersWithOrders(start, end);
+                            long visits = visitTrackingService.getVisits(start, end);
+                            double ratio = (visits == 0) ? 0.0 : ((double) orders / visits) * 100;
+                            ratio = Math.round(ratio * 100.0) / 100.0;
+                            points.add(new PointDTO(timestamp, ratio));
+
+                            totalOrders += orders;
+                            totalVisits += visits;
+                        } else {
+                            double value = getValueByKey(key, start, end);
+                            points.add(new PointDTO(timestamp, value));
+                            total += value;
+                        }
                     }
                 }
                 case "week" -> {
@@ -334,11 +349,22 @@ public class StatServiceImpl implements StatService {
                         LocalDate current = weekStart.plusDays(i);// Ngày thứ i trong tuần hiện tại
                         LocalDateTime start = current.atStartOfDay();// 00:00:00 của ngày thứ i
                         LocalDateTime end = current.atTime(LocalTime.MAX); // 23:59:59 của ngày thứ i
-
-                        double value = getValueByKey(key, start, end);
                         long timestamp = start.atZone(ZoneId.systemDefault()).toEpochSecond();
-                        points.add(new PointDTO(timestamp, value));
-                        total += value;
+
+                        if (key.equals("conversion")) {
+                            long orders = orderRepository.countDistinctCustomersWithOrders(start, end);
+                            long visits = visitTrackingService.getVisits(start, end);
+                            double ratio = (visits == 0) ? 0.0 : ((double) orders / visits) * 100;
+                            ratio = Math.round(ratio * 100.0) / 100.0;
+                            points.add(new PointDTO(timestamp, ratio));
+
+                            totalOrders += orders;
+                            totalVisits += visits;
+                        } else {
+                            double value = getValueByKey(key, start, end);
+                            points.add(new PointDTO(timestamp, value));
+                            total += value;
+                        }
                     }
                 }
                 case "month" -> {
@@ -351,11 +377,22 @@ public class StatServiceImpl implements StatService {
                     while (!current.isAfter(endOfMonth)) {
                         LocalDateTime start = current.atStartOfDay(); // 00:00:00 của từng ngày trong tháng
                         LocalDateTime end = current.atTime(LocalTime.MAX);// 23:59:59 của từng ngày
-
-                        double value = getValueByKey(key, start, end);
                         long timestamp = start.atZone(ZoneId.systemDefault()).toEpochSecond();
-                        points.add(new PointDTO(timestamp, value));
-                        total += value;
+
+                        if (key.equals("conversion")) {
+                            long orders = orderRepository.countDistinctCustomersWithOrders(start, end);
+                            long visits = visitTrackingService.getVisits(start, end);
+                            double ratio = (visits == 0) ? 0.0 : ((double) orders / visits) * 100;
+                            ratio = Math.round(ratio * 100.0) / 100.0;
+                            points.add(new PointDTO(timestamp, ratio));
+
+                            totalOrders += orders;
+                            totalVisits += visits;
+                        } else {
+                            double value = getValueByKey(key, start, end);
+                            points.add(new PointDTO(timestamp, value));
+                            total += value;
+                        }
 
                         current = current.plusDays(1); // Sang ngày tiếp theo
                     }
@@ -371,11 +408,22 @@ public class StatServiceImpl implements StatService {
                         LocalDateTime start = firstDay.atStartOfDay();// 00:00:00 ngày đầu tháng
                         LocalDate lastDay = firstDay.withDayOfMonth(firstDay.lengthOfMonth());// Ngày cuối tháng
                         LocalDateTime end = lastDay.atTime(LocalTime.MAX);// 23:59:59 ngày cuối tháng
-
-                        double value = getValueByKey(key, start, end);
                         long timestamp = start.atZone(ZoneId.systemDefault()).toEpochSecond();
-                        points.add(new PointDTO(timestamp, value));
-                        total += value;
+
+                        if (key.equals("conversion")) {
+                            long orders = orderRepository.countDistinctCustomersWithOrders(start, end);
+                            long visits = visitTrackingService.getVisits(start, end);
+                            double ratio = (visits == 0) ? 0.0 : ((double) orders / visits) * 100;
+                            ratio = Math.round(ratio * 100.0) / 100.0;
+                            points.add(new PointDTO(timestamp, ratio));
+
+                            totalOrders += orders;
+                            totalVisits += visits;
+                        } else {
+                            double value = getValueByKey(key, start, end);
+                            points.add(new PointDTO(timestamp, value));
+                            total += value;
+                        }
                     }
                 }
                 default -> {
@@ -383,7 +431,22 @@ public class StatServiceImpl implements StatService {
                 }
             }
 
-            previousTotal = getValueByKey(key, prevStart, prevEnd);
+            // Tính tổng cho conversion
+            if (key.equals("conversion")) {
+                total = (totalVisits == 0) ? 0.0 : (totalOrders / totalVisits) * 100;
+                total = Math.round(total * 100.0) / 100.0;
+            }
+
+            // Tính previousTotal
+            if (key.equals("conversion")) {
+                long prevOrders = orderRepository.countDistinctCustomersWithOrders(prevStart, prevEnd);
+                long prevVisits = visitTrackingService.getVisits(prevStart, prevEnd);
+                previousTotal = (prevVisits == 0) ? 0.0 : ((double) prevOrders / prevVisits) * 100;
+                previousTotal = Math.round(previousTotal * 100.0) / 100.0;
+            } else {
+                previousTotal = getValueByKey(key, prevStart, prevEnd);
+            }
+
             double chainRatio;
             if (previousTotal == 0) {
                 chainRatio = (total == 0) ? 0 : 100;
@@ -401,16 +464,6 @@ public class StatServiceImpl implements StatService {
         return switch (key) {
             case "revenue" -> orderRepository.getTotalRevenue(start, end);
             case "orders" -> orderRepository.countOrders(start, end);
-            case "conversion" -> {
-                long totalOrders = orderRepository.countDistinctCustomersWithOrders(start, end);
-                long totalVisits = visitTrackingService.getVisits(start, end);
-                if (totalVisits == 0) {
-                    yield 0.0;
-                } else {
-                    double ratio = ((double) totalOrders / totalVisits) * 100;
-                    yield Math.round(ratio * 100.0) / 100.0;
-                }
-            }
             case "visits" -> visitTrackingService.getVisits(start, end);
             case "pageviews" -> visitTrackingService.getPageViews(start, end);
             default -> 0;

@@ -68,6 +68,6 @@ public class VisitTrackingServiceImpl implements VisitTrackingService {
             visitStatisticsRepository.save(stat);
         }
 
-        visitLogRepository.deleteByDate(date);
+//        visitLogRepository.deleteByDate(date);
     }
 }
