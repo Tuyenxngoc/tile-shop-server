@@ -25,38 +25,11 @@ public enum SortByDataConstant implements SortByInterface {
         }
     },
 
-    CART {
-        @Override
-        public String getSortBy(String sortBy) {
-            return switch (sortBy) {
-                default -> "id";
-            };
-        }
-    },
-
-    CART_ITEM {
-        @Override
-        public String getSortBy(String sortBy) {
-            return switch (sortBy) {
-                default -> "id";
-            };
-        }
-    },
-
     CATEGORY {
         @Override
         public String getSortBy(String sortBy) {
             return switch (sortBy) {
                 case "name" -> "name";
-                default -> "id";
-            };
-        }
-    },
-
-    CATEGORY_ATTRIBUTE {
-        @Override
-        public String getSortBy(String sortBy) {
-            return switch (sortBy) {
                 default -> "id";
             };
         }
@@ -105,15 +78,6 @@ public enum SortByDataConstant implements SortByInterface {
         }
     },
 
-    ORDER_ITEM {
-        @Override
-        public String getSortBy(String sortBy) {
-            return switch (sortBy) {
-                default -> "id";
-            };
-        }
-    },
-
     PRODUCT {
         @Override
         public String getSortBy(String sortBy) {
@@ -131,24 +95,6 @@ public enum SortByDataConstant implements SortByInterface {
         }
     },
 
-    PRODUCT_ATTRIBUTE {
-        @Override
-        public String getSortBy(String sortBy) {
-            return switch (sortBy) {
-                default -> "id";
-            };
-        }
-    },
-
-    PRODUCT_IMAGE {
-        @Override
-        public String getSortBy(String sortBy) {
-            return switch (sortBy) {
-                default -> "id";
-            };
-        }
-    },
-
     REVIEW {
         @Override
         public String getSortBy(String sortBy) {
@@ -157,15 +103,6 @@ public enum SortByDataConstant implements SortByInterface {
                 case "comment" -> "comment";
                 case "username" -> "username";
                 case "status" -> "status";
-                default -> "id";
-            };
-        }
-    },
-
-    ROLE {
-        @Override
-        public String getSortBy(String sortBy) {
-            return switch (sortBy) {
                 default -> "id";
             };
         }
