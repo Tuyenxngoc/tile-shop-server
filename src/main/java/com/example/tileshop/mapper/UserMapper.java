@@ -11,6 +11,8 @@ public class UserMapper {
         }
 
         UserResponseDTO dto = new UserResponseDTO();
+        dto.setCreatedDate(user.getCreatedDate());
+        dto.setLastModifiedDate(user.getLastModifiedDate());
         dto.setId(user.getId());
         dto.setUsername(user.getUsername());
         dto.setEmail(user.getEmail());

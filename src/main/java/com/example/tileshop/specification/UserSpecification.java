@@ -1,8 +1,11 @@
 package com.example.tileshop.specification;
 
+import com.example.tileshop.entity.Role;
+import com.example.tileshop.entity.Role_;
 import com.example.tileshop.entity.User;
 import com.example.tileshop.entity.User_;
 import com.example.tileshop.util.SpecificationsUtil;
+import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.Predicate;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.jpa.domain.Specification;
@@ -14,21 +17,29 @@ public class UserSpecification {
 
             if (StringUtils.isNotBlank(keyword) && StringUtils.isNotBlank(searchBy)) {
                 switch (searchBy) {
-                    case User_.ID -> predicate = builder.and(predicate,
+                    case "id" -> predicate = builder.and(predicate,
                             builder.equal(root.get(User_.id),
                                     SpecificationsUtil.castToRequiredType(root.get(User_.id).getJavaType(), keyword)));
 
-                    case User_.USERNAME -> predicate = builder.and(predicate,
+                    case "username" -> predicate = builder.and(predicate,
                             builder.like(builder.lower(root.get(User_.username)), "%" + keyword.toLowerCase() + "%"));
 
-                    case User_.EMAIL -> predicate = builder.and(predicate,
+                    case "email" -> predicate = builder.and(predicate,
                             builder.like(builder.lower(root.get(User_.email)), "%" + keyword.toLowerCase() + "%"));
 
-                    case User_.FULL_NAME -> predicate = builder.and(predicate,
+                    case "fullName" -> predicate = builder.and(predicate,
                             builder.like(builder.lower(root.get(User_.fullName)), "%" + keyword.toLowerCase() + "%"));
 
-                    case User_.PHONE_NUMBER -> predicate = builder.and(predicate,
+                    case "phoneNumber" -> predicate = builder.and(predicate,
                             builder.like(builder.lower(root.get(User_.phoneNumber)), "%" + keyword.toLowerCase() + "%"));
+
+                    case "roleName" -> {
+                        Join<User, Role> roleJoin = root.join(User_.role);
+                        predicate = builder.and(predicate, builder.like(
+                                builder.lower(roleJoin.get(Role_.name)),
+                                "%" + keyword.toLowerCase() + "%"
+                        ));
+                    }
                 }
             }
 
