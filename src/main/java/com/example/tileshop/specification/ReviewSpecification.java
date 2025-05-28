@@ -37,15 +37,15 @@ public class ReviewSpecification {
 
             if (StringUtils.isNotBlank(keyword) && StringUtils.isNotBlank(searchBy)) {
                 switch (searchBy) {
-                    case Review_.RATING -> predicate = builder.and(predicate, builder.equal(root.get(Review_.rating),
+                    case "rating" -> predicate = builder.and(predicate, builder.equal(root.get(Review_.rating),
                             SpecificationsUtil.castToRequiredType(root.get(Review_.rating).getJavaType(), keyword)));
 
-                    case Review_.COMMENT -> predicate = builder.and(predicate, builder.like(
+                    case "comment" -> predicate = builder.and(predicate, builder.like(
                             builder.lower(root.get(Review_.comment)),
                             "%" + keyword.toLowerCase() + "%"
                     ));
 
-                    case Product_.ID -> {
+                    case "productId" -> {
                         Join<Review, Product> productJoin = root.join(Review_.product);
                         predicate = builder.and(predicate,
                                 builder.equal(
@@ -55,7 +55,7 @@ public class ReviewSpecification {
                         );
                     }
 
-                    case Product_.NAME -> {
+                    case "productName" -> {
                         Join<Review, Product> productJoin = root.join(Review_.product);
                         predicate = builder.and(predicate,
                                 builder.like(
@@ -65,7 +65,7 @@ public class ReviewSpecification {
                         );
                     }
 
-                    case Product_.CATEGORY -> {
+                    case "productCategoryName" -> {
                         Join<Review, Product> productJoin = root.join(Review_.product);
                         Join<Product, Category> categoryJoin = productJoin.join(Product_.category);
                         predicate = builder.and(predicate,

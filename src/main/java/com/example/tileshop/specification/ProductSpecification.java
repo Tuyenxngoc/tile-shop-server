@@ -19,41 +19,57 @@ public class ProductSpecification {
 
             if (StringUtils.isNotBlank(keyword) && StringUtils.isNotBlank(searchBy)) {
                 switch (searchBy) {
-                    case Product_.ID -> predicate = builder.and(predicate, builder.equal(root.get(Product_.id),
+                    case "id" -> predicate = builder.and(predicate, builder.equal(root.get(Product_.id),
                             SpecificationsUtil.castToRequiredType(root.get(Product_.id).getJavaType(), keyword)));
 
-                    case Product_.NAME -> predicate = builder.and(predicate,
+                    case "name" -> predicate = builder.and(predicate,
                             builder.like(builder.lower(root.get(Product_.name)), "%" + keyword.toLowerCase() + "%")
                     );
 
-                    case Product_.SLUG -> predicate = builder.and(predicate,
+                    case "slug" -> predicate = builder.and(predicate,
                             builder.like(builder.lower(root.get(Product_.slug)), "%" + keyword.toLowerCase() + "%")
                     );
 
-                    case Product_.PRICE -> predicate = builder.and(predicate,
+                    case "price" -> predicate = builder.and(predicate,
                             builder.equal(root.get(Product_.price),
                                     SpecificationsUtil.castToRequiredType(root.get(Product_.price).getJavaType(), keyword))
                     );
 
-                    case Product_.STOCK_QUANTITY -> predicate = builder.and(predicate,
+                    case "stockQuantity" -> predicate = builder.and(predicate,
                             builder.equal(root.get(Product_.stockQuantity),
                                     SpecificationsUtil.castToRequiredType(root.get(Product_.stockQuantity).getJavaType(), keyword))
                     );
 
-                    case Product_.DISCOUNT_PERCENTAGE -> predicate = builder.and(predicate,
+                    case "discountPercentage" -> predicate = builder.and(predicate,
                             builder.equal(root.get(Product_.discountPercentage),
                                     SpecificationsUtil.castToRequiredType(root.get(Product_.discountPercentage).getJavaType(), keyword))
                     );
 
-                    case Product_.AVERAGE_RATING -> predicate = builder.and(predicate,
+                    case "averageRating" -> predicate = builder.and(predicate,
                             builder.equal(root.get(Product_.averageRating),
                                     SpecificationsUtil.castToRequiredType(root.get(Product_.averageRating).getJavaType(), keyword))
                     );
+
+                    case "categoryName" -> {
+                        Join<Product, Category> categoryJoin = root.join(Product_.category);
+                        predicate = builder.and(predicate,
+                                builder.like(builder.lower(categoryJoin.get(Category_.name)),
+                                        "%" + keyword.toLowerCase() + "%")
+                        );
+                    }
 
                     case "categorySlug" -> {
                         Join<Product, Category> categoryJoin = root.join(Product_.category);
                         predicate = builder.and(predicate,
                                 builder.like(builder.lower(categoryJoin.get(Category_.slug)),
+                                        "%" + keyword.toLowerCase() + "%")
+                        );
+                    }
+
+                    case "brandName" -> {
+                        Join<Product, Brand> brandJoin = root.join(Product_.brand, JoinType.LEFT);
+                        predicate = builder.and(predicate,
+                                builder.like(builder.lower(brandJoin.get(Brand_.name)),
                                         "%" + keyword.toLowerCase() + "%")
                         );
                     }

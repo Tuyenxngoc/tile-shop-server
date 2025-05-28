@@ -29,7 +29,7 @@ public class OrderSpecification {
             Join<Order, OrderItem> orderItems = root.join(Order_.ORDER_ITEMS, JoinType.LEFT);
             Join<OrderItem, Product> product = orderItems.join(OrderItem_.PRODUCT, JoinType.LEFT);
 
-            Predicate byProductName = cb.like(cb.lower(product.get(Product_.NAME)), "%" + keyword.toLowerCase() + "%");
+            Predicate byProductName = cb.like(cb.lower(product.get(Product_.name)), "%" + keyword.toLowerCase() + "%");
             Predicate byOrderId = cb.like(cb.lower(root.get(Order_.ID).as(String.class)), "%" + keyword.toLowerCase() + "%");
 
             return cb.or(byProductName, byOrderId);
@@ -74,7 +74,7 @@ public class OrderSpecification {
 
             if (StringUtils.isNotBlank(keyword) && StringUtils.isNotBlank(searchBy)) {
                 switch (searchBy) {
-                    case Order_.ID -> predicate = builder.and(predicate, builder.equal(root.get(Order_.id),
+                    case "id" -> predicate = builder.and(predicate, builder.equal(root.get(Order_.id),
                             SpecificationsUtil.castToRequiredType(root.get(Order_.id).getJavaType(), keyword)));
 
                     case "fullName" -> {
@@ -90,7 +90,7 @@ public class OrderSpecification {
                         Join<Order, OrderItem> orderItems = root.join(Order_.ORDER_ITEMS, JoinType.LEFT);
                         Join<OrderItem, Product> product = orderItems.join(OrderItem_.PRODUCT, JoinType.LEFT);
                         predicate = builder.and(predicate, builder.like(
-                                builder.lower(product.get(Product_.NAME)),
+                                builder.lower(product.get(Product_.name)),
                                 "%" + keyword.toLowerCase() + "%"
                         ));
                     }

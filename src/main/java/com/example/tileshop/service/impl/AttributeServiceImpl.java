@@ -14,6 +14,7 @@ import com.example.tileshop.exception.ConflictException;
 import com.example.tileshop.exception.NotFoundException;
 import com.example.tileshop.repository.AttributeRepository;
 import com.example.tileshop.service.AttributeService;
+import com.example.tileshop.specification.AttributeSpecification;
 import com.example.tileshop.util.MessageUtil;
 import com.example.tileshop.util.PaginationUtil;
 import lombok.RequiredArgsConstructor;
@@ -113,7 +114,7 @@ public class AttributeServiceImpl implements AttributeService {
     public PaginationResponseDTO<AttributeResponseDTO> findAll(PaginationFullRequestDTO requestDTO) {
         Pageable pageable = PaginationUtil.buildPageable(requestDTO, SortByDataConstant.ATTRIBUTE);
 
-        Page<Attribute> page = attributeRepository.findAll(pageable);
+        Page<Attribute> page = attributeRepository.findAll(AttributeSpecification.filterByField(requestDTO.getSearchBy(), requestDTO.getKeyword()), pageable);
 
         List<AttributeResponseDTO> items = page.getContent().stream()
                 .map(AttributeResponseDTO::new)

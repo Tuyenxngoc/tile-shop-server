@@ -6,6 +6,8 @@ public enum SortByDataConstant implements SortByInterface {
         public String getSortBy(String sortBy) {
             return switch (sortBy) {
                 case "name" -> "name";
+                case "isRequired" -> "isRequired";
+                case "defaultValue" -> "defaultValue";
                 case "createdDate" -> "createdDate";
                 case "lastModifiedDate" -> "lastModifiedDate";
                 default -> "id";
@@ -18,6 +20,9 @@ public enum SortByDataConstant implements SortByInterface {
         public String getSortBy(String sortBy) {
             return switch (sortBy) {
                 case "name" -> "name";
+                case "slug" -> "slug";
+                case "description" -> "description";
+                case "logoUrl" -> "logoUrl";
                 case "createdDate" -> "createdDate";
                 case "lastModifiedDate" -> "lastModifiedDate";
                 default -> "id";
@@ -30,6 +35,11 @@ public enum SortByDataConstant implements SortByInterface {
         public String getSortBy(String sortBy) {
             return switch (sortBy) {
                 case "name" -> "name";
+                case "slug" -> "slug";
+                case "imageUrl" -> "imageUrl";
+                case "description" -> "description";
+                case "createdDate" -> "createdDate";
+                case "lastModifiedDate" -> "lastModifiedDate";
                 default -> "id";
             };
         }
@@ -41,6 +51,8 @@ public enum SortByDataConstant implements SortByInterface {
             return switch (sortBy) {
                 case "title" -> "title";
                 case "slug" -> "slug";
+                case "description" -> "description";
+                case "imageUrl" -> "imageUrl";
                 case "viewCount" -> "viewCount";
                 case "createdDate" -> "createdDate";
                 case "lastModifiedDate" -> "lastModifiedDate";
@@ -55,6 +67,7 @@ public enum SortByDataConstant implements SortByInterface {
         public String getSortBy(String sortBy) {
             return switch (sortBy) {
                 case "name" -> "name";
+                case "slug" -> "slug";
                 case "createdDate" -> "createdDate";
                 case "lastModifiedDate" -> "lastModifiedDate";
                 default -> "id";

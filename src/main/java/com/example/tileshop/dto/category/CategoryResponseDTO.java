@@ -1,5 +1,6 @@
 package com.example.tileshop.dto.category;
 
+import com.example.tileshop.dto.attribute.AttributeResponseDTO;
 import com.example.tileshop.dto.common.DateAuditingDTO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -25,5 +26,5 @@ public class CategoryResponseDTO extends DateAuditingDTO {
 
     private CategorySimpleDTO parent;
 
-    private List<Long> attributeIds;
+    private List<AttributeResponseDTO> attributes;
 }

@@ -14,11 +14,10 @@ public class NewsCategorySpecification {
 
             if (StringUtils.isNotBlank(keyword) && StringUtils.isNotBlank(searchBy)) {
                 switch (searchBy) {
-                    case NewsCategory_.ID ->
-                            predicate = builder.and(predicate, builder.equal(root.get(NewsCategory_.id),
-                                    SpecificationsUtil.castToRequiredType(root.get(NewsCategory_.id).getJavaType(), keyword)));
+                    case "id" -> predicate = builder.and(predicate, builder.equal(root.get(NewsCategory_.id),
+                            SpecificationsUtil.castToRequiredType(root.get(NewsCategory_.id).getJavaType(), keyword)));
 
-                    case NewsCategory_.NAME -> predicate = builder.and(predicate, builder.like(
+                    case "name" -> predicate = builder.and(predicate, builder.like(
                             builder.lower(root.get(NewsCategory_.name)),
                             "%" + keyword.toLowerCase() + "%"
                     ));

@@ -10,8 +10,12 @@ public class AttributeMapper {
         }
 
         AttributeResponseDTO dto = new AttributeResponseDTO();
-        // TODO: set fields từ Attribute vào dto
-        // vd: dto.setId(attribute.getId());
+        dto.setCreatedDate(attribute.getCreatedDate());
+        dto.setLastModifiedDate(attribute.getLastModifiedDate());
+        dto.setId(attribute.getId());
+        dto.setName(attribute.getName());
+        dto.setIsRequired(attribute.isRequired());
+        dto.setDefaultValue(attribute.getDefaultValue());
 
         return dto;
     }

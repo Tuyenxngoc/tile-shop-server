@@ -34,6 +34,8 @@ public class ProductMapper {
         }
 
         ProductResponseDTO dto = new ProductResponseDTO();
+        dto.setCreatedDate(product.getCreatedDate());
+        dto.setLastModifiedDate(product.getLastModifiedDate());
         dto.setId(product.getId());
         dto.setName(product.getName());
         dto.setSlug(product.getSlug());

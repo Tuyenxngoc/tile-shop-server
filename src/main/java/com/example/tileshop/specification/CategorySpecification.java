@@ -14,11 +14,16 @@ public class CategorySpecification {
 
             if (StringUtils.isNotBlank(keyword) && StringUtils.isNotBlank(searchBy)) {
                 switch (searchBy) {
-                    case Category_.ID -> predicate = builder.and(predicate, builder.equal(root.get(Category_.id),
+                    case "id" -> predicate = builder.and(predicate, builder.equal(root.get(Category_.id),
                             SpecificationsUtil.castToRequiredType(root.get(Category_.id).getJavaType(), keyword)));
 
-                    case Category_.NAME -> predicate = builder.and(predicate, builder.like(
+                    case "name" -> predicate = builder.and(predicate, builder.like(
                             builder.lower(root.get(Category_.name)),
+                            "%" + keyword.toLowerCase() + "%"
+                    ));
+
+                    case "parentName" -> predicate = builder.and(predicate, builder.like(
+                            builder.lower(root.get(Category_.parent).get(Category_.name)),
                             "%" + keyword.toLowerCase() + "%"
                     ));
                 }
