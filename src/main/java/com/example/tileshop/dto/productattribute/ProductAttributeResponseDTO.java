@@ -1,6 +1,5 @@
 package com.example.tileshop.dto.productattribute;
 
-import com.example.tileshop.entity.ProductAttribute;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,12 +10,9 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProductAttributeResponseDTO {
+    private long id;
+
     private String name;
 
     private String value;
-
-    public ProductAttributeResponseDTO(ProductAttribute productAttribute) {
-        this.name = productAttribute.getAttribute().getName();
-        this.value = productAttribute.getValue();
-    }
 }

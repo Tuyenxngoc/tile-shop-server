@@ -114,7 +114,7 @@ public class ProductMapper {
         );
 
         List<ProductAttributeResponseDTO> attributes = product.getAttributes().stream()
-                .map(ProductAttributeResponseDTO::new)
+                .map(ProductAttributeMapper::toDTO)
                 .toList();
         dto.setAttributes(attributes);
 

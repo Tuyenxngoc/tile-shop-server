@@ -4,14 +4,15 @@ import com.example.tileshop.dto.productattribute.ProductAttributeResponseDTO;
 import com.example.tileshop.entity.ProductAttribute;
 
 public class ProductAttributeMapper {
-    public static ProductAttributeResponseDTO toDTO(ProductAttribute productattribute) {
-        if (productattribute == null) {
+    public static ProductAttributeResponseDTO toDTO(ProductAttribute productAttribute) {
+        if (productAttribute == null) {
             return null;
         }
 
         ProductAttributeResponseDTO dto = new ProductAttributeResponseDTO();
-        // TODO: set fields từ ProductAttribute vào dto
-        // vd: dto.setId(productattribute.getId());
+        dto.setId(productAttribute.getId());
+        dto.setName(productAttribute.getAttribute().getName());
+        dto.setValue(productAttribute.getValue());
 
         return dto;
     }

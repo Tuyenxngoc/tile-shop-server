@@ -11,6 +11,7 @@ import com.example.tileshop.entity.Product;
 import com.example.tileshop.entity.User;
 import com.example.tileshop.exception.BadRequestException;
 import com.example.tileshop.exception.NotFoundException;
+import com.example.tileshop.mapper.CartItemMapper;
 import com.example.tileshop.repository.CartItemRepository;
 import com.example.tileshop.repository.CartRepository;
 import com.example.tileshop.repository.ProductRepository;
@@ -55,7 +56,7 @@ public class CartServiceImpl implements CartService {
         Cart cart = getOrCreateCart(userId);
         return cartItemRepository.findByCartId(cart.getId())
                 .stream()
-                .map(CartItemResponseDTO::new)
+                .map(CartItemMapper::toDTO)
                 .toList();
     }
 
@@ -93,7 +94,7 @@ public class CartServiceImpl implements CartService {
         cartItemRepository.save(cartItem);
 
         String message = messageUtil.getMessage(SuccessMessage.CartItem.ADD);
-        return new CommonResponseDTO(message, new CartItemResponseDTO(cartItem));
+        return new CommonResponseDTO(message, CartItemMapper.toDTO(cartItem));
     }
 
     @Override
@@ -114,7 +115,7 @@ public class CartServiceImpl implements CartService {
         cartItemRepository.save(cartItem);
 
         String message = messageUtil.getMessage(SuccessMessage.CartItem.UPDATE);
-        return new CommonResponseDTO(message, new CartItemResponseDTO(cartItem));
+        return new CommonResponseDTO(message, CartItemMapper.toDTO(cartItem));
     }
 
     @Override

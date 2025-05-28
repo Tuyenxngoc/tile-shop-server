@@ -20,6 +20,7 @@ import com.example.tileshop.entity.ReviewImage;
 import com.example.tileshop.entity.User;
 import com.example.tileshop.exception.BadRequestException;
 import com.example.tileshop.exception.NotFoundException;
+import com.example.tileshop.mapper.ReviewMapper;
 import com.example.tileshop.repository.ProductRepository;
 import com.example.tileshop.repository.ReviewRepository;
 import com.example.tileshop.service.ReviewService;
@@ -166,7 +167,7 @@ public class ReviewServiceImpl implements ReviewService {
         Page<Review> page = reviewRepository.findAll(spec, pageable);
 
         List<ReviewResponseDTO> items = page.getContent().stream()
-                .map(ReviewResponseDTO::new)
+                .map(ReviewMapper::toDTO)
                 .toList();
 
         PagingMeta pagingMeta = PaginationUtil.buildPagingMeta(requestDTO, SortByDataConstant.REVIEW, page);
@@ -243,7 +244,7 @@ public class ReviewServiceImpl implements ReviewService {
         }
 
         String message = messageUtil.getMessage(SuccessMessage.Review.APPROVE);
-        return new CommonResponseDTO(message, new ReviewResponseDTO(review));
+        return new CommonResponseDTO(message, ReviewMapper.toDTO(review));
     }
 
     @Override
@@ -256,7 +257,7 @@ public class ReviewServiceImpl implements ReviewService {
         }
 
         String message = messageUtil.getMessage(SuccessMessage.Review.REJECT);
-        return new CommonResponseDTO(message, new ReviewResponseDTO(review));
+        return new CommonResponseDTO(message, ReviewMapper.toDTO(review));
     }
 
     @Override
