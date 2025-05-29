@@ -21,6 +21,8 @@ public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpec
 
     Optional<Product> findBySlug(String slug);
 
+    List<Product> findByNameContainingIgnoreCase(String keyword);
+
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("SELECT p FROM Product p WHERE p.id IN :ids")
     List<Product> findAllByIdWithPessimisticLock(@Param("ids") List<Long> ids);

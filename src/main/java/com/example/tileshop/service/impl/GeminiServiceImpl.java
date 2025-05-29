@@ -1,9 +1,13 @@
 package com.example.tileshop.service.impl;
 
 import com.example.tileshop.dto.chat.ChatRequestDTO;
+import com.example.tileshop.entity.Product;
+import com.example.tileshop.repository.ProductRepository;
 import com.example.tileshop.service.GeminiService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -11,12 +15,13 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class GeminiServiceImpl implements GeminiService {
+    private static final Logger log = LoggerFactory.getLogger(GeminiServiceImpl.class);
     @Value("${gemini.api.key}")
     private String apiKey;
 
@@ -27,17 +32,28 @@ public class GeminiServiceImpl implements GeminiService {
 
     private final ObjectMapper objectMapper;
 
+    private final ProductRepository productRepository;
+
     @Override
     public String askGemini(ChatRequestDTO requestDTO) {
         String fullUrl = apiUrl + "?key=" + apiKey;
 
         try {
+            // 1. Lọc sản phẩm liên quan
+            String userMessage = requestDTO.getMessage();
+            List<Product> matchedProducts = findRelevantProductInfo(userMessage);
+
+            // 2. Tạo phần mô tả sản phẩm
+            String productInfo = buildProductDescription(matchedProducts);
+
+            // 3. Tạo request body gửi Gemini
             String requestBody = objectMapper.writeValueAsString(Map.of(
                     "contents", new Object[]{
                             Map.of(
-                                    "role", "user",  // Có thể là "user" hoặc "model"
+                                    "role", "user",
                                     "parts", new Object[]{
-                                            Map.of("text", requestDTO.getMessage())
+                                            Map.of("text", "Dữ liệu sản phẩm của cửa hàng:\n" + productInfo),
+                                            Map.of("text", "Câu hỏi khách hàng: " + userMessage)
                                     }
                             )
                     },
@@ -88,5 +104,36 @@ public class GeminiServiceImpl implements GeminiService {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    /**
+     * Tìm sản phẩm liên quan dựa trên từ khóa trong câu hỏi
+     */
+    private List<Product> findRelevantProductInfo(String userMessage) {
+        // Tách từ khóa đơn giản (có thể dùng NLP sau này)
+        String[] keywords = userMessage.toLowerCase().split("\\s+");
+
+        Set<Product> results = new HashSet<>();
+        for (String keyword : keywords) {
+            if (keyword.length() > 2) { // bỏ qua từ quá ngắn
+                results.addAll(productRepository.findByNameContainingIgnoreCase(keyword));
+            }
+        }
+        return new ArrayList<>(results);
+    }
+
+    /**
+     * Tạo mô tả dạng text cho danh sách sản phẩm truyền vào
+     */
+    private String buildProductDescription(List<Product> products) {
+        if (products == null || products.isEmpty()) {
+            return "Không tìm thấy sản phẩm liên quan.";
+        }
+        return products.stream()
+                .map(p -> String.format("• %s - giá: %,.0fđ - danh mục: %s - thương hiệu: %s",
+                        p.getName(), p.calculateFinalPrice(),
+                        p.getCategory() != null ? p.getCategory().getName() : "Không rõ",
+                        p.getBrand() != null ? p.getBrand() : "Không rõ"))
+                .collect(Collectors.joining("\n"));
     }
 }
