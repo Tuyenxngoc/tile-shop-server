@@ -43,7 +43,7 @@ public class VisitTrackingServiceImpl implements VisitTrackingService {
     }
 
     @Override
-    public double getPageViews(LocalDateTime start, LocalDateTime end) {
+    public long getPageViews(LocalDateTime start, LocalDateTime end) {
         return visitLogRepository.countTotalVisits(start, end);
     }
 

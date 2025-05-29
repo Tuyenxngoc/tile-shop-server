@@ -31,6 +31,18 @@ public interface OrderRepository extends JpaRepository<Order, Long>, JpaSpecific
     @Query("SELECT COALESCE(SUM(o.totalAmount), 0) FROM Order o WHERE o.status = 'DELIVERED' AND o.createdDate BETWEEN :startDate AND :endDate")
     double getTotalRevenue(@Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate);
 
+    @Query("""
+                SELECT COALESCE(SUM(o.totalAmount), 0)
+                FROM Order o
+                WHERE o.status = :status
+                  AND o.createdDate BETWEEN :startDate AND :endDate
+            """)
+    double getRevenueByStatus(
+            @Param("status") OrderStatus status,
+            @Param("startDate") LocalDateTime startDate,
+            @Param("endDate") LocalDateTime endDate
+    );
+
     @Query("SELECT COUNT(o) FROM Order o WHERE o.createdDate BETWEEN :startDate AND :endDate")
     int countOrders(@Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate);
 

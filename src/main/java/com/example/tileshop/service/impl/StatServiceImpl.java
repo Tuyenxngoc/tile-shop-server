@@ -9,14 +9,23 @@ import com.example.tileshop.repository.ProductRepository;
 import com.example.tileshop.repository.UserRepository;
 import com.example.tileshop.service.StatService;
 import com.example.tileshop.service.VisitTrackingService;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.time.*;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class StatServiceImpl implements StatService {
@@ -29,8 +38,8 @@ public class StatServiceImpl implements StatService {
     private final VisitTrackingService visitTrackingService;
 
     private double getCustomerChangePercentage(LocalDateTime startDate, LocalDateTime endDate, LocalDateTime prevStartDate, LocalDateTime prevEndDate) {
-        int currentCount = userRepository.countCustomers(startDate, endDate);
-        int previousCount = userRepository.countCustomers(prevStartDate, prevEndDate);
+        int currentCount = userRepository.countUsers(startDate, endDate);
+        int previousCount = userRepository.countUsers(prevStartDate, prevEndDate);
 
         if (previousCount == 0) {
             return currentCount > 0 ? 100.0 : 0.0;
@@ -114,8 +123,8 @@ public class StatServiceImpl implements StatService {
         responseDTO.setOrderStat(orderStat);
 
         // Customer Stat
-        int totalCustomers = userRepository.countCustomers();
-        int newCustomers = userRepository.countCustomers(startDate, endDate);
+        long totalCustomers = userRepository.count();
+        int newCustomers = userRepository.countUsers(startDate, endDate);
         double customerChange = getCustomerChangePercentage(startDate, endDate, prevStartDate, prevEndDate);
 
         CustomerStatDTO customerStat = new CustomerStatDTO();
@@ -167,7 +176,7 @@ public class StatServiceImpl implements StatService {
                 ? filter.getEndDate().atTime(23, 59, 59)
                 : null;
 
-        return userRepository.findTopCustomers(startDate, endDate, pageable);
+        return userRepository.findTopUsers(startDate, endDate, pageable);
     }
 
     @Override
@@ -468,5 +477,257 @@ public class StatServiceImpl implements StatService {
             case "pageviews" -> visitTrackingService.getPageViews(start, end);
             default -> 0;
         };
+    }
+
+    @Override
+    public byte[] exportChartDataToExcel(ChartDataFilter filter) {
+        String timeLabel;
+        DateTimeFormatter formatter;
+
+        if ("day".equals(filter.getType())) {
+            timeLabel = "Thời gian";
+            formatter = DateTimeFormatter.ofPattern("HH:mm dd-MM-yyyy");
+        } else {
+            timeLabel = "Ngày";
+            formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        }
+
+        List<ShopStat> stats = getShopStatsByFilter(filter);
+
+        try (Workbook workbook = new XSSFWorkbook();
+             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream()) {
+
+            Sheet sheet = workbook.createSheet("shop-stats");
+
+            Font headerFont = workbook.createFont();
+            headerFont.setBold(true);
+            headerFont.setFontHeightInPoints((short) 12);
+
+            CellStyle headerCellStyle = workbook.createCellStyle();
+            headerCellStyle.setFont(headerFont);
+
+            headerCellStyle.setAlignment(HorizontalAlignment.CENTER);
+            headerCellStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+
+            headerCellStyle.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
+            headerCellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+
+            headerCellStyle.setBorderTop(BorderStyle.THIN);
+            headerCellStyle.setBorderBottom(BorderStyle.THIN);
+            headerCellStyle.setBorderLeft(BorderStyle.THIN);
+            headerCellStyle.setBorderRight(BorderStyle.THIN);
+
+            headerCellStyle.setWrapText(true);
+
+            CellStyle dataCellStyle = workbook.createCellStyle();
+            dataCellStyle.setAlignment(HorizontalAlignment.CENTER);
+
+            // Tạo tiêu đề cột
+            Row headerRow = sheet.createRow(0);
+            String[] headers = {
+                    timeLabel,
+                    "Tổng doanh số (VND)",
+                    "Tổng số đơn hàng",
+                    "Doanh số trên mỗi đơn hàng",
+                    "Tổng số lượt xem sản phẩm",
+                    "Số lượt truy cập",
+                    "Tỉ lệ mua hàng, đã thanh toán",
+                    "Đơn đã hủy",
+                    "Doanh số đơn hủy",
+                    "Đơn đã hoàn trả / hoàn tiền",
+                    "Doanh số các đơn Trả hàng/Hoàn tiền",
+                    "Số người dùng",
+                    "Số người dùng mới"
+            };
+
+            for (int i = 0; i < headers.length; i++) {
+                Cell cell = headerRow.createCell(i);
+                cell.setCellValue(headers[i]);
+                cell.setCellStyle(headerCellStyle);
+            }
+
+            int rowNum = 1;
+            for (ShopStat stat : stats) {
+                Row row = sheet.createRow(rowNum++);
+
+                Object[] values = new Object[]{
+                        stat.getTime().format(formatter),
+                        stat.getTotalSales(),
+                        stat.getTotalOrders(),
+                        stat.getSalesPerOrder(),
+                        stat.getProductViews(),
+                        stat.getVisits(),
+                        stat.getPurchaseRate(),
+                        stat.getCanceledOrders(),
+                        stat.getCanceledSales(),
+                        stat.getReturnedOrders(),
+                        stat.getReturnedSales(),
+                        stat.getUserCount(),
+                        stat.getNewUserCount()
+                };
+
+                for (int i = 0; i < values.length; i++) {
+                    Cell cell = row.createCell(i);
+                    Object val = values[i];
+                    if (val instanceof String) {
+                        cell.setCellValue((String) val);
+                    } else if (val instanceof Number) {
+                        double doubleVal = ((Number) val).doubleValue();
+                        double roundedVal = Math.round(doubleVal * 100.0) / 100.0;
+                        cell.setCellValue(roundedVal);
+                    }
+                    cell.setCellStyle(dataCellStyle);
+                }
+            }
+
+            // Auto size cột
+            for (int i = 0; i < headers.length; i++) {
+                sheet.autoSizeColumn(i);
+            }
+
+            workbook.write(byteArrayOutputStream);
+            return byteArrayOutputStream.toByteArray();
+        } catch (IOException e) {
+            log.error("Error while generating shop stats Excel report", e);
+            throw new RuntimeException("Error while generating shop stats Excel report", e);
+        }
+    }
+
+    private List<ShopStat> getShopStatsByFilter(ChartDataFilter filter) {
+        List<ShopStat> shopStats = new ArrayList<>();
+        LocalDate date = filter.getDate();
+        String type = filter.getType();
+
+        switch (type) {
+            case "day" -> {
+                LocalDateTime dayStart = date.atStartOfDay(); // Lấy thời điểm bắt đầu của ngày hiện tại (00:00:00)
+
+                for (int hour = 0; hour < 24; hour++) {
+                    LocalDateTime start = dayStart.plusHours(hour);// Thời điểm bắt đầu của từng giờ trong ngày
+                    LocalDateTime end = start.plusHours(1).minusSeconds(1);// Thời điểm kết thúc của từng giờ (59:59)
+
+                    ShopStat shopStat = createStat(start, end);
+                    shopStats.add(shopStat);
+                }
+            }
+            case "week" -> {
+                LocalDate weekStart = date.with(DayOfWeek.MONDAY);// Lấy ngày thứ 2 trong tuần chứa date
+
+                for (int i = 0; i < 7; i++) {
+                    LocalDate current = weekStart.plusDays(i);// Ngày thứ i trong tuần hiện tại
+                    LocalDateTime start = current.atStartOfDay();// 00:00:00 của ngày thứ i
+                    LocalDateTime end = current.atTime(LocalTime.MAX); // 23:59:59 của ngày thứ i
+
+                    ShopStat shopStat = createStat(start, end);
+                    shopStats.add(shopStat);
+                }
+            }
+            case "month" -> {
+                LocalDate current = date.withDayOfMonth(1); // Ngày đầu tiên của tháng hiện tại
+                LocalDate endOfMonth = current.withDayOfMonth(current.lengthOfMonth()); // Ngày cuối cùng của tháng hiện tại
+
+                while (!current.isAfter(endOfMonth)) {
+                    LocalDateTime start = current.atStartOfDay(); // 00:00:00 của từng ngày trong tháng
+                    LocalDateTime end = current.atTime(LocalTime.MAX);// 23:59:59 của từng ngày
+
+                    ShopStat shopStat = createStat(start, end);
+                    shopStats.add(shopStat);
+
+                    current = current.plusDays(1); // Sang ngày tiếp theo
+                }
+            }
+            case "year" -> {
+                Year year = Year.of(date.getYear()); // Năm hiện tại (ví dụ: 2024)
+
+                for (int month = 1; month <= 12; month++) {
+                    LocalDate firstDay = year.atMonth(month).atDay(1); // Ngày đầu tiên của tháng thứ month trong năm hiện tại
+                    LocalDateTime start = firstDay.atStartOfDay();// 00:00:00 ngày đầu tháng
+                    LocalDate lastDay = firstDay.withDayOfMonth(firstDay.lengthOfMonth());// Ngày cuối tháng
+                    LocalDateTime end = lastDay.atTime(LocalTime.MAX);// 23:59:59 ngày cuối tháng
+
+                    ShopStat shopStat = createStat(start, end);
+                    shopStats.add(shopStat);
+                }
+            }
+        }
+
+        return shopStats;
+    }
+
+    private ShopStat createStat(LocalDateTime start, LocalDateTime end) {
+        ShopStat stat = new ShopStat();
+        stat.setTime(start);
+
+        // Tổng doanh số
+        double totalSales = orderRepository.getTotalRevenue(start, end);
+        stat.setTotalSales(totalSales);
+
+        // Tổng số đơn
+        int totalOrders = orderRepository.countOrdersByStatus(OrderStatus.DELIVERED, start, end);
+        stat.setTotalOrders(totalOrders);
+
+        // Doanh số / đơn
+        double salesPerOrder = (totalOrders > 0) ? totalSales / totalOrders : 0;
+        stat.setSalesPerOrder(salesPerOrder);
+
+        // Lượt xem sản phẩm
+        long productViews = visitTrackingService.getPageViews(start, end);
+        stat.setProductViews(productViews);
+
+        // Lượt truy cập
+        long visits = visitTrackingService.getVisits(start, end);
+        stat.setVisits(visits);
+
+        // Tỉ lệ mua hàng (VD: tổng đơn / lượt truy cập * 100)
+        double purchaseRate = 0;
+        if (stat.getVisits() > 0) {
+            long customersWithOrders = orderRepository.countDistinctCustomersWithOrders(start, end);
+            purchaseRate = (double) customersWithOrders / stat.getVisits() * 100;
+        }
+        stat.setPurchaseRate(purchaseRate);
+
+        // Đơn hủy
+        int canceledOrders = orderRepository.countOrdersByStatus(OrderStatus.CANCELLED, start, end);
+        stat.setCanceledOrders(canceledOrders);
+
+        // Doanh số đơn hủy
+        double canceledSales = orderRepository.getRevenueByStatus(OrderStatus.CANCELLED, start, end);
+        stat.setCanceledSales(canceledSales);
+
+        // Đơn trả hoàn
+        int returnedOrders = orderRepository.countOrdersByStatus(OrderStatus.RETURNED, start, end);
+        stat.setReturnedOrders(returnedOrders);
+
+        // Doanh số trả hoàn
+        double returnedSales = orderRepository.getRevenueByStatus(OrderStatus.RETURNED, start, end);
+        stat.setReturnedSales(returnedSales);
+
+        // Số người dùng hiện có (tổng)
+        long totalUsers = userRepository.countUsersUpTo(end);
+        stat.setUserCount(totalUsers);
+
+        // Số người dùng mới
+        int newUserCount = userRepository.countUsers(start, end);
+        stat.setNewUserCount(newUserCount);
+
+        return stat;
+    }
+
+    @Getter
+    @Setter
+    public static class ShopStat {
+        private LocalDateTime time;     // thời gian hoặc ngày
+        private double totalSales;        // tổng doanh số
+        private int totalOrders;        // tổng đơn hàng
+        private double salesPerOrder;   // doanh số trên đơn
+        private long productViews;       // lượt xem sản phẩm
+        private long visits;             // lượt truy cập
+        private double purchaseRate;    // tỉ lệ mua hàng (%)
+        private int canceledOrders;     // đơn hủy
+        private double canceledSales;     // doanh số đơn hủy
+        private int returnedOrders;     // đơn trả hoàn
+        private double returnedSales;    // doanh số đơn trả hoàn
+        private long userCount;          // số người dùng
+        private int newUserCount;       // người dùng mới
     }
 }

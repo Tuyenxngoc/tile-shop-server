@@ -8,7 +8,7 @@ public interface VisitTrackingService {
 
     long getVisits(LocalDateTime start, LocalDateTime end);
 
-    double getPageViews(LocalDateTime start, LocalDateTime end);
+    long getPageViews(LocalDateTime start, LocalDateTime end);
 
     void aggregateDailyStatistics(LocalDate yesterday);
 }

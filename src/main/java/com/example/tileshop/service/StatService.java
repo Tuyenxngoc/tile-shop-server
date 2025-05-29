@@ -22,4 +22,6 @@ public interface StatService {
     List<CategoryRevenueChartDTO> getRevenueByCategory(RevenueStatsFilter filter);
 
     Map<String, MetricDTO> getChartData(ChartDataFilter filter);
+
+    byte[] exportChartDataToExcel(ChartDataFilter filter);
 }

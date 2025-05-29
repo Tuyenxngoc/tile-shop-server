@@ -25,11 +25,15 @@ public interface UserRepository extends JpaRepository<User, String>, JpaSpecific
 
     boolean existsByUsernameOrEmail(String username, String email);
 
-    @Query("SELECT COUNT(c) FROM User c")
-    int countCustomers();
+    @Query("""
+                SELECT COUNT(u)
+                FROM User u
+                WHERE u.createdDate <= :endDate
+            """)
+    int countUsersUpTo(@Param("endDate") LocalDateTime endDate);
 
     @Query("SELECT COUNT(c) FROM User c WHERE c.createdDate BETWEEN :startDate AND :endDate")
-    int countCustomers(@Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate);
+    int countUsers(@Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate);
 
     @Query("""
                 SELECT new com.example.tileshop.dto.statistics.TopCustomerDTO(
@@ -43,7 +47,7 @@ public interface UserRepository extends JpaRepository<User, String>, JpaSpecific
                 GROUP BY u.id, u.username, u.fullName, u.email
                 ORDER BY SUM(o.totalAmount) DESC
             """)
-    List<TopCustomerDTO> findTopCustomers(
+    List<TopCustomerDTO> findTopUsers(
             @Param("startDate") LocalDateTime startDate,
             @Param("endDate") LocalDateTime endDate,
             Pageable pageable
