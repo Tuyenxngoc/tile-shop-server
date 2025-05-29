@@ -143,7 +143,7 @@ public class BrandServiceImpl implements BrandService {
         Brand brand = getEntity(id);
 
         if (!brand.getProducts().isEmpty()) {
-            throw new ConflictException(ErrorMessage.Brand.ERR_DELETE_HAS_PRODUCTS, id);
+            throw new BadRequestException(ErrorMessage.Brand.ERR_DELETE_HAS_PRODUCTS, id);
         }
 
         if (brand.getLogoUrl() != null) {

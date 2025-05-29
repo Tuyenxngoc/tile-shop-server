@@ -10,6 +10,9 @@ import com.example.tileshop.dto.pagination.PaginationFullRequestDTO;
 import com.example.tileshop.dto.pagination.PaginationResponseDTO;
 import com.example.tileshop.dto.pagination.PagingMeta;
 import com.example.tileshop.entity.Attribute;
+import com.example.tileshop.entity.CategoryAttribute;
+import com.example.tileshop.entity.ProductAttribute;
+import com.example.tileshop.exception.BadRequestException;
 import com.example.tileshop.exception.ConflictException;
 import com.example.tileshop.exception.NotFoundException;
 import com.example.tileshop.repository.AttributeRepository;
@@ -103,6 +106,25 @@ public class AttributeServiceImpl implements AttributeService {
     @Override
     public CommonResponseDTO delete(Long id) {
         Attribute attribute = getEntity(id);
+
+        if (!attribute.getCategoryAttributes().isEmpty()) {
+            CategoryAttribute first = attribute.getCategoryAttributes().getFirst();
+            String categoryName = first.getCategory().getName();
+
+            throw new BadRequestException(
+                    ErrorMessage.Attribute.ERR_USED_BY_CATEGORY,
+                    categoryName
+            );
+        }
+
+        if (!attribute.getProductAttributes().isEmpty()) {
+            ProductAttribute first = attribute.getProductAttributes().getFirst();
+            String productName = first.getProduct().getName();
+            throw new BadRequestException(
+                    ErrorMessage.Attribute.ERR_USED_BY_PRODUCT,
+                    productName
+            );
+        }
 
         attributeRepository.delete(attribute);
 
