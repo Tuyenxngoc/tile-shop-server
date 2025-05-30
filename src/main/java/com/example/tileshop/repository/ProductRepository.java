@@ -58,4 +58,20 @@ public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpec
             @Param("endDate") LocalDateTime endDate,
             Pageable pageable
     );
+
+    @Query("""
+                SELECT p
+                FROM OrderItem oi
+                JOIN oi.product p
+                JOIN oi.order o
+                WHERE (:startDate IS NULL OR o.createdDate >= :startDate)
+                  AND (:endDate IS NULL OR o.createdDate <= :endDate)
+                GROUP BY p.id
+                ORDER BY SUM(oi.quantity) DESC
+            """)
+    List<Product> findTopSellingProductsOnlyEntities(
+            @Param("startDate") LocalDateTime startDate,
+            @Param("endDate") LocalDateTime endDate,
+            Pageable pageable
+    );
 }
