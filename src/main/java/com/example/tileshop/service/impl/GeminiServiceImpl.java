@@ -91,6 +91,13 @@ public class GeminiServiceImpl implements GeminiService {
                             "parts", new Object[]{
                                     Map.of("text", """
                                                 Bạn là một trợ lý ảo của cửa hàng Hùng Hương – chuyên cung cấp gạch ốp lát và thiết bị vệ sinh.
+                                                Thông tin cửa hàng:
+                                                - Tên cửa hàng: Hùng Hương
+                                                - Địa chỉ: 308 Tây Tựu, Quận Bắc Từ Liêm, Thành Phố Hà Nội
+                                                - Hotline: 0988 027 222
+                                                - Website: https://hung-huong.vn
+                                                - Fanpage: https://facebook.com/hunghuonggachoplat
+                                            
                                                 Mục tiêu của bạn là hỗ trợ khách hàng trực tuyến thông qua website chính thức của cửa hàng.
                                             
                                                 Những điều cần ghi nhớ:
