@@ -3,6 +3,7 @@ package com.example.tileshop.controller;
 import com.example.tileshop.annotation.RestApiV1;
 import com.example.tileshop.constant.UrlConstant;
 import com.example.tileshop.service.VnPayService;
+import com.example.tileshop.service.ZaloPayService;
 import com.example.tileshop.util.VsResponseUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -12,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @RestApiV1
@@ -20,6 +22,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Tag(name = "Payment")
 public class PaymentController {
     VnPayService paymentService;
+
+    ZaloPayService zaloPayService;
 
     @Operation(summary = "Initiate VNPay payment process")
     @GetMapping(UrlConstant.Payment.VN_PAY)
@@ -31,5 +35,17 @@ public class PaymentController {
     @GetMapping(UrlConstant.Payment.VN_PAY_RETURN)
     public ResponseEntity<?> payCallbackHandler(@RequestParam("vnp_SecureHash") String receivedHash, HttpServletRequest request) {
         return VsResponseUtil.success(paymentService.handleVNPayReturn(receivedHash, request));
+    }
+
+    @Operation(summary = "Initiate ZaloPay payment process")
+    @GetMapping(UrlConstant.Payment.ZALO_PAY)
+    public ResponseEntity<?> zaloPay(@RequestParam("orderId") Long orderId, HttpServletRequest request) {
+        return VsResponseUtil.success(zaloPayService.createPaymentUrl(orderId, request));
+    }
+
+    @Operation(summary = "Handle ZaloPay payment callback")
+    @PostMapping(UrlConstant.Payment.ZALO_PAY_RETURN)
+    public ResponseEntity<?> zaloPayCallbackHandler(HttpServletRequest request) {
+        return VsResponseUtil.success(zaloPayService.handleZaloPayReturn(request));
     }
 }

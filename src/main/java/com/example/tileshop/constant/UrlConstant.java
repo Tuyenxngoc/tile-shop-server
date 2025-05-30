@@ -45,6 +45,9 @@ public class UrlConstant {
 
         public static final String VN_PAY = PRE_FIX + "/vn-pay";
         public static final String VN_PAY_RETURN = PRE_FIX + "/vn-pay-return";
+
+        public static final String ZALO_PAY = PRE_FIX + "/zalopay";
+        public static final String ZALO_PAY_RETURN = PRE_FIX + "/zalopay-return";
     }
 
     public static class Attribute {
