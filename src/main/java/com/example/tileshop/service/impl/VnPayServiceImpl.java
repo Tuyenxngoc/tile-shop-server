@@ -11,7 +11,7 @@ import com.example.tileshop.exception.BadRequestException;
 import com.example.tileshop.exception.NotFoundException;
 import com.example.tileshop.repository.OrderRepository;
 import com.example.tileshop.service.VnPayService;
-import com.example.tileshop.util.VNPayUtil;
+import com.example.tileshop.util.PaymentUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -67,8 +67,8 @@ public class VnPayServiceImpl implements VnPayService {
         String vnp_Command = vnPayConfig.getCommand();
         String vnp_OrderInfo = request.getParameter("vnp_OrderInfo");
         String orderType = request.getParameter("ordertype");
-        String vnp_TxnRef = VNPayUtil.getRandomNumber(8);
-        String vnp_IpAddr = VNPayUtil.getIpAddress(request);
+        String vnp_TxnRef = PaymentUtil.getRandomNumber(8);
+        String vnp_IpAddr = PaymentUtil.getIpAddress(request);
         String vnp_TmnCode = vnPayConfig.getTmnCode();
 
         // Lưu thông tin giao dịch vào đơn hàng trước khi tạo URL thanh toán
@@ -167,7 +167,7 @@ public class VnPayServiceImpl implements VnPayService {
             }
         }
         String queryUrl = query.toString();
-        String vnp_SecureHash = VNPayUtil.hmacSHA512(vnPayConfig.getHashSecret(), hashData.toString());
+        String vnp_SecureHash = PaymentUtil.hmacSHA512(vnPayConfig.getHashSecret(), hashData.toString());
         queryUrl += "&vnp_SecureHash=" + vnp_SecureHash;
         String paymentUrl = vnPayConfig.getPayUrl() + "?" + queryUrl;
 
@@ -179,9 +179,9 @@ public class VnPayServiceImpl implements VnPayService {
 
     @Override
     public PaymentStatusResponse handleVNPayReturn(String receivedHash, HttpServletRequest request) {
-        Map<String, String> parameters = VNPayUtil.getParametersFromRequest(request);
+        Map<String, String> parameters = PaymentUtil.getParametersFromRequest(request);
         parameters.remove("vnp_SecureHash");
-        String calculatedHash = VNPayUtil.hmacSHA512(vnPayConfig.getHashSecret(), VNPayUtil.buildHashData(parameters));
+        String calculatedHash = PaymentUtil.hmacSHA512(vnPayConfig.getHashSecret(), PaymentUtil.buildHashData(parameters));
 
         if (!receivedHash.equalsIgnoreCase(calculatedHash)) {
             throw new BadRequestException(ErrorMessage.Order.ERR_INVALID_OR_TAMPERED_DATA);

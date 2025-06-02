@@ -99,6 +99,9 @@ public class SecurityConfig {
 
             //Visit
             "/api/v1/visit/track",
+
+            //PayOS webhook
+            "/api/v1/payment/payos/webhook",
     };
 
     CustomUserDetailsService userDetailsService;

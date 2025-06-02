@@ -48,6 +48,9 @@ public class UrlConstant {
 
         public static final String ZALO_PAY = PRE_FIX + "/zalopay";
         public static final String ZALO_PAY_RETURN = PRE_FIX + "/zalopay-return";
+
+        public static final String PAYOS_CREATE_PAYMENT = PRE_FIX + "/payos/create-payment";
+        public static final String PAYOS_WEBHOOK = PRE_FIX + "/payos/webhook";
     }
 
     public static class Attribute {
